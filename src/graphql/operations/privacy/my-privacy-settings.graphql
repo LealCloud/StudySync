@@ -1,0 +1,8 @@
+query MyPrivacySettings {
+  myPrivacySettings {
+    profileVisibility
+    emailVisibility
+    phoneVisibility
+    allowDirectMessages
+  }
+}

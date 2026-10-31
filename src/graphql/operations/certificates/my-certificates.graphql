@@ -1,0 +1,10 @@
+query MyCertificates {
+  myCertificates {
+    id
+    courseId
+    courseTitle
+    certificateNumber
+    issuedAt
+    downloadUrl
+  }
+}

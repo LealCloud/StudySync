@@ -1,0 +1,15 @@
+query PublicProfile($userId: ID!) {
+  publicProfile(userId: $userId) {
+    id
+    name
+    image
+    bio {
+      title
+      description
+    }
+    interests
+    email
+    phone
+    allowDirectMessages
+  }
+}

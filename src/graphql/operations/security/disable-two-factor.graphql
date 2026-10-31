@@ -1,0 +1,6 @@
+mutation DisableTwoFactor($code: String!) {
+  disableTwoFactor(code: $code) {
+    success
+    message
+  }
+}

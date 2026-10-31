@@ -1,0 +1,16 @@
+query MyProfile {
+  me {
+    id
+    name
+    email
+    image
+    role
+    profile {
+      bio {
+        title
+        description
+      }
+      interests
+    }
+  }
+}

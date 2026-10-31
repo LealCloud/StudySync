@@ -1,0 +1,39 @@
+enum UserRole {
+  student
+  teacher
+  admin
+}
+
+type Bio {
+  title: String
+  description: String
+}
+
+type User {
+  id: ID!
+  name: String!
+  email: String!
+  image: String
+  role: UserRole!
+  profile: Profile!
+}
+
+type PublicProfile {
+  id: ID!
+  name: String!
+  image: String
+  bio: Bio
+  interests: [String!]!
+  email: String
+  phone: String
+  allowDirectMessages: Boolean!
+}
+
+type Query {
+  me: User!
+  publicProfile(userId: ID!): PublicProfile
+}
+
+type Mutation {
+  updateProfile(input: UpdateProfileInput!): User!
+}

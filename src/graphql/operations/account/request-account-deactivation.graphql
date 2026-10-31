@@ -1,0 +1,6 @@
+mutation RequestAccountDeactivation {
+  requestAccountDeactivation {
+    status
+    deactivationScheduledAt
+  }
+}

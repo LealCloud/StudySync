@@ -1,0 +1,9 @@
+query MyPaymentMethods {
+  myPaymentMethods {
+    id
+    brand
+    last4
+    expirationMonth
+    expirationYear
+  }
+}

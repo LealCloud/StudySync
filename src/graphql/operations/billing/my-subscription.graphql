@@ -1,0 +1,10 @@
+query MySubscription {
+  mySubscription {
+    id
+    plan
+    status
+    startedAt
+    currentPeriodEnd
+    cancelAtPeriodEnd
+  }
+}

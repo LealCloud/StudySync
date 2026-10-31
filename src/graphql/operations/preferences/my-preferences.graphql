@@ -1,0 +1,16 @@
+query MyPreferences {
+  myPreferences {
+    language
+    theme
+    timezone
+    notifications {
+      email
+      push
+      inApp
+    }
+    accessibility {
+      reducedMotion
+      highContrast
+    }
+  }
+}

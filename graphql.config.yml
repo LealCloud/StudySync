@@ -1,0 +1,9 @@
+schema:
+  - 'src/graphql/schema/**/*.graphql'
+
+documents:
+  - 'src/graphql/operations/**/*.graphql'
+
+extensions:
+  languageService:
+    useSchemaFileDefinitions: true

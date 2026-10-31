@@ -1,0 +1,55 @@
+type SecuritySettings {
+  email: String!
+  emailVerified: Boolean!
+  twoFactorEnabled: Boolean!
+  twoFactorRequired: Boolean!
+  sessions: [Session!]!
+}
+
+type Session {
+  id: ID!
+  deviceName: String
+  browser: String
+  ipAddress: String
+  lastActiveAt: DateTime!
+  current: Boolean!
+}
+
+type SecurityOperationResult {
+  success: Boolean!
+  message: String
+}
+
+type TwoFactorSetup {
+  secret: String!
+  qrCode: String!
+}
+
+input ChangePasswordInput {
+  currentPassword: String!
+  newPassword: String!
+}
+
+input RequestEmailChangeInput {
+  newEmail: String!
+}
+
+extend type Query {
+  mySecuritySettings: SecuritySettings!
+}
+
+extend type Mutation {
+  requestEmailChange(input: RequestEmailChangeInput!): SecurityOperationResult!
+
+  changePassword(input: ChangePasswordInput!): SecurityOperationResult!
+
+  beginTwoFactorSetup: TwoFactorSetup!
+
+  verifyTwoFactorSetup(code: String!): SecurityOperationResult!
+
+  disableTwoFactor(code: String!): SecurityOperationResult!
+
+  revokeSession(sessionId: ID!): SecurityOperationResult!
+
+  revokeOtherSessions: SecurityOperationResult!
+}

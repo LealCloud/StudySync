@@ -1,0 +1,18 @@
+enum CourseEnrollmentStatus {
+  active
+  completed
+  paused
+}
+
+type CourseEnrollment {
+  courseId: ID!
+  title: String!
+  progress: Float!
+  status: CourseEnrollmentStatus!
+  enrolledAt: DateTime!
+  completedAt: DateTime
+}
+
+extend type Query {
+  myCourses: [CourseEnrollment!]!
+}

@@ -1,0 +1,16 @@
+mutation UpdatePreferences($input: UpdatePreferencesInput!) {
+  updatePreferences(input: $input) {
+    language
+    theme
+    timezone
+    notifications {
+      email
+      push
+      inApp
+    }
+    accessibility {
+      reducedMotion
+      highContrast
+    }
+  }
+}

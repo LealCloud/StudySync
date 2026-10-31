@@ -1,0 +1,10 @@
+query MyCourses {
+  myCourses {
+    courseId
+    title
+    progress
+    status
+    enrolledAt
+    completedAt
+  }
+}

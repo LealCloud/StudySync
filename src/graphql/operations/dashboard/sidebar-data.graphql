@@ -1,0 +1,15 @@
+query SidebarData {
+  me {
+    id
+    name
+    email
+    image
+    role
+  }
+  mySubscription {
+    plan
+  }
+  myAccount {
+    status
+  }
+}

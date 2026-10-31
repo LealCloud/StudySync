@@ -1,0 +1,11 @@
+allowBuilds:
+  '@parcel/watcher': true
+  '@swc/core': true
+  esbuild: false
+  sharp: false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - framer-motion@14.2.0
+  - graphql-yoga@5.24.5
+  - motion-dom@14.2.0
+  - motion-utils@14.1.1

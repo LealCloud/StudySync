@@ -1,0 +1,1303 @@
+{
+  "common": {
+    "loading": "Loading…",
+    "error": "Something went wrong",
+    "retry": "Retry",
+    "close": "Close"
+  },
+  "header": {
+    "navLabel": "Main navigation",
+    "links": {
+      "home": "Home",
+      "subscription": "Subscription",
+      "contact": "Contact"
+    },
+    "login": "Log in",
+    "register": "Create account",
+    "language": "Language",
+    "theme": "Theme",
+    "openMenu": "Open navigation menu",
+    "closeMenu": "Close navigation menu"
+  },
+  "languageToggle": {
+    "switchTo": "Switch language to {language}",
+    "es": "Spanish",
+    "en": "English"
+  },
+  "logo": {
+    "tagline": "Learn. Connect. Advance."
+  },
+  "themeToggle": {
+    "toLight": "Switch to light mode",
+    "toDark": "Switch to dark mode"
+  },
+  "pages": {
+    "home": {
+      "title": "Welcome",
+      "subtitle": "Learn. Connect. Advance.",
+      "cta": "Get started"
+    },
+    "contact": {
+      "title": "Contact us",
+      "form": {
+        "name": "Name",
+        "email": "Email",
+        "message": "Message",
+        "submit": "Send"
+      }
+    }
+  },
+  "footer": {
+    "description": "A modern educational platform built to enhance learning and online collaboration.",
+    "sections": {
+      "platform": "Platform",
+      "community": "Community",
+      "support": "Support"
+    },
+    "links": {
+      "courses": "Courses",
+      "learningPaths": "Learning Paths",
+      "pricing": "Pricing",
+      "about": "About",
+      "blog": "Blog",
+      "forum": "Forum",
+      "helpCenter": "Help Center",
+      "contact": "Contact",
+      "status": "Status"
+    },
+    "legal": {
+      "privacy": "Privacy",
+      "terms": "Terms"
+    },
+    "copyright": "© 2026 StudySync. All rights reserved."
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Your smart study ecosystem",
+      "title": {
+        "line1": "Study smarter.",
+        "line2": "Move forward with purpose."
+      },
+      "description": "Organize your courses, join collaborative rooms, improve your focus, and get personalized support from a single platform.",
+      "cta": {
+        "primary": "Start for free",
+        "secondary": "Explore the platform"
+      },
+      "benefits": {
+        "noCreditCard": "No credit card required",
+        "instantAccess": "Instant access",
+        "forEveryone": "For students and teachers"
+      },
+      "dashboardPreview": {
+        "status": "Platform active",
+        "welcome": "Welcome back",
+        "progressTitle": "Your academic progress",
+        "initials": "RV",
+        "stats": {
+          "timeStudied": "Time studied",
+          "weeklyGoal": "Weekly goal",
+          "activeRooms": "Active rooms"
+        },
+        "weeklyProgress": {
+          "title": "Weekly progress",
+          "value": "18 hours of 22",
+          "ariaLabel": "Weekly progress bar chart. Bar height represents hours studied per day, totaling 18 hours out of 22."
+        },
+        "nextSession": {
+          "title": "Next session",
+          "course": "Advanced React",
+          "time": "Today · 4:30 PM"
+        },
+        "streak": {
+          "title": "Current streak",
+          "value": "12 days"
+        },
+        "aiCoach": {
+          "title": "AI Coach",
+          "value": "Plan updated"
+        }
+      },
+      "trusted": {
+        "title": "A platform designed to boost",
+        "items": {
+          "focus": "Focus",
+          "collaboration": "Collaboration",
+          "organization": "Organization",
+          "progress": "Progress"
+        }
+      }
+    },
+    "features": {
+      "eyebrow": "Purposeful learning",
+      "title": "Everything you need to study better",
+      "description": "StudySync combines organization, collaboration, and technology to turn every study session into real progress.",
+      "items": {
+        "focus": {
+          "title": "Smart focus",
+          "description": "Organize your sessions, reduce distractions, and build consistent study habits."
+        },
+        "collaboration": {
+          "title": "Collaborative learning",
+          "description": "Study with classmates, teachers, and academic communities in real time."
+        },
+        "progress": {
+          "title": "Measurable progress",
+          "description": "Track statistics, goals, activity, and progress from a single space."
+        }
+      }
+    },
+    "studyRooms": {
+      "eyebrow": "Study rooms",
+      "title": "Learning together changes the results",
+      "description": "Join collaborative sessions, share resources, and stay on track with people who share your goals.",
+      "sessionProgress": "Session progress",
+      "participants": "participants",
+      "status": {
+        "active": "Active",
+        "comingSoon": "Coming soon"
+      },
+      "rooms": {
+        "react": {
+          "title": "React and JavaScript",
+          "subject": "Frontend development"
+        },
+        "calculus": {
+          "title": "Differential calculus",
+          "subject": "Mathematics"
+        },
+        "databases": {
+          "title": "Databases",
+          "subject": "SQL and modeling"
+        }
+      },
+      "aside": {
+        "eyebrow": "Real-time sessions",
+        "title": "Turn studying into a shared experience",
+        "description": "Create public or private rooms, start Pomodoro sessions, chat with your team, and access materials without leaving the session.",
+        "benefits": {
+          "chat": "Live chat and collaboration",
+          "pomodoro": "Shared Pomodoro timer",
+          "resources": "Resource and participant management"
+        },
+        "cta": "Explore rooms"
+      }
+    },
+    "benefits": {
+      "eyebrow": "A complete experience",
+      "title": "Fewer tools. More focus.",
+      "description": "StudySync brings together the essential features you need to organize, study, collaborate, and track your progress.",
+      "items": {
+        "academicOrganization": {
+          "title": "Academic organization",
+          "description": "Plan courses, sessions, assignments, and events from a centralized calendar."
+        },
+        "pomodoro": {
+          "title": "Integrated Pomodoro",
+          "description": "Manage focus and break periods with clear metrics."
+        },
+        "aiCoach": {
+          "title": "AI academic coach",
+          "description": "Get recommendations based on your goals, activity, and progress."
+        },
+        "communication": {
+          "title": "Direct communication",
+          "description": "Stay connected with teachers, classmates, and study groups."
+        }
+      },
+      "platform": {
+        "eyebrow": "Trusted platform",
+        "title": "Your information and progress are always protected",
+        "description": "StudySync provides privacy controls, account security, and personalized settings for every user.",
+        "availability": "Availability",
+        "privacy": "Privacy control"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Progress stories",
+      "title": "People who are already studying differently",
+      "description": "Experiences from students and teachers who found a more organized way to move forward.",
+      "items": {
+        "lucia": {
+          "name": "Lucía Martínez",
+          "role": "Web development student",
+          "quote": "StudySync helped me organize my sessions and make progress on projects I used to leave unfinished."
+        },
+        "andres": {
+          "name": "Andrés Gómez",
+          "role": "University student",
+          "quote": "The collaborative rooms and shared Pomodoro made studying much more consistent for me."
+        },
+        "camila": {
+          "name": "Camila Rodríguez",
+          "role": "Technology teacher",
+          "quote": "Now I can better support my students, organize courses, and review their progress from a single platform."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Your next session starts here",
+      "title": "Build a better way to learn today",
+      "description": "Create your account and start organizing your courses, rooms, focus sessions, and academic goals.",
+      "primary": "Create a free account",
+      "secondary": "I already have an account"
+    }
+  },
+  "subscription": {
+    "eyebrow": "Plans and pricing",
+    "title": "Choose the plan that powers the way you study",
+    "description": "From your first study sessions to managing an entire institution: StudySync grows with you.",
+    "recommended": "Recommended",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Ideal for students who want to get started or try StudySync independently.",
+        "price": {
+          "value": "$0",
+          "suffix": "COP / month"
+        },
+        "features": [
+          "Access to community study rooms",
+          "Personal study calendar",
+          "Basic messaging with classmates",
+          "Weekly progress dashboard"
+        ],
+        "cta": "Start for free"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "For advanced students and independent professionals looking for consistency and results.",
+        "price": {
+          "value": "$49,900",
+          "suffix": "COP / month"
+        },
+        "features": [
+          "Everything included in the Free plan",
+          "Private study rooms and unlimited video calls",
+          "AI study assistant",
+          "Advanced performance statistics",
+          "Smart task planning and reminders",
+          "Priority support"
+        ],
+        "cta": "Start with Premium",
+        "note": "Activate Premium from your dashboard once you have signed in."
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Designed for employees and institutions that need to manage learning at scale.",
+        "price": {
+          "value": "Custom",
+          "suffix": "Corporate pricing"
+        },
+        "features": [
+          "Everything included in the Premium plan",
+          "Access to exclusive courses and corporate learning paths",
+          "Management of multiple courses, teachers, and students",
+          "Administrative roles and permissions",
+          "Institutional progress reports",
+          "Customized onboarding and integrations",
+          "Dedicated support with a service-level agreement (SLA)"
+        ],
+        "cta": "Contact the team"
+      }
+    },
+    "pricingNote": "All prices are expressed in Colombian pesos (COP)."
+  },
+  "contact": {
+    "page": {
+      "eyebrow": "Contact",
+      "title": {
+        "before": "Let's talk about",
+        "highlight": "your study experience"
+      },
+      "description": "Have questions about StudySync or our plans, or want to bring it to your institution? Get in touch and our team will support you every step of the way.",
+      "channels": {
+        "email": {
+          "title": "Email support",
+          "description": "soporte@studysync.co"
+        },
+        "hours": {
+          "title": "Support hours",
+          "description": "Monday to Friday, 8:00 AM to 6:00 PM (Colombia time)"
+        },
+        "location": {
+          "title": "Location",
+          "description": "Colombia · online support for students and institutions"
+        }
+      }
+    },
+    "form": {
+      "title": "Send us a message",
+      "description": "Fill out the form and we'll get back to you as soon as possible.",
+      "legend": "Contact form",
+      "fields": {
+        "name": {
+          "label": "Full name",
+          "placeholder": "Your name"
+        },
+        "email": {
+          "label": "Email address",
+          "placeholder": "you@example.com"
+        },
+        "contactNumber": {
+          "label": "Contact phone",
+          "optional": "optional",
+          "placeholder": "300 123 4567"
+        },
+        "subject": {
+          "label": "Subject",
+          "placeholder": "What would you like to talk about?"
+        },
+        "message": {
+          "label": "Message",
+          "placeholder": "Tell us how we can help…"
+        }
+      },
+      "success": {
+        "title": "Message sent!",
+        "description": "Thanks for reaching out. We'll review your message and reply to the email address you provided.",
+        "sendAnother": "Send another message"
+      },
+      "error": {
+        "unexpected": "Something went wrong. Please try again.",
+        "sendFailed": "We couldn't send your message. Please try again in a few minutes.",
+        "rateLimited": "You've sent too many messages. Please try again later.",
+        "invalidData": "Check the form data and try again.",
+        "serverError": "There was a problem on our server. Please try again later.",
+        "unavailable": "We couldn't reach the contact service. Please try again in a few minutes."
+      },
+      "actions": {
+        "sending": "Sending…",
+        "submit": "Send message"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "page": {
+        "eyebrow": "Welcome back",
+        "title": {
+          "before": "Continue your path.",
+          "highlight": "Take back control."
+        },
+        "description": "Access your study rooms, review your pending courses, and keep your performance on track in StudySync.",
+        "cards": {
+          "rooms": {
+            "title": "Active rooms",
+            "description": "Get back to collaborating with your classmates."
+          },
+          "security": {
+            "title": "Secure access",
+            "description": "Your credentials and data are protected."
+          }
+        }
+      },
+      "form": {
+        "eyebrow": "Welcome back",
+        "title": "Log in",
+        "description": "Enter your details to continue to your workspace.",
+        "fields": {
+          "email": {
+            "label": "Email address",
+            "placeholder": "name@email.com"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Enter your password",
+            "show": "Show password",
+            "hide": "Hide password"
+          }
+        },
+        "forgotPassword": "Forgot your password?",
+        "actions": {
+          "submit": "Log in",
+          "submitting": "Logging in..."
+        },
+        "success": "Logged in successfully. Redirecting...",
+        "errors": {
+          "invalidCredentials": "Incorrect email or password.",
+          "unexpected": "We couldn't log you in. Please try again.",
+          "rateLimited": "Too many attempts. Please try again later.",
+          "unavailable": "The sign-in service is unavailable. Please try again later."
+        },
+        "footer": {
+          "prompt": "Don't have an account yet?",
+          "link": "Create account"
+        }
+      }
+    },
+    "register": {
+      "page": {
+        "eyebrow": "Start today",
+        "title": {
+          "before": "Create your space.",
+          "highlight": "Learn without limits."
+        },
+        "description": "Join StudySync to organize your courses, study rooms, activities, and progress in one place.",
+        "cards": {
+          "community": {
+            "title": "An active community",
+            "description": "Connect with students and teachers."
+          },
+          "security": {
+            "title": "A protected account",
+            "description": "Your data and progress stay secure."
+          }
+        }
+      },
+      "form": {
+        "eyebrow": "New account",
+        "title": "Create an account",
+        "description": "Enter your details to get started with StudySync.",
+        "fields": {
+          "firstName": {
+            "label": "First name",
+            "placeholder": "Enter your first name"
+          },
+          "lastName": {
+            "label": "Last name",
+            "placeholder": "Enter your last name"
+          },
+          "email": {
+            "label": "Email address",
+            "placeholder": "name@email.com"
+          },
+          "password": {
+            "label": "Password",
+            "placeholder": "Create a password",
+            "show": "Show password",
+            "hide": "Hide password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Confirm your password"
+          }
+        },
+        "terms": "I agree to the terms and privacy policy.",
+        "success": "Account created. Redirecting...",
+        "actions": {
+          "submit": "Create account",
+          "submitting": "Creating account..."
+        },
+        "errors": {
+          "rateLimited": "Too many requests. Please try again later.",
+          "invalidData": "Check the form and try again.",
+          "serverError": "We could not create your account. Please try again.",
+          "unavailable": "Could not connect to the service. Please try again later.",
+          "emailTaken": "This email is already registered."
+        },
+        "footer": {
+          "prompt": "Already have an account?",
+          "link": "Log in"
+        }
+      }
+    },
+    "apiErrors": {
+      "rateLimited": "Too many requests. Please try again later.",
+      "invalidData": "Check the submitted information and try again.",
+      "serverError": "A server error occurred. Please try again later.",
+      "unavailable": "The service is unavailable. Please try again later.",
+      "invalidToken": "This link is invalid or has expired. Request a new one."
+    },
+    "resetPassword": {
+      "page": {
+        "eyebrow": "One last step",
+        "title": {
+          "before": "Secure your account.",
+          "highlight": "Choose a new key."
+        },
+        "description": "Set a new password to return to your study rooms, courses, and progress in StudySync.",
+        "cards": {
+          "link": {
+            "title": "One-time link",
+            "description": "This link stops working after you update your password."
+          },
+          "security": {
+            "title": "Secure access",
+            "description": "Your credentials and data are protected."
+          }
+        }
+      },
+      "form": {
+        "successTitle": "Password updated",
+        "success": "Your password was updated. We will take you to log in shortly.",
+        "successButton": "Go to log in",
+        "eyebrow": "New password",
+        "title": "Reset your password",
+        "description": "Create a new secure password for your StudySync account.",
+        "legend": "Password reset form",
+        "fields": {
+          "password": {
+            "label": "New password",
+            "placeholder": "Create a new password",
+            "show": "Show password",
+            "hide": "Hide password"
+          },
+          "confirmPassword": {
+            "label": "Confirm password",
+            "placeholder": "Repeat your new password"
+          }
+        },
+        "requestLink": "Request a new link",
+        "validating": "Checking your password reset link...",
+        "validationError": "We could not validate the link. Please try again.",
+        "retryValidation": "Retry validation",
+        "actions": {
+          "submit": "Reset password",
+          "submitting": "Updating..."
+        },
+        "footer": {
+          "prompt": "Remember your password?",
+          "link": "Log in"
+        },
+        "errors": {
+          "unexpected": "Something went wrong. Please try again."
+        }
+      }
+    },
+    "forgotPassword": {
+      "title": "Forgot your password?",
+      "description": "Enter your email and we will send you instructions to reset your password.",
+      "label": "Email address",
+      "placeholder": "name@email.com",
+      "legend": "Password recovery form",
+      "successTitle": "Check your email",
+      "success": "If the email is registered, you will receive instructions to reset your password.",
+      "close": "Close",
+      "submit": "Send instructions",
+      "submitting": "Sending...",
+      "back": "Back to log in",
+      "errors": {
+        "rateLimited": "Too many requests. Please try again later.",
+        "invalidData": "Enter a valid email address.",
+        "serverError": "We could not process your request. Please try again.",
+        "unavailable": "The service is unavailable. Please try again later."
+      },
+      "unexpected": "Something went wrong. Please try again."
+    }
+  },
+  "Validation": {
+    "firstName": {
+      "required": "Name is required",
+      "min": "Name must be at least 2 characters long",
+      "max": "Name cannot exceed 100 characters",
+      "invalid": "Name can only contain letters, spaces, apostrophes, hyphens, and periods"
+    },
+    "lastName": {
+      "required": "Last name is required",
+      "min": "Last name must be at least 2 characters long",
+      "max": "Last name cannot exceed 100 characters",
+      "invalid": "Last name can only contain letters, spaces, apostrophes, hyphens, and periods"
+    },
+    "email": {
+      "required": "Email is required",
+      "max": "Email cannot exceed 254 characters",
+      "invalid": "Invalid email address",
+      "invalidInput": "Please enter a valid email address"
+    },
+    "password": {
+      "required": "Password is required",
+      "min": "Password must be at least 6 characters long",
+      "max": "Password cannot exceed 15 characters",
+      "invalid": "Password must contain at least one lowercase letter, one uppercase letter, and one special character"
+    },
+    "confirmPassword": {
+      "required": "You must confirm your password",
+      "mismatch": "Passwords do not match"
+    },
+    "resetPassword": {
+      "invalidToken": "The password reset link is not valid"
+    },
+    "contact": {
+      "name": {
+        "min": "Name must be at least 2 characters long",
+        "max": "Name cannot exceed 100 characters",
+        "invalid": "Name can only contain letters, spaces, apostrophes, hyphens, and periods"
+      },
+      "phone": {
+        "invalid": "The phone number is not valid"
+      },
+      "subject": {
+        "min": "Subject must be at least 5 characters long",
+        "max": "Subject cannot exceed 150 characters",
+        "invalid": "Subject contains invalid characters"
+      },
+      "message": {
+        "min": "Message must be at least 20 characters long",
+        "max": "Message cannot exceed 2000 characters",
+        "invalid": "Message contains invalid characters"
+      }
+    },
+    "documentType": {
+      "invalid": "Please select a valid document type"
+    },
+    "documentId": {
+      "min": "Document ID cannot be empty",
+      "max": "Document ID cannot exceed 30 characters",
+      "invalid": "Document ID can only contain letters, numbers, and hyphens"
+    },
+    "phone": {
+      "invalid": "Phone number must be a valid international format (e.g., +573001234567)"
+    },
+    "country": {
+      "invalid": "Please select a valid country"
+    },
+    "address": {
+      "min": "Address cannot be empty",
+      "max": "Address cannot exceed 200 characters",
+      "invalid": "Address contains invalid characters"
+    },
+    "preferences": {
+      "language": {
+        "invalid": "Please select a valid language"
+      },
+      "theme": {
+        "invalid": "Please select a valid theme"
+      },
+      "timezone": {
+        "invalid": "Please select a valid timezone"
+      },
+      "notifications": {
+        "email": { "invalid": "Invalid value" },
+        "push": { "invalid": "Invalid value" },
+        "inApp": { "invalid": "Invalid value" }
+      },
+      "accessibility": {
+        "reducedMotion": { "invalid": "Invalid value" },
+        "highContrast": { "invalid": "Invalid value" }
+      }
+    },
+    "privacy": {
+      "visibility": {
+        "invalid": "Please select a valid visibility option"
+      },
+      "allowDirectMessages": {
+        "invalid": "Invalid value"
+      }
+    },
+    "bio": {
+      "title": {
+        "min": "Bio title cannot be empty",
+        "max": "Bio title cannot exceed 100 characters"
+      },
+      "description": {
+        "min": "Bio description cannot be empty",
+        "max": "Bio description cannot exceed 500 characters"
+      }
+    },
+    "interests": {
+      "invalid": "Invalid interests format",
+      "minLength": "Each interest must be at least 1 character long",
+      "maxLength": "Each interest cannot exceed 40 characters",
+      "maxCount": "You cannot add more than 20 interests"
+    },
+    "image": {
+      "invalid": "Image must be a valid URL or a base64 data URI"
+    },
+    "security": {
+      "emailChange": {
+        "sameAsCurrent": "That's your current email."
+      },
+      "twoFactor": {
+        "codeInvalid": "The code must have exactly 6 digits."
+      }
+    },
+    "acceptedTerms": {
+      "required": "You must accept the terms and conditions"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "navigationLabel": "Primary navigation",
+      "showMenu": "Show menu",
+      "hideMenu": "Hide menu",
+      "more": "More",
+      "moreOptions": "More options",
+      "theme": "Theme",
+      "signOut": "Sign out",
+      "currentPlan": "Current plan",
+      "plans": {
+        "free": {
+          "name": "Plan Free",
+          "description": "Access the platform’s basic features."
+        },
+        "premium": {
+          "name": "Plan Premium",
+          "description": "Enjoy all advanced features."
+        },
+        "enterprise": {
+          "name": "Plan Enterprise",
+          "description": "Full access with priority support."
+        }
+      },
+      "actions": {
+        "upgrade": "Upgrade plan",
+        "manage": "Manage plan"
+      },
+      "guestName": "User",
+      "guestEmail": "user@studysync.com"
+    },
+    "navigation": {
+      "home": "Home",
+      "panel": {
+        "admin": "Admin dashboard",
+        "professor": "Teacher dashboard",
+        "student": "Student dashboard"
+      },
+      "roles": {
+        "admin": "Administrator",
+        "professor": "Teacher",
+        "student": "Student"
+      },
+      "items": {
+        "courses": "Courses",
+        "studyRooms": "Study rooms",
+        "calendar": "Calendar",
+        "messages": "Messages",
+        "academicManagement": "Academic management",
+        "pomodoro": "Pomodoro",
+        "students": "Students",
+        "users": "Users",
+        "professors": "Professors",
+        "academicCenter": "Academic center",
+        "rooms": "Rooms",
+        "reportsAudit": "Reports & audit"
+      }
+    },
+    "userSettings": {
+      "metadata": {
+        "title": "My profile | StudySync",
+        "description": "Manage your profile, photo, and certificate requirements."
+      },
+      "page": {
+        "title": "Account settings",
+        "description": "Manage your profile, security, and preferences.",
+        "fallbackName": "User",
+        "fallbackEmail": "Not provided"
+      },
+      "avatar": {
+        "title": "Profile photo",
+        "description": "Shown in your study rooms, messages, and sidebar.",
+        "changeAria": "Change profile photo",
+        "uploadAria": "Upload profile photo",
+        "save": "Save photo",
+        "saving": "Saving...",
+        "cancel": "Cancel",
+        "change": "Change photo",
+        "upload": "Upload photo",
+        "remove": "Remove",
+        "limit": "JPG, PNG, or WEBP · max 4 MB",
+        "previewTitle": "Preview in StudySync",
+        "visibility": "Only visible to users signed in to StudySync.",
+        "errors": {
+          "unsupportedType": "Unsupported format. Use JPG, PNG, or WEBP.",
+          "fileTooLarge": "The image cannot exceed 4 MB.",
+          "unauthenticated": "Your session expired. Please sign in again.",
+          "serverError": "Could not save the photo. Please try again.",
+          "invalidRequest": "Could not read the uploaded file.",
+          "missingFile": "Select an image to continue.",
+          "serviceUnavailable": "The image service is unavailable. Please try again later.",
+          "uploadFailed": "Could not save the photo. Please try again.",
+          "removeFailed": "Could not remove the photo. Please try again."
+        },
+        "saved": "Profile photo updated.",
+        "removed": "Profile photo removed.",
+        "sidebarPreview": "Sidebar preview"
+      },
+      "certificates": {
+        "title": "My certificates",
+        "description": "Certificates you've earned. Click download to open the signed link in a new tab.",
+        "empty": "You haven't earned any certificates yet.",
+        "downloadLabel": "Download",
+        "issuedAt": "Issued: {date}",
+        "certificateNumber": "Certificate No. {number}",
+        "errors": {
+          "FORBIDDEN": "This section isn't available for your account.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        },
+        "eligibility": {
+          "title": "Certificate requirements",
+          "description": "Complete these profile requirements to generate certificates.",
+          "eligible": "Eligible",
+          "pending": "Pending",
+          "avatar": "Profile photo added",
+          "personalData": "Personal details complete",
+          "verified": "Account verified",
+          "comingSoon": "Coming soon"
+        }
+      },
+      "account": {
+        "title": "Account",
+        "description": "Manage your account's lifecycle. Deactivating is reversible until the scheduled date.",
+        "statuses": {
+          "active": {
+            "title": "Account active",
+            "description": "You can deactivate your account. You'll have a grace period to cancel before it's permanently closed."
+          },
+          "pending_deactivation": {
+            "title": "Deactivation scheduled",
+            "description": "Your account will be closed on {date}. You can cancel the deactivation until then."
+          },
+          "suspended": {
+            "title": "Account suspended",
+            "description": "Your account has been suspended by an administrator. Please contact support."
+          },
+          "inactive": {
+            "title": "Account inactive",
+            "description": "This account has been closed. If you believe this is a mistake, please contact support."
+          }
+        },
+        "actions": {
+          "request": "Deactivate account",
+          "requesting": "Deactivating...",
+          "cancel": "Cancel deactivation",
+          "cancelling": "Cancelling..."
+        },
+        "confirmRequest": {
+          "title": "Deactivate your account?",
+          "description": "You won't be able to undo this once the grace period ends. You can cancel at any time before the scheduled date.",
+          "confirm": "Deactivate account",
+          "cancel": "Keep my account"
+        },
+        "confirmCancel": {
+          "title": "Cancel deactivation?",
+          "description": "Your account will return to active status and your access will be preserved.",
+          "confirm": "Cancel deactivation",
+          "cancel": "Keep deactivation"
+        },
+        "successRequest": "Account deactivation requested. You'll receive an email with the details.",
+        "successCancel": "Deactivation cancelled. Your account is active again.",
+        "errors": {
+          "VALIDATION_ERROR": "Please check the form fields.",
+          "FORBIDDEN": "This action isn't allowed for your account.",
+          "CONFLICT": "The operation can't be completed in the current account state.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      },
+      "courses": {
+        "title": "My courses",
+        "description": "Courses you're enrolled in. Click on any course to open its detail.",
+        "empty": "You don't have any courses yet.",
+        "statuses": {
+          "active": "Active",
+          "completed": "Completed",
+          "paused": "Paused"
+        },
+        "progressLabel": "Progress",
+        "enrolledAt": "Enrolled: {date}",
+        "completedAt": "Completed: {date}",
+        "errors": {
+          "FORBIDDEN": "This section isn't available for your account.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      },
+      "billing": {
+        "title": "Billing",
+        "description": "Manage your subscription, payment methods, and invoices.",
+        "errors": {
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        },
+        "subscription": {
+          "title": "Subscription",
+          "description": "Your current plan and renewal date.",
+          "empty": "You don't have an active subscription yet.",
+          "planLabels": {
+            "free": "Free",
+            "premium": "Premium",
+            "enterprise": "Enterprise"
+          },
+          "statusLabels": {
+            "trialing": "Trial period",
+            "active": "Active",
+            "past_due": "Past due",
+            "canceled": "Canceled",
+            "expired": "Expired"
+          },
+          "fields": {
+            "currentPlan": "Current plan",
+            "status": "Status",
+            "startedAt": "Started at",
+            "currentPeriodEnd": "Your subscription will be canceled on {date}",
+            "cancelAtPeriodEnd": "Cancellation scheduled",
+            "pastDueWarning": "Your last payment failed. Please review your payment methods to keep your subscription active.",
+            "trialingNotice": "You're on a trial period. The plan will be charged when the trial ends."
+          },
+          "actions": {
+            "changePlan": "Change plan",
+            "changingPlan": "Changing...",
+            "cancelSubscription": "Cancel subscription",
+            "cancellingSubscription": "Cancelling...",
+            "planSelectLabel": "New plan"
+          },
+          "confirmChange": {
+            "title": "Change to {plan}?",
+            "description": "Your plan will be updated according to the contract: upgrades apply immediately with prorated billing, downgrades apply at the end of the current period.",
+            "confirm": "Change plan",
+            "cancel": "Keep current plan"
+          },
+          "confirmCancel": {
+            "title": "Cancel your subscription?",
+            "description": "Future charges will stop. You'll keep access until the end of the current billing period.",
+            "confirm": "Cancel subscription",
+            "cancel": "Keep subscription"
+          },
+          "successChange": "Subscription plan updated.",
+          "successCancel": "Subscription canceled. You'll keep access until the end of the period.",
+          "errors": {
+            "CONFLICT": "That's already your current plan.",
+            "PAYMENT_METHOD_REQUIRED": "You need a payment method to switch to premium.",
+            "FORBIDDEN": "This action isn't allowed for your account.",
+            "VALIDATION_ERROR": "Please check the selected plan.",
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        },
+        "paymentMethods": {
+          "title": "Payment methods",
+          "description": "Cards linked to your account. Removing the last card of an active premium subscription isn't allowed.",
+          "empty": "You don't have any payment methods yet.",
+          "fields": {
+            "brand": "Brand",
+            "last4": "Last 4 digits",
+            "expiration": "Expires {date}",
+            "unknownBrand": "Unknown card",
+            "unknownLast4": "••••"
+          },
+          "actions": {
+            "remove": "Remove",
+            "removing": "Removing..."
+          },
+          "confirmRemove": {
+            "title": "Remove this payment method?",
+            "description": "The card {card} will be removed from your account. You can add it again later.",
+            "confirm": "Remove card",
+            "cancel": "Keep card"
+          },
+          "successRemove": "Payment method removed.",
+          "errors": {
+            "NOT_FOUND": "This payment method no longer exists.",
+            "CONFLICT": "You can't remove the last payment method of an active premium subscription.",
+            "FORBIDDEN": "This action isn't allowed for your account.",
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        },
+        "invoices": {
+          "title": "Invoices",
+          "description": "Your billing history. Click download to open the signed link in a new tab.",
+          "empty": "You don't have any invoices yet.",
+          "fields": {
+            "issuedAt": "Issued {date}",
+            "amount": "Amount"
+          },
+          "statusLabels": {
+            "draft": "Draft",
+            "open": "Open",
+            "paid": "Paid",
+            "void": "Void",
+            "uncollectible": "Uncollectible"
+          },
+          "downloadLabel": "Download",
+          "errors": {
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        }
+      },
+      "personalData": {
+        "title": "Personal Data",
+        "description": "Manage your identity and contact information. Some fields may be locked.",
+        "fields": {
+          "firstName": {
+            "label": "First Name",
+            "placeholder": "Your first name"
+          },
+          "lastName": {
+            "label": "Last Name",
+            "placeholder": "Your last name"
+          },
+          "fieldsets": {
+            "identity": "Identity",
+            "contact": "Contact"
+          },
+          "documentType": {
+            "label": "Document Type"
+          },
+          "documentId": {
+            "label": "Document ID",
+            "placeholder": "e.g., 12345678"
+          },
+          "phone": {
+            "label": "Phone",
+            "placeholder": "e.g., +57 300 123 4567"
+          },
+          "country": {
+            "label": "Country"
+          },
+          "address": {
+            "label": "Address",
+            "placeholder": "123 Main St, Anytown"
+          }
+        },
+        "documentType": {
+          "passport": "Passport",
+          "dni": "National ID"
+        },
+        "emptyOption": "Not specified",
+        "locked": {
+          "title": "Identity Locked",
+          "description": "Your identity information cannot be changed. Contact support if you need to update it.",
+          "badge": "Locked"
+        },
+        "fieldsets": {
+          "identity": "Identity",
+          "contact": "Contact"
+        },
+        "actions": {
+          "save": "Save changes",
+          "saving": "Saving..."
+        },
+        "successMessage": "Personal data updated.",
+        "errors": {
+          "VALIDATION_ERROR": "Please check the form fields.",
+          "FORBIDDEN": "You don't have permission to modify this identity information.",
+          "CONFLICT": "Another user already exists with this information. Contact support.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      },
+      "preferences": {
+        "title": "Preferences",
+        "description": "Customize your StudySync experience. Changes are saved to your account.",
+        "fields": {
+          "language": {
+            "label": "Language",
+            "options": { "es": "Spanish", "en": "English" }
+          },
+          "theme": {
+            "label": "Theme",
+            "options": { "system": "System", "light": "Light", "dark": "Dark" }
+          },
+          "timezone": {
+            "label": "Timezone",
+            "placeholder": "e.g., America/Bogota"
+          }
+        },
+        "fieldsets": {
+          "general": "General",
+          "notifications": "Notifications",
+          "accessibility": "Accessibility"
+        },
+        "notifications": {
+          "title": "Notifications",
+          "email": { "label": "Email" },
+          "push": { "label": "Push notifications" },
+          "inApp": { "label": "In-app" }
+        },
+        "accessibility": {
+          "title": "Accessibility",
+          "reducedMotion": { "label": "Reduce motion" },
+          "highContrast": { "label": "High contrast" }
+        },
+        "notes": {
+          "theme": "We save this preference to your account. The header selector only changes the theme in this browser."
+        },
+        "actions": {
+          "save": "Save preferences",
+          "saving": "Saving..."
+        },
+        "successMessage": "Preferences saved.",
+        "errors": {
+          "VALIDATION_ERROR": "Please check the form fields.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      },
+      "privacy": {
+        "title": "Privacy",
+        "description": "Control who can see your information and contact you.",
+        "fields": {
+          "profileVisibility": { "label": "Profile visibility" },
+          "emailVisibility": { "label": "Email visibility" },
+          "phoneVisibility": { "label": "Phone visibility" },
+          "allowDirectMessages": {
+            "label": "Allow direct messages",
+            "description": "If disabled, other users won't be able to message you from your public profile."
+          }
+        },
+        "visibilityOptions": {
+          "everyone": "Everyone",
+          "authenticated": "Authenticated users only",
+          "nobody": "Nobody"
+        },
+        "actions": {
+          "save": "Save privacy",
+          "saving": "Saving..."
+        },
+        "successMessage": "Privacy settings saved.",
+        "errors": {
+          "VALIDATION_ERROR": "Please check the form fields.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      },
+      "security": {
+        "title": "Security",
+        "description": "Manage your password, email, two-factor authentication, and active sessions.",
+        "overview": {
+          "email": "Email address",
+          "emailVerified": "Verified",
+          "emailNotVerified": "Not verified",
+          "twoFactor": "Two-factor authentication (2FA)",
+          "twoFactorEnabled": "Enabled",
+          "twoFactorDisabled": "Disabled",
+          "twoFactorRequired": "Required for your role",
+          "sessions": "Active sessions",
+          "sessionsCount": "{count, plural, =0 {No sessions} =1 {# session} other {# sessions}}"
+        },
+        "changePassword": {
+          "title": "Cambiar contraseña",
+          "description": "Actualiza tu contraseña periódicamente para mantener tu cuenta segura.",
+          "fields": {
+            "currentPassword": {
+              "label": "Contraseña actual",
+              "placeholder": "Tu contraseña actual",
+              "show": "Mostrar contraseña",
+              "hide": "Ocultar contraseña"
+            },
+            "newPassword": {
+              "label": "Nueva contraseña",
+              "placeholder": "Crea una nueva contraseña",
+              "show": "Mostrar contraseña",
+              "hide": "Ocultar contraseña"
+            },
+            "confirmPassword": {
+              "label": "Confirmar nueva contraseña",
+              "placeholder": "Repite la nueva contraseña"
+            }
+          },
+          "actions": {
+            "save": "Cambiar contraseña",
+            "saving": "Actualizando..."
+          },
+          "successMessage": "Contraseña actualizada. Por seguridad, se cerraron tus otras sesiones.",
+          "errors": {
+            "VALIDATION_ERROR": "Revisa los campos del formulario.",
+            "INVALID_CURRENT_PASSWORD": "La contraseña actual no es correcta.",
+            "CONFLICT": "La nueva contraseña no puede ser igual a la actual.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "emailChange": {
+          "title": "Email address",
+          "description": "Change the email associated with your account. You'll receive a verification link at the new address.",
+          "fields": {
+            "newEmail": {
+              "label": "New email address",
+              "placeholder": "new@email.com"
+            }
+          },
+          "actions": {
+            "save": "Request change",
+            "saving": "Sending..."
+          },
+          "successMessage": "We sent a verification email. Check your new address to confirm the change.",
+          "errors": {
+            "VALIDATION_ERROR": "Check the email format.",
+            "EMAIL_TAKEN": "That email is already registered.",
+            "EMAIL_UNCHANGED": "That's your current email.",
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        },
+        "twoFactor": {
+          "title": "Two-factor authentication (2FA)",
+          "description": "Add an extra layer of security. You'll receive a code by email when needed.",
+          "enabled": "Enabled",
+          "disabled": "Disabled",
+          "required": "Required for your role",
+          "activate": "Enable 2FA",
+          "activating": "Enabling...",
+          "verifyingTitle": "Verify your email",
+          "verifyingDescription": "We sent a 6-digit code to your email. Enter it to complete activation.",
+          "codeLabel": "Verification code",
+          "codePlaceholder": "123456",
+          "verify": "Verify",
+          "verifying": "Verifying...",
+          "cancel": "Cancel",
+          "disable": "Disable 2FA",
+          "disabling": "Disabling...",
+          "disablingTitle": "Disable 2FA",
+          "disablingDescription": "Enter the 6-digit code you received by email to confirm the deactivation.",
+          "successEnabled": "2FA enabled successfully.",
+          "successDisabled": "2FA disabled.",
+          "errors": {
+            "VALIDATION_ERROR": "Check the code format.",
+            "INVALID_CODE": "The code is incorrect.",
+            "CONFLICT": "The operation isn't valid right now. Please try again.",
+            "FORBIDDEN": "You can't disable 2FA with your role.",
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        },
+        "sessions": {
+          "title": "Active sessions",
+          "description": "Devices where your account is signed in. Revoke any you don't recognize.",
+          "currentBadge": "Current session",
+          "unknownDevice": "Unknown device",
+          "unknownBrowser": "Unknown browser",
+          "unknownIp": "Unknown IP",
+          "lastActive": "Last active: {date}",
+          "revoke": "Revoke",
+          "revokeAllOthers": "Sign out other sessions",
+          "empty": "No other active sessions.",
+          "confirmRevokeTitle": "Revoke session",
+          "confirmRevokeDescription": "Are you sure you want to sign out {device}? You'll have to sign in again on that device.",
+          "confirmRevokeOthersTitle": "Sign out other sessions",
+          "confirmRevokeOthersDescription": "All sessions except the current one will be closed. You'll have to sign in again on those devices.",
+          "confirm": "Revoke",
+          "confirmOthers": "Sign out all",
+          "cancel": "Cancel",
+          "revoking": "Revoking...",
+          "successRevoked": "Session revoked.",
+          "successRevokedOthers": "Other sessions were closed.",
+          "errors": {
+            "NOT_FOUND": "The session no longer exists. Refresh the page.",
+            "SESSION_IS_CURRENT": "You can't revoke your current session from here.",
+            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+          }
+        },
+        "errors": {
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+          "sameAsCurrent": "La nueva contraseña no puede ser igual a la actual."
+        }
+      },
+      "profile": {
+        "title": "Profile",
+        "description": "Manage your bio, interests, and profile image.",
+        "fields": {
+          "bio": {
+            "title": {
+              "label": "Bio title",
+              "placeholder": "e.g., Engineering student"
+            },
+            "description": {
+              "label": "Description",
+              "placeholder": "Tell us about yourself…"
+            }
+          },
+          "interests": {
+            "label": "Interests",
+            "placeholder": "Add an interest and press Enter",
+            "addButton": "Add",
+            "removeAria": "Remove interest"
+          },
+          "image": {
+            "label": "Profile image",
+            "emptyOption": "No image"
+          }
+        },
+        "actions": {
+          "save": "Save profile",
+          "saving": "Saving..."
+        },
+        "successMessage": "Profile updated.",
+        "errors": {
+          "VALIDATION_ERROR": "Please check the form fields.",
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
+        }
+      }
+    }
+  }
+}

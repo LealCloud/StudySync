@@ -1,0 +1,1312 @@
+{
+  "common": {
+    "loading": "Cargando…",
+    "error": "Algo salió mal",
+    "retry": "Reintentar",
+    "close": "Cerrar"
+  },
+  "header": {
+    "navLabel": "Navegación principal",
+    "links": {
+      "home": "Inicio",
+      "subscription": "Suscripción",
+      "contact": "Contacto"
+    },
+    "login": "Iniciar sesión",
+    "register": "Crear cuenta",
+    "language": "Idioma",
+    "theme": "Tema",
+    "openMenu": "Abrir menú de navegación",
+    "closeMenu": "Cerrar menú de navegación"
+  },
+  "languageToggle": {
+    "switchTo": "Cambiar idioma a {language}",
+    "es": "español",
+    "en": "inglés"
+  },
+  "logo": {
+    "tagline": "Aprende. Conecta. Avanza."
+  },
+  "themeToggle": {
+    "toLight": "Cambiar a modo claro",
+    "toDark": "Cambiar a modo oscuro"
+  },
+  "pages": {
+    "home": {
+      "title": "Bienvenido",
+      "subtitle": "Aprende. Conecta. Avanza.",
+      "cta": "Comenzar"
+    },
+    "subscription": {
+      "title": "Elige tu plan",
+      "monthly": "Mensual",
+      "yearly": "Anual"
+    },
+    "contact": {
+      "title": "Contáctanos",
+      "form": {
+        "name": "Nombre",
+        "email": "Correo electrónico",
+        "message": "Mensaje",
+        "submit": "Enviar"
+      }
+    }
+  },
+  "footer": {
+    "description": "Plataforma educativa moderna construida para potenciar el aprendizaje y la colaboración en línea.",
+    "sections": {
+      "platform": "Plataforma",
+      "community": "Comunidad",
+      "support": "Soporte"
+    },
+    "links": {
+      "courses": "Cursos",
+      "learningPaths": "Rutas de Aprendizaje",
+      "pricing": "Precios",
+      "about": "Acerca de",
+      "blog": "Blog",
+      "forum": "Foro",
+      "helpCenter": "Centro de Ayuda",
+      "contact": "Contacto",
+      "status": "Estado"
+    },
+    "legal": {
+      "privacy": "Privacidad",
+      "terms": "Términos"
+    },
+    "copyright": "© 2026 StudySync. Todos los derechos reservados."
+  },
+  "home": {
+    "hero": {
+      "eyebrow": "Tu ecosistema de estudio inteligente",
+      "title": {
+        "line1": "Estudia mejor.",
+        "line2": "Avanza con propósito."
+      },
+      "description": "Organiza tus cursos, únete a salas colaborativas, mejora tu concentración y recibe apoyo personalizado desde una sola plataforma.",
+      "cta": {
+        "primary": "Comenzar gratis",
+        "secondary": "Explorar la plataforma"
+      },
+      "benefits": {
+        "noCreditCard": "No requiere tarjeta de crédito",
+        "instantAccess": "Acceso inmediato",
+        "forEveryone": "Para estudiantes y profesores"
+      },
+      "dashboardPreview": {
+        "status": "Plataforma activa",
+        "welcome": "Bienvenido de nuevo",
+        "progressTitle": "Tu progreso académico",
+        "initials": "RV",
+        "stats": {
+          "timeStudied": "Tiempo estudiado",
+          "weeklyGoal": "Meta semanal",
+          "activeRooms": "Salas activas"
+        },
+        "weeklyProgress": {
+          "title": "Progreso semanal",
+          "value": "18 horas de 22",
+          "ariaLabel": "Gráfico de barras del progreso semanal. La altura de las barras representa las horas estudiadas cada día, totalizando 18 horas de 22."
+        },
+        "nextSession": {
+          "title": "Próxima sesión",
+          "course": "React avanzado",
+          "time": "Hoy · 4:30 p. m."
+        },
+        "streak": {
+          "title": "Racha actual",
+          "value": "12 días"
+        },
+        "aiCoach": {
+          "title": "IA Coach",
+          "value": "Plan actualizado"
+        }
+      },
+      "trusted": {
+        "title": "Una plataforma diseñada para potenciar",
+        "items": {
+          "focus": "Concentración",
+          "collaboration": "Colaboración",
+          "organization": "Organización",
+          "progress": "Progreso"
+        }
+      }
+    },
+    "features": {
+      "eyebrow": "Aprendizaje con propósito",
+      "title": "Todo lo que necesitas para estudiar mejor",
+      "description": "StudySync combina organización, colaboración y tecnología para convertir cada sesión de estudio en progreso real.",
+      "items": {
+        "focus": {
+          "title": "Enfoque inteligente",
+          "description": "Organiza tus sesiones, reduce distracciones y construye hábitos de estudio consistentes."
+        },
+        "collaboration": {
+          "title": "Aprendizaje colaborativo",
+          "description": "Estudia junto a compañeros, profesores y comunidades académicas en tiempo real."
+        },
+        "progress": {
+          "title": "Progreso medible",
+          "description": "Consulta estadísticas, metas, actividad y evolución desde un mismo espacio."
+        }
+      }
+    },
+    "studyRooms": {
+      "eyebrow": "Salas de estudio",
+      "title": "Aprender acompañado cambia los resultados",
+      "description": "Únete a sesiones colaborativas, comparte recursos y mantén el ritmo junto a personas con tus mismos objetivos.",
+      "sessionProgress": "Progreso de la sesión",
+      "participants": "participantes",
+      "status": {
+        "active": "Activa",
+        "comingSoon": "Próximamente"
+      },
+      "rooms": {
+        "react": {
+          "title": "React y JavaScript",
+          "subject": "Desarrollo frontend"
+        },
+        "calculus": {
+          "title": "Cálculo diferencial",
+          "subject": "Matemáticas"
+        },
+        "databases": {
+          "title": "Bases de datos",
+          "subject": "SQL y modelado"
+        }
+      },
+      "aside": {
+        "eyebrow": "Sesiones en tiempo real",
+        "title": "Convierte el estudio en una experiencia compartida",
+        "description": "Crea salas públicas o privadas, activa sesiones de Pomodoro, conversa con tu equipo y consulta materiales sin abandonar la sesión.",
+        "benefits": {
+          "chat": "Chat y colaboración en vivo",
+          "pomodoro": "Temporizador Pomodoro compartido",
+          "resources": "Gestión de recursos y participantes"
+        },
+        "cta": "Explorar salas"
+      }
+    },
+    "benefits": {
+      "eyebrow": "Una experiencia completa",
+      "title": "Menos herramientas. Más concentración.",
+      "description": "StudySync reúne las funciones esenciales para que puedas organizar, estudiar, colaborar y medir tu evolución.",
+      "items": {
+        "academicOrganization": {
+          "title": "Organización académica",
+          "description": "Planifica cursos, sesiones, tareas y eventos desde un calendario centralizado."
+        },
+        "pomodoro": {
+          "title": "Pomodoro integrado",
+          "description": "Gestiona periodos de concentración y descanso con métricas claras."
+        },
+        "aiCoach": {
+          "title": "Coach académico con IA",
+          "description": "Recibe recomendaciones basadas en tus metas, actividad y progreso."
+        },
+        "communication": {
+          "title": "Comunicación directa",
+          "description": "Mantén conversaciones con profesores, compañeros y grupos de estudio."
+        }
+      },
+      "platform": {
+        "eyebrow": "Plataforma confiable",
+        "title": "Tu información y tu progreso siempre protegidos",
+        "description": "StudySync integra controles de privacidad, seguridad de cuenta y configuraciones personalizadas para cada usuario.",
+        "availability": "Disponibilidad",
+        "privacy": "Control de privacidad"
+      }
+    },
+    "testimonials": {
+      "eyebrow": "Historias de progreso",
+      "title": "Personas que ya estudian de otra manera",
+      "description": "Experiencias de estudiantes y profesores que encontraron una forma más organizada de avanzar.",
+      "items": {
+        "lucia": {
+          "name": "Lucía Martínez",
+          "role": "Estudiante de desarrollo web",
+          "quote": "StudySync me ayudó a organizar mis sesiones y avanzar en proyectos que antes siempre dejaba incompletos."
+        },
+        "andres": {
+          "name": "Andrés Gómez",
+          "role": "Estudiante universitario",
+          "quote": "Las salas colaborativas y el Pomodoro compartido hicieron que estudiar fuera mucho más constante."
+        },
+        "camila": {
+          "name": "Camila Rodríguez",
+          "role": "Profesora de tecnología",
+          "quote": "Ahora puedo acompañar mejor a mis estudiantes, organizar cursos y revisar su progreso desde una sola plataforma."
+        }
+      }
+    },
+    "cta": {
+      "eyebrow": "Tu siguiente sesión comienza aquí",
+      "title": "Construye hoy una mejor forma de aprender",
+      "description": "Crea tu cuenta y empieza a organizar tus cursos, salas, sesiones de concentración y objetivos académicos.",
+      "primary": "Crear cuenta gratis",
+      "secondary": "Ya tengo una cuenta"
+    }
+  },
+  "subscription": {
+    "eyebrow": "Planes y precios",
+    "title": "Elige el plan que impulsa tu forma de estudiar",
+    "description": "Desde tus primeras sesiones de estudio hasta la gestión de toda una institución: StudySync crece contigo.",
+    "recommended": "Recomendado",
+    "plans": {
+      "free": {
+        "name": "Free",
+        "description": "Ideal para estudiantes que quieren empezar o probar StudySync de forma independiente.",
+        "price": {
+          "value": "$0",
+          "suffix": "COP / mes"
+        },
+        "features": [
+          "Acceso a salas de estudio comunitarias",
+          "Calendario personal de estudio",
+          "Mensajería básica con compañeros",
+          "Panel de progreso semanal"
+        ],
+        "cta": "Comenzar gratis"
+      },
+      "premium": {
+        "name": "Premium",
+        "description": "Para estudiantes avanzados y profesionales independientes que buscan constancia y resultados.",
+        "price": {
+          "value": "$49.900",
+          "suffix": "COP / mes"
+        },
+        "features": [
+          "Todo lo incluido en el plan Free",
+          "Salas de estudio privadas y videollamadas sin límite",
+          "Asistente de estudio con IA",
+          "Estadísticas avanzadas de rendimiento",
+          "Planificación inteligente de tareas y recordatorios",
+          "Soporte prioritario"
+        ],
+        "cta": "Empezar con Premium",
+        "note": "Activa Premium desde tu panel una vez hayas iniciado sesión."
+      },
+      "enterprise": {
+        "name": "Enterprise",
+        "description": "Diseñado para empleados e instituciones que necesitan gestionar el aprendizaje a gran escala.",
+        "price": {
+          "value": "A medida",
+          "suffix": "Precio corporativo"
+        },
+        "features": [
+          "Todo lo incluido en el plan Premium",
+          "Acceso a cursos exclusivos y rutas de aprendizaje corporativas",
+          "Gestión de múltiples cursos, profesores y estudiantes",
+          "Roles y permisos administrativos",
+          "Reportes institucionales de avance",
+          "Onboarding e integración personalizados",
+          "Soporte dedicado con acuerdo de servicio (SLA)"
+        ],
+        "cta": "Contactar al equipo"
+      }
+    },
+    "pricingNote": "Todos los precios están expresados en pesos colombianos (COP)."
+  },
+  "contact": {
+    "page": {
+      "eyebrow": "Contacto",
+      "title": {
+        "before": "Hablemos de",
+        "highlight": "tu experiencia de estudio"
+      },
+      "description": "¿Tienes dudas sobre StudySync, sobre nuestros planes o quieres llevarlo a tu institución? Escríbenos y el equipo te acompañará en cada paso.",
+      "channels": {
+        "email": {
+          "title": "Soporte por correo",
+          "description": "soporte@studysync.co"
+        },
+        "hours": {
+          "title": "Horario de atención",
+          "description": "Lunes a viernes, de 8:00 a. m. a 6:00 p. m. (hora de Colombia)"
+        },
+        "location": {
+          "title": "Ubicación",
+          "description": "Colombia · atención en línea para estudiantes e instituciones"
+        }
+      }
+    },
+    "form": {
+      "title": "Envíanos un mensaje",
+      "description": "Completa el formulario y te responderemos lo antes posible.",
+      "legend": "Formulario de contacto",
+      "fields": {
+        "name": {
+          "label": "Nombre completo",
+          "placeholder": "Tu nombre"
+        },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "tucorreo@ejemplo.com"
+        },
+        "contactNumber": {
+          "label": "Teléfono de contacto",
+          "optional": "opcional",
+          "placeholder": "300 123 4567"
+        },
+        "subject": {
+          "label": "Asunto",
+          "placeholder": "¿Sobre qué quieres hablar?"
+        },
+        "message": {
+          "label": "Mensaje",
+          "placeholder": "Cuéntanos en qué podemos ayudarte…"
+        }
+      },
+      "success": {
+        "title": "¡Mensaje enviado!",
+        "description": "Gracias por escribirnos. Revisaremos tu mensaje y te responderemos al correo que nos indicaste.",
+        "sendAnother": "Enviar otro mensaje"
+      },
+      "error": {
+        "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo.",
+        "sendFailed": "No pudimos enviar tu mensaje. Inténtalo de nuevo en unos minutos.",
+        "rateLimited": "Has enviado demasiados mensajes. Inténtalo de nuevo más tarde.",
+        "invalidData": "Revisa los datos del formulario e inténtalo de nuevo.",
+        "serverError": "Hubo un problema en nuestro servidor. Inténtalo más tarde.",
+        "unavailable": "No pudimos conectar con el servicio de contacto. Inténtalo en unos minutos."
+      },
+      "actions": {
+        "sending": "Enviando…",
+        "submit": "Enviar mensaje"
+      }
+    }
+  },
+  "auth": {
+    "login": {
+      "page": {
+        "eyebrow": "Bienvenido de nuevo",
+        "title": {
+          "before": "Continúa tu ruta.",
+          "highlight": "Retoma el control."
+        },
+        "description": "Accede a tus salas de estudio, revisa tus cursos pendientes y mantén tu rendimiento al día en StudySync.",
+        "cards": {
+          "rooms": {
+            "title": "Salas activas",
+            "description": "Retoma la colaboración con tus compañeros."
+          },
+          "security": {
+            "title": "Acceso seguro",
+            "description": "Tus credenciales y datos están protegidos."
+          }
+        }
+      },
+      "form": {
+        "eyebrow": "Bienvenido de nuevo",
+        "title": "Inicia sesión",
+        "description": "Ingresa tus datos para continuar a tu espacio de trabajo.",
+        "fields": {
+          "email": {
+            "label": "Correo electrónico",
+            "placeholder": "nombre@correo.com"
+          },
+          "password": {
+            "label": "Contraseña",
+            "placeholder": "Ingresa tu contraseña",
+            "show": "Mostrar contraseña",
+            "hide": "Ocultar contraseña"
+          }
+        },
+        "forgotPassword": "¿Olvidaste tu contraseña?",
+        "actions": {
+          "submit": "Iniciar sesión",
+          "submitting": "Iniciando sesión..."
+        },
+        "success": "Sesión iniciada correctamente. Redirigiendo...",
+        "errors": {
+          "invalidCredentials": "Correo electrónico o contraseña incorrectos.",
+          "unexpected": "No se pudo iniciar sesión. Inténtalo de nuevo.",
+          "rateLimited": "Demasiados intentos. Inténtalo de nuevo más tarde.",
+          "unavailable": "El servicio de inicio de sesión no está disponible. Inténtalo más tarde."
+        },
+        "footer": {
+          "prompt": "¿Todavía no tienes una cuenta?",
+          "link": "Crear cuenta"
+        }
+      }
+    },
+    "register": {
+      "page": {
+        "eyebrow": "Empieza hoy",
+        "title": {
+          "before": "Crea tu espacio.",
+          "highlight": "Aprende sin límites."
+        },
+        "description": "Únete a StudySync y organiza tus cursos, salas de estudio, actividades y progreso desde una sola plataforma.",
+        "cards": {
+          "community": {
+            "title": "Comunidad activa",
+            "description": "Conecta con estudiantes y profesores."
+          },
+          "security": {
+            "title": "Cuenta protegida",
+            "description": "Tus datos y avances permanecen seguros."
+          }
+        }
+      },
+      "form": {
+        "eyebrow": "Nueva cuenta",
+        "title": "Regístrate",
+        "description": "Completa tus datos para empezar a utilizar StudySync.",
+        "fields": {
+          "firstName": {
+            "label": "Nombre",
+            "placeholder": "Escribe tu nombre"
+          },
+          "lastName": {
+            "label": "Apellido",
+            "placeholder": "Escribe tu apellido"
+          },
+          "email": {
+            "label": "Correo electrónico",
+            "placeholder": "nombre@correo.com"
+          },
+          "password": {
+            "label": "Contraseña",
+            "placeholder": "Crea una contraseña",
+            "show": "Mostrar contraseña",
+            "hide": "Ocultar contraseña"
+          },
+          "confirmPassword": {
+            "label": "Confirmar contraseña",
+            "placeholder": "Confirma tu contraseña"
+          }
+        },
+        "terms": "Acepto los términos y la política de privacidad.",
+        "success": "Usuario registrado correctamente. Redirigiendo...",
+        "actions": {
+          "submit": "Crear cuenta",
+          "submitting": "Registrando..."
+        },
+        "errors": {
+          "rateLimited": "Demasiadas solicitudes. Inténtalo de nuevo más tarde.",
+          "invalidData": "Revisa los datos del formulario e inténtalo de nuevo.",
+          "serverError": "No se pudo registrar el usuario. Inténtalo de nuevo.",
+          "unavailable": "No fue posible conectar con el servicio. Inténtalo de nuevo más tarde.",
+          "emailTaken": "Este correo ya está registrado."
+        },
+        "footer": {
+          "prompt": "¿Ya tienes una cuenta?",
+          "link": "Iniciar sesión"
+        }
+      }
+    },
+    "apiErrors": {
+      "rateLimited": "Demasiadas solicitudes. Inténtalo de nuevo más tarde.",
+      "invalidData": "Revisa los datos e inténtalo de nuevo.",
+      "serverError": "Ocurrió un problema en el servidor. Inténtalo más tarde.",
+      "unavailable": "No fue posible conectar con el servicio. Inténtalo más tarde.",
+      "invalidToken": "Este enlace no es válido o ya expiró. Solicita uno nuevo."
+    },
+    "resetPassword": {
+      "page": {
+        "eyebrow": "Un último paso",
+        "title": {
+          "before": "Asegura tu cuenta.",
+          "highlight": "Elige una nueva llave."
+        },
+        "description": "Define una contraseña nueva para volver a tus salas de estudio, cursos y progreso en StudySync.",
+        "cards": {
+          "link": {
+            "title": "Enlace de un solo uso",
+            "description": "Este enlace deja de funcionar una vez que actualices tu contraseña."
+          },
+          "security": {
+            "title": "Acceso seguro",
+            "description": "Tus credenciales y datos están protegidos."
+          }
+        }
+      },
+      "form": {
+        "successTitle": "Contraseña actualizada",
+        "success": "Tu contraseña se actualizó correctamente. Te llevaremos a iniciar sesión en un momento.",
+        "successButton": "Ir a iniciar sesión",
+        "eyebrow": "Nueva contraseña",
+        "title": "Restablece tu contraseña",
+        "description": "Crea una nueva contraseña segura para tu cuenta de StudySync.",
+        "legend": "Formulario de restablecimiento de contraseña",
+        "fields": {
+          "password": {
+            "label": "Nueva contraseña",
+            "placeholder": "Crea una nueva contraseña",
+            "show": "Mostrar contraseña",
+            "hide": "Ocultar contraseña"
+          },
+          "confirmPassword": {
+            "label": "Confirmar contraseña",
+            "placeholder": "Repite tu nueva contraseña"
+          }
+        },
+        "requestLink": "Solicitar un nuevo enlace",
+        "validating": "Validando el enlace de recuperación...",
+        "validationError": "No pudimos validar el enlace. Inténtalo de nuevo.",
+        "retryValidation": "Reintentar validación",
+        "actions": {
+          "submit": "Restablecer contraseña",
+          "submitting": "Actualizando..."
+        },
+        "footer": {
+          "prompt": "¿Recordaste tu contraseña?",
+          "link": "Iniciar sesión"
+        },
+        "errors": {
+          "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      }
+    },
+    "forgotPassword": {
+      "title": "¿Olvidaste tu contraseña?",
+      "description": "Ingresa tu correo electrónico y te enviaremos las instrucciones para restablecerla.",
+      "label": "Correo electrónico",
+      "placeholder": "nombre@correo.com",
+      "legend": "Formulario de recuperación de contraseña",
+      "successTitle": "Revisa tu correo",
+      "success": "Si el correo está registrado, recibirás instrucciones para restablecer tu contraseña.",
+      "close": "Cerrar",
+      "submit": "Enviar instrucciones",
+      "submitting": "Enviando...",
+      "back": "Volver a inicio de sesión",
+      "errors": {
+        "rateLimited": "Demasiadas solicitudes. Inténtalo de nuevo más tarde.",
+        "invalidData": "Ingresa un correo electrónico válido.",
+        "serverError": "No pudimos procesar la solicitud. Inténtalo de nuevo.",
+        "unavailable": "El servicio no está disponible. Inténtalo más tarde."
+      },
+      "unexpected": "Ocurrió un error inesperado. Inténtalo de nuevo."
+    }
+  },
+  "Validation": {
+    "firstName": {
+      "required": "El nombre es requerido",
+      "min": "El nombre debe tener al menos 2 caracteres",
+      "max": "El nombre no puede exceder los 100 caracteres",
+      "invalid": "El nombre solo puede contener letras, espacios, apóstrofes, guiones y puntos"
+    },
+    "lastName": {
+      "required": "El apellido es requerido",
+      "min": "El apellido debe tener al menos 2 caracteres",
+      "max": "El apellido no puede exceder los 100 caracteres",
+      "invalid": "El apellido solo puede contener letras, espacios, apóstrofes, guiones y puntos"
+    },
+    "email": {
+      "required": "El correo electrónico es requerido",
+      "max": "El correo no puede exceder los 254 caracteres",
+      "invalid": "Correo electrónico inválido",
+      "invalidInput": "Ingresa un correo electrónico válido"
+    },
+    "password": {
+      "required": "La contraseña es requerida",
+      "min": "La contraseña debe tener al menos 6 caracteres",
+      "max": "La contraseña no puede exceder los 15 caracteres",
+      "invalid": "La contraseña debe contener al menos una letra minúscula, una mayúscula y un carácter especial"
+    },
+    "confirmPassword": {
+      "required": "Debes confirmar tu contraseña",
+      "mismatch": "Las contraseñas no coinciden"
+    },
+    "resetPassword": {
+      "invalidToken": "El enlace de restablecimiento no es válido"
+    },
+    "contact": {
+      "name": {
+        "min": "El nombre debe tener al menos 2 caracteres",
+        "max": "El nombre no puede exceder los 100 caracteres",
+        "invalid": "El nombre solo puede contener letras, espacios, apóstrofes, guiones y puntos"
+      },
+      "phone": {
+        "invalid": "El número de teléfono no es válido"
+      },
+      "subject": {
+        "min": "El asunto debe tener al menos 5 caracteres",
+        "max": "El asunto no puede exceder los 150 caracteres",
+        "invalid": "El asunto contiene caracteres no permitidos"
+      },
+      "message": {
+        "min": "El mensaje debe tener al menos 20 caracteres",
+        "max": "El mensaje no puede exceder los 2000 caracteres",
+        "invalid": "El mensaje contiene caracteres no permitidos"
+      }
+    },
+    "documentType": {
+      "invalid": "Selecciona un tipo de documento válido"
+    },
+    "documentId": {
+      "min": "El número de documento no puede estar vacío",
+      "max": "El número de documento no puede exceder los 30 caracteres",
+      "invalid": "El número de documento solo puede contener letras, números y guiones"
+    },
+    "phone": {
+      "invalid": "El teléfono debe tener un formato internacional válido (ej: +573001234567)"
+    },
+    "country": {
+      "invalid": "Selecciona un país válido"
+    },
+    "address": {
+      "min": "La dirección no puede estar vacía",
+      "max": "La dirección no puede exceder los 200 caracteres",
+      "invalid": "La dirección contiene caracteres no permitidos"
+    },
+    "preferences": {
+      "language": {
+        "invalid": "Selecciona un idioma válido"
+      },
+      "theme": {
+        "invalid": "Selecciona un tema válido"
+      },
+      "timezone": {
+        "invalid": "Selecciona una zona horaria válida"
+      },
+      "notifications": {
+        "email": { "invalid": "Valor inválido" },
+        "push": { "invalid": "Valor inválido" },
+        "inApp": { "invalid": "Valor inválido" }
+      },
+      "accessibility": {
+        "reducedMotion": { "invalid": "Valor inválido" },
+        "highContrast": { "invalid": "Valor inválido" }
+      }
+    },
+    "privacy": {
+      "visibility": {
+        "invalid": "Selecciona una opción de visibilidad válida"
+      },
+      "allowDirectMessages": {
+        "invalid": "Valor inválido"
+      }
+    },
+    "bio": {
+      "title": {
+        "min": "El título de la biografía no puede estar vacío",
+        "max": "El título no puede exceder los 100 caracteres"
+      },
+      "description": {
+        "min": "La descripción de la biografía no puede estar vacía",
+        "max": "La descripción no puede exceder los 500 caracteres"
+      }
+    },
+    "interests": {
+      "invalid": "Formato de intereses inválido",
+      "minLength": "Cada interés debe tener al menos 1 carácter",
+      "maxLength": "Cada interés no puede exceder los 40 caracteres",
+      "maxCount": "No puedes añadir más de 20 intereses"
+    },
+    "image": {
+      "invalid": "La imagen debe ser una URL válida o un data URI base64"
+    },
+    "security": {
+      "emailChange": {
+        "sameAsCurrent": "Es tu correo actual."
+      },
+      "twoFactor": {
+        "codeInvalid": "El código debe tener exactamente 6 dígitos."
+      }
+    },
+    "acceptedTerms": {
+      "required": "Debes aceptar los términos y condiciones"
+    }
+  },
+  "dashboard": {
+    "sidebar": {
+      "navigationLabel": "Navegación principal",
+      "showMenu": "Mostrar menú",
+      "hideMenu": "Ocultar menú",
+      "more": "Más",
+      "moreOptions": "Más opciones",
+      "theme": "Tema",
+      "signOut": "Cerrar sesión",
+      "currentPlan": "Plan actual",
+      "plans": {
+        "free": {
+          "name": "Plan Free",
+          "description": "Accede a las funciones básicas de la plataforma."
+        },
+        "premium": {
+          "name": "Plan Premium",
+          "description": "Disfrutas de todas las funciones avanzadas."
+        },
+        "enterprise": {
+          "name": "Plan Enterprise",
+          "description": "Acceso completo con soporte prioritario."
+        }
+      },
+      "actions": {
+        "upgrade": "Mejorar plan",
+        "manage": "Gestionar plan"
+      },
+      "guestName": "Usuario",
+      "guestEmail": "usuario@studysync.com"
+    },
+    "navigation": {
+      "home": "Inicio",
+      "panel": {
+        "admin": "Panel del administrador",
+        "professor": "Panel del profesor",
+        "student": "Panel del estudiante"
+      },
+      "roles": {
+        "admin": "Administrador",
+        "professor": "Profesor",
+        "student": "Estudiante"
+      },
+      "items": {
+        "courses": "Cursos",
+        "studyRooms": "Salas de estudio",
+        "calendar": "Calendario",
+        "messages": "Mensajes",
+        "academicManagement": "Gestión académica",
+        "pomodoro": "Pomodoro",
+        "students": "Estudiantes",
+        "users": "Usuarios",
+        "professors": "Profesores",
+        "academicCenter": "Centro académico",
+        "rooms": "Salas",
+        "reportsAudit": "Informes y auditoría"
+      }
+    },
+    "userSettings": {
+      "metadata": {
+        "title": "Mi perfil | StudySync",
+        "description": "Gestiona tu perfil, foto y requisitos para certificados."
+      },
+      "page": {
+        "title": "Configuración de la cuenta",
+        "description": "Gestiona tu perfil, seguridad y preferencias.",
+        "fallbackName": "Usuario",
+        "fallbackEmail": "No disponible"
+      },
+      "avatar": {
+        "title": "Foto de perfil",
+        "description": "Se muestra en tus salas de estudio, tus mensajes y el menú lateral.",
+        "changeAria": "Cambiar foto de perfil",
+        "uploadAria": "Subir foto de perfil",
+        "save": "Guardar foto",
+        "saving": "Guardando...",
+        "cancel": "Cancelar",
+        "change": "Cambiar foto",
+        "upload": "Subir foto",
+        "remove": "Eliminar",
+        "limit": "JPG, PNG o WEBP · máx. 4 MB",
+        "previewTitle": "Así se ve en StudySync",
+        "visibility": "Solo visible para usuarios con sesión iniciada en StudySync.",
+        "errors": {
+          "unsupportedType": "Formato no soportado. Usa JPG, PNG o WEBP.",
+          "fileTooLarge": "La imagen no puede superar los 4 MB.",
+          "unauthenticated": "Tu sesión expiró. Inicia sesión de nuevo.",
+          "serverError": "No se pudo guardar la foto. Inténtalo de nuevo.",
+          "invalidRequest": "No se pudo leer el archivo enviado.",
+          "missingFile": "Selecciona una imagen para continuar.",
+          "serviceUnavailable": "El servicio de imágenes no está disponible. Inténtalo más tarde.",
+          "uploadFailed": "No se pudo guardar la foto. Inténtalo de nuevo.",
+          "removeFailed": "No se pudo eliminar la foto. Inténtalo de nuevo."
+        },
+        "saved": "Foto de perfil actualizada.",
+        "removed": "Foto de perfil eliminada.",
+        "sidebarPreview": "Así se ve en el menú lateral"
+      },
+      "certificates": {
+        "title": "Mis certificados",
+        "description": "Certificados que has obtenido. Haz clic en descargar para abrir el enlace firmado en una nueva pestaña.",
+        "empty": "Aún no has obtenido ningún certificado.",
+        "downloadLabel": "Descargar",
+        "issuedAt": "Emitido: {date}",
+        "certificateNumber": "Certificado n.º {number}",
+        "errors": {
+          "FORBIDDEN": "Esta sección no está disponible para tu cuenta.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        },
+        "eligibility": {
+          "title": "Requisitos para certificados",
+          "description": "Debes completar estos puntos de tu perfil para poder generar certificados.",
+          "eligible": "Cumples",
+          "pending": "Pendiente",
+          "avatar": "Foto de perfil cargada",
+          "personalData": "Datos personales completos",
+          "verified": "Cuenta verificada",
+          "comingSoon": "Próximamente"
+        }
+      },
+      "account": {
+        "title": "Cuenta",
+        "description": "Gestiona el ciclo de vida de tu cuenta. La desactivación es reversible hasta la fecha programada.",
+        "statuses": {
+          "active": {
+            "title": "Cuenta activa",
+            "description": "Puedes desactivar tu cuenta. Tendrás un período de gracia para cancelar antes de que se cierre definitivamente."
+          },
+          "pending_deactivation": {
+            "title": "Desactivación programada",
+            "description": "Tu cuenta se cerrará el {date}. Puedes cancelar la desactivación hasta esa fecha."
+          },
+          "suspended": {
+            "title": "Cuenta suspendida",
+            "description": "Tu cuenta fue suspendida por un administrador. Contacta a soporte para más información."
+          },
+          "inactive": {
+            "title": "Cuenta inactiva",
+            "description": "Esta cuenta fue cerrada. Si crees que es un error, por favor contacta a soporte."
+          }
+        },
+        "actions": {
+          "request": "Desactivar cuenta",
+          "requesting": "Desactivando...",
+          "cancel": "Cancelar desactivación",
+          "cancelling": "Cancelando..."
+        },
+        "confirmRequest": {
+          "title": "¿Desactivar tu cuenta?",
+          "description": "No podrás revertirlo cuando el período de gracia termine. Puedes cancelar en cualquier momento antes de la fecha programada.",
+          "confirm": "Desactivar cuenta",
+          "cancel": "Conservar mi cuenta"
+        },
+        "confirmCancel": {
+          "title": "¿Cancelar la desactivación?",
+          "description": "Tu cuenta volverá al estado activo y tu acceso se mantendrá.",
+          "confirm": "Cancelar desactivación",
+          "cancel": "Mantener desactivación"
+        },
+        "successRequest": "Desactivación solicitada. Recibirás un correo con los detalles.",
+        "successCancel": "Desactivación cancelada. Tu cuenta está activa de nuevo.",
+        "errors": {
+          "VALIDATION_ERROR": "Revisa los campos del formulario.",
+          "FORBIDDEN": "Esta acción no está permitida para tu cuenta.",
+          "CONFLICT": "La operación no se puede completar en el estado actual de la cuenta.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      },
+      "courses": {
+        "title": "Mis cursos",
+        "description": "Cursos en los que estás inscrito. Haz clic en cualquiera para abrir su detalle.",
+        "empty": "Aún no tienes cursos inscritos.",
+        "statuses": {
+          "active": "Activo",
+          "completed": "Completado",
+          "paused": "En pausa"
+        },
+        "progressLabel": "Progreso",
+        "enrolledAt": "Inscrito: {date}",
+        "completedAt": "Completado: {date}",
+        "errors": {
+          "FORBIDDEN": "Esta sección no está disponible para tu cuenta.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      },
+      "billing": {
+        "title": "Facturación",
+        "description": "Gestiona tu suscripción, métodos de pago y facturas.",
+        "errors": {
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        },
+        "subscription": {
+          "title": "Suscripción",
+          "description": "Tu plan actual y fecha de renovación.",
+          "empty": "Aún no tienes una suscripción activa.",
+          "planLabels": {
+            "free": "Gratis",
+            "premium": "Premium",
+            "enterprise": "Empresarial"
+          },
+          "statusLabels": {
+            "trialing": "Período de prueba",
+            "active": "Activa",
+            "past_due": "Pago pendiente",
+            "canceled": "Cancelada",
+            "expired": "Expirada"
+          },
+          "fields": {
+            "currentPlan": "Plan actual",
+            "status": "Estado",
+            "startedAt": "Inicio",
+            "currentPeriodEnd": "Tu suscripción se cancelará el {date}",
+            "cancelAtPeriodEnd": "Cancelación programada",
+            "pastDueWarning": "Tu último pago falló. Revisa tus métodos de pago para mantener la suscripción activa.",
+            "trialingNotice": "Estás en período de prueba. El plan se cobrará al terminar la prueba."
+          },
+          "actions": {
+            "changePlan": "Cambiar plan",
+            "changingPlan": "Cambiando...",
+            "cancelSubscription": "Cancelar suscripción",
+            "cancellingSubscription": "Cancelando...",
+            "planSelectLabel": "Nuevo plan"
+          },
+          "confirmChange": {
+            "title": "¿Cambiar a {plan}?",
+            "description": "Tu plan se actualizará según el contrato: los upgrades aplican de inmediato con cobro prorrateado, los downgrades aplican al final del período actual.",
+            "confirm": "Cambiar plan",
+            "cancel": "Conservar plan actual"
+          },
+          "confirmCancel": {
+            "title": "¿Cancelar tu suscripción?",
+            "description": "Se detendrán los cobros futuros. Mantendrás el acceso hasta el final del período de facturación actual.",
+            "confirm": "Cancelar suscripción",
+            "cancel": "Mantener suscripción"
+          },
+          "successChange": "Plan de suscripción actualizado.",
+          "successCancel": "Suscripción cancelada. Mantendrás acceso hasta el final del período.",
+          "errors": {
+            "CONFLICT": "Ese ya es tu plan actual.",
+            "PAYMENT_METHOD_REQUIRED": "Necesitas un método de pago para cambiar a premium.",
+            "FORBIDDEN": "Esta acción no está permitida para tu cuenta.",
+            "VALIDATION_ERROR": "Revisa el plan seleccionado.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "paymentMethods": {
+          "title": "Métodos de pago",
+          "description": "Tarjetas vinculadas a tu cuenta. No puedes eliminar la última tarjeta de una suscripción premium activa.",
+          "empty": "Aún no tienes métodos de pago registrados.",
+          "fields": {
+            "brand": "Marca",
+            "last4": "Últimos 4 dígitos",
+            "expiration": "Vence {date}",
+            "unknownBrand": "Tarjeta desconocida",
+            "unknownLast4": "••••"
+          },
+          "actions": {
+            "remove": "Eliminar",
+            "removing": "Eliminando..."
+          },
+          "confirmRemove": {
+            "title": "¿Eliminar este método de pago?",
+            "description": "La tarjeta {card} se eliminará de tu cuenta. Podrás añadirla de nuevo más tarde.",
+            "confirm": "Eliminar tarjeta",
+            "cancel": "Conservar tarjeta"
+          },
+          "successRemove": "Método de pago eliminado.",
+          "errors": {
+            "NOT_FOUND": "Este método de pago ya no existe.",
+            "CONFLICT": "No puedes eliminar el último método de pago de una suscripción premium activa.",
+            "FORBIDDEN": "Esta acción no está permitida para tu cuenta.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "invoices": {
+          "title": "Facturas",
+          "description": "Historial de facturación. Haz clic en descargar para abrir el enlace firmado en una nueva pestaña.",
+          "empty": "Aún no tienes facturas.",
+          "fields": {
+            "issuedAt": "Emitida el {date}",
+            "amount": "Monto"
+          },
+          "statusLabels": {
+            "draft": "Borrador",
+            "open": "Abierta",
+            "paid": "Pagada",
+            "void": "Anulada",
+            "uncollectible": "Incobrable"
+          },
+          "downloadLabel": "Descargar",
+          "errors": {
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        }
+      },
+      "personalData": {
+        "title": "Datos personales",
+        "description": "Gestiona tu identidad y tu información de contacto. Algunos campos pueden estar bloqueados.",
+        "fields": {
+          "firstName": {
+            "label": "Nombre",
+            "placeholder": "Tu nombre"
+          },
+          "lastName": {
+            "label": "Apellido",
+            "placeholder": "Tu apellido"
+          },
+          "fieldsets": {
+            "identity": "Identidad",
+            "contact": "Contacto"
+          },
+          "documentType": {
+            "label": "Tipo de documento"
+          },
+          "documentId": {
+            "label": "Número de documento",
+            "placeholder": "Ej: 12345678"
+          },
+          "phone": {
+            "label": "Teléfono",
+            "placeholder": "Ej: +57 300 123 4567"
+          },
+          "country": {
+            "label": "País"
+          },
+          "address": {
+            "label": "Dirección",
+            "placeholder": "Calle 123 #45-67, Bogotá"
+          }
+        },
+        "documentType": {
+          "passport": "Pasaporte",
+          "dni": "Documento Nacional de Identidad"
+        },
+        "emptyOption": "Sin especificar",
+        "locked": {
+          "title": "Identidad bloqueada",
+          "description": "Tus datos de identidad no se pueden modificar. Contacta a soporte si necesitas actualizarlos.",
+          "badge": "Bloqueado"
+        },
+        "fieldsets": {
+          "identity": "Identidad",
+          "contact": "Contacto"
+        },
+        "actions": {
+          "save": "Guardar cambios",
+          "saving": "Guardando..."
+        },
+        "successMessage": "Datos personales actualizados.",
+        "errors": {
+          "VALIDATION_ERROR": "Revisa los campos del formulario.",
+          "FORBIDDEN": "No tienes permiso para modificar estos datos de identidad.",
+          "CONFLICT": "Ya existe otro usuario con estos datos. Contacta a soporte.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      },
+      "preferences": {
+        "title": "Preferencias",
+        "description": "Personaliza tu experiencia en StudySync. Los cambios se guardan en tu cuenta.",
+        "fields": {
+          "language": {
+            "label": "Idioma",
+            "options": { "es": "Español", "en": "Inglés" }
+          },
+          "theme": {
+            "label": "Tema",
+            "options": {
+              "system": "Sistema",
+              "light": "Claro",
+              "dark": "Oscuro"
+            }
+          },
+          "timezone": {
+            "label": "Zona horaria",
+            "placeholder": "Ej: America/Bogota"
+          }
+        },
+        "fieldsets": {
+          "general": "General",
+          "notifications": "Notificaciones",
+          "accessibility": "Accesibilidad"
+        },
+        "notifications": {
+          "title": "Notificaciones",
+          "email": { "label": "Correo electrónico" },
+          "push": { "label": "Notificaciones push" },
+          "inApp": { "label": "En la aplicación" }
+        },
+        "accessibility": {
+          "title": "Accesibilidad",
+          "reducedMotion": { "label": "Reducir movimiento" },
+          "highContrast": { "label": "Alto contraste" }
+        },
+        "notes": {
+          "theme": "Guardamos esta preferencia en tu cuenta. El selector del header solo cambia el tema en este navegador."
+        },
+        "actions": {
+          "save": "Guardar preferencias",
+          "saving": "Guardando..."
+        },
+        "successMessage": "Preferencias guardadas.",
+        "errors": {
+          "VALIDATION_ERROR": "Revisa los campos del formulario.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      },
+      "privacy": {
+        "title": "Privacidad",
+        "description": "Controla quién puede ver tu información y contactarte.",
+        "fields": {
+          "profileVisibility": { "label": "Visibilidad del perfil" },
+          "emailVisibility": { "label": "Visibilidad del correo" },
+          "phoneVisibility": { "label": "Visibilidad del teléfono" },
+          "allowDirectMessages": {
+            "label": "Permitir mensajes directos",
+            "description": "Si lo desactivas, otros usuarios no podrán escribirte desde tu perfil público."
+          }
+        },
+        "visibilityOptions": {
+          "everyone": "Todos",
+          "authenticated": "Solo usuarios autenticados",
+          "nobody": "Nadie"
+        },
+        "actions": {
+          "save": "Guardar privacidad",
+          "saving": "Guardando..."
+        },
+        "successMessage": "Configuración de privacidad guardada.",
+        "errors": {
+          "VALIDATION_ERROR": "Revisa los campos del formulario.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      },
+      "security": {
+        "title": "Seguridad",
+        "description": "Gestiona tu contraseña, tu correo electrónico, la autenticación de dos factores y tus sesiones activas.",
+        "overview": {
+          "email": "Correo electrónico",
+          "emailVerified": "Verificado",
+          "emailNotVerified": "No verificado",
+          "twoFactor": "Autenticación de dos factores (2FA)",
+          "twoFactorEnabled": "Activado",
+          "twoFactorDisabled": "Desactivado",
+          "twoFactorRequired": "Obligatorio para tu rol",
+          "sessions": "Sesiones activas",
+          "sessionsCount": "{count, plural, =0 {Sin sesiones} =1 {# sesión} other {# sesiones}}"
+        },
+        "changePassword": {
+          "title": "Cambiar contraseña",
+          "description": "Actualiza tu contraseña periódicamente para mantener tu cuenta segura.",
+          "fields": {
+            "currentPassword": {
+              "label": "Contraseña actual",
+              "placeholder": "Tu contraseña actual",
+              "show": "Mostrar contraseña",
+              "hide": "Ocultar contraseña"
+            },
+            "newPassword": {
+              "label": "Nueva contraseña",
+              "placeholder": "Crea una nueva contraseña",
+              "show": "Mostrar contraseña",
+              "hide": "Ocultar contraseña"
+            },
+            "confirmPassword": {
+              "label": "Confirmar nueva contraseña",
+              "placeholder": "Repite la nueva contraseña"
+            }
+          },
+          "actions": {
+            "save": "Cambiar contraseña",
+            "saving": "Actualizando..."
+          },
+          "successMessage": "Contraseña actualizada. Por seguridad, se cerraron tus otras sesiones.",
+          "errors": {
+            "VALIDATION_ERROR": "Revisa los campos del formulario.",
+            "INVALID_CURRENT_PASSWORD": "La contraseña actual no es correcta.",
+            "CONFLICT": "La nueva contraseña no puede ser igual a la actual.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "emailChange": {
+          "title": "Correo electrónico",
+          "description": "Cambia el correo asociado a tu cuenta. Recibirás un enlace de verificación en la nueva dirección.",
+          "fields": {
+            "newEmail": {
+              "label": "Nuevo correo electrónico",
+              "placeholder": "nuevo@correo.com"
+            }
+          },
+          "actions": {
+            "save": "Solicitar cambio",
+            "saving": "Enviando..."
+          },
+          "successMessage": "Te enviamos un correo de verificación. Revisa tu nueva dirección para confirmar el cambio.",
+          "errors": {
+            "VALIDATION_ERROR": "Revisa el formato del correo electrónico.",
+            "EMAIL_TAKEN": "Ese correo ya está registrado.",
+            "EMAIL_UNCHANGED": "Es tu correo actual.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "twoFactor": {
+          "title": "Autenticación de dos factores (2FA)",
+          "description": "Añade una capa extra de seguridad. Recibirás un código por correo cada vez que sea necesario.",
+          "enabled": "Activado",
+          "disabled": "Desactivado",
+          "required": "Obligatorio para tu rol",
+          "activate": "Activar 2FA",
+          "activating": "Activando...",
+          "verifyingTitle": "Verifica tu correo",
+          "verifyingDescription": "Te enviamos un código de 6 dígitos a tu correo. Ingrésalo para completar la activación.",
+          "codeLabel": "Código de verificación",
+          "codePlaceholder": "123456",
+          "verify": "Verificar",
+          "verifying": "Verificando...",
+          "cancel": "Cancelar",
+          "disable": "Desactivar 2FA",
+          "disabling": "Desactivando...",
+          "disablingTitle": "Desactivar 2FA",
+          "disablingDescription": "Ingresa el código de 6 dígitos que recibiste por correo para confirmar la desactivación.",
+          "successEnabled": "2FA activado correctamente.",
+          "successDisabled": "2FA desactivado.",
+          "errors": {
+            "VALIDATION_ERROR": "Revisa el formato del código.",
+            "INVALID_CODE": "El código no es correcto.",
+            "CONFLICT": "La operación no es válida en este momento. Inténtalo de nuevo.",
+            "FORBIDDEN": "No puedes desactivar el 2FA con tu rol.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "sessions": {
+          "title": "Sesiones activas",
+          "description": "Dispositivos donde tu cuenta tiene una sesión iniciada. Revoca cualquiera que no reconozcas.",
+          "currentBadge": "Sesión actual",
+          "unknownDevice": "Dispositivo desconocido",
+          "unknownBrowser": "Navegador desconocido",
+          "unknownIp": "IP desconocida",
+          "lastActive": "Última actividad: {date}",
+          "revoke": "Revocar",
+          "revokeAllOthers": "Cerrar otras sesiones",
+          "empty": "No hay otras sesiones activas.",
+          "confirmRevokeTitle": "Revocar sesión",
+          "confirmRevokeDescription": "¿Seguro que quieres cerrar la sesión en {device}? Tendrás que volver a iniciar sesión en ese dispositivo.",
+          "confirmRevokeOthersTitle": "Cerrar otras sesiones",
+          "confirmRevokeOthersDescription": "Se cerrarán todas las sesiones excepto la actual. Tendrás que volver a iniciar sesión en esos dispositivos.",
+          "confirm": "Revocar",
+          "confirmOthers": "Cerrar todas",
+          "cancel": "Cancelar",
+          "revoking": "Revocando...",
+          "successRevoked": "Sesión revocada.",
+          "successRevokedOthers": "Se cerraron las otras sesiones.",
+          "errors": {
+            "NOT_FOUND": "La sesión ya no existe. Actualiza la página.",
+            "SESSION_IS_CURRENT": "No puedes revocar tu sesión actual desde aquí.",
+            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+          }
+        },
+        "errors": {
+          "INTERNAL_ERROR": "An unexpected error occurred. Please try again.",
+          "sameAsCurrent": "The new password can't be the same as the current one."
+        }
+      },
+      "profile": {
+        "title": "Perfil",
+        "description": "Gestiona tu biografía, intereses e imagen de perfil.",
+        "fields": {
+          "bio": {
+            "title": {
+              "label": "Título de la biografía",
+              "placeholder": "Ej: Estudiante de ingeniería"
+            },
+            "description": {
+              "label": "Descripción",
+              "placeholder": "Cuéntanos sobre ti…"
+            }
+          },
+          "interests": {
+            "label": "Intereses",
+            "placeholder": "Añade un interés y pulsa Enter",
+            "addButton": "Añadir",
+            "removeAria": "Eliminar interés"
+          },
+          "image": {
+            "label": "Imagen de perfil",
+            "emptyOption": "Sin imagen"
+          }
+        },
+        "actions": {
+          "save": "Guardar perfil",
+          "saving": "Guardando..."
+        },
+        "successMessage": "Perfil actualizado.",
+        "errors": {
+          "VALIDATION_ERROR": "Revisa los campos del formulario.",
+          "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
+        }
+      }
+    }
+  }
+}

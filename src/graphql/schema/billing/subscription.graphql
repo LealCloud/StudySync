@@ -1,0 +1,32 @@
+enum SubscriptionPlan {
+  free
+  premium
+  enterprise
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  past_due
+  canceled
+  expired
+}
+
+type UserSubscription {
+  id: ID!
+  plan: SubscriptionPlan!
+  status: SubscriptionStatus!
+  startedAt: DateTime!
+  currentPeriodEnd: DateTime
+  cancelAtPeriodEnd: Boolean!
+}
+
+extend type Query {
+  mySubscription: UserSubscription
+}
+
+extend type Mutation {
+  changeSubscriptionPlan(plan: SubscriptionPlan!): UserSubscription!
+
+  cancelSubscription: UserSubscription!
+}

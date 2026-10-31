@@ -1,0 +1,6 @@
+mutation VerifyTwoFactorSetup($code: String!) {
+  verifyTwoFactorSetup(code: $code) {
+    success
+    message
+  }
+}

@@ -1,0 +1,33 @@
+enum DocumentType {
+  passport
+  dni
+}
+
+type PersonalData {
+  firstName: String!
+  lastName: String!
+  documentType: DocumentType
+  documentId: String
+  phone: String
+  country: String
+  address: String
+  identityLocked: Boolean!
+}
+
+input UpdatePersonalDataInput {
+  firstName: String
+  lastName: String
+  documentType: DocumentType
+  documentId: String
+  phone: String
+  country: String
+  address: String
+}
+
+extend type Query {
+  myPersonalData: PersonalData!
+}
+
+extend type Mutation {
+  updatePersonalData(input: UpdatePersonalDataInput!): PersonalData!
+}

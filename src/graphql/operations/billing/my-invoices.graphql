@@ -1,0 +1,11 @@
+query MyInvoices {
+  myInvoices {
+    id
+    number
+    amount
+    currency
+    status
+    issuedAt
+    downloadUrl
+  }
+}

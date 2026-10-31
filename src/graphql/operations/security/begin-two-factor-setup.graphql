@@ -1,0 +1,6 @@
+mutation BeginTwoFactorSetup {
+  beginTwoFactorSetup {
+    secret
+    qrCode
+  }
+}

@@ -1,0 +1,21 @@
+enum AccountStatus {
+  active
+  pending_deactivation
+  suspended
+  inactive
+}
+
+type Account {
+  status: AccountStatus!
+  deactivationScheduledAt: DateTime
+}
+
+extend type Query {
+  myAccount: Account!
+}
+
+extend type Mutation {
+  requestAccountDeactivation: Account!
+
+  cancelAccountDeactivation: Account!
+}

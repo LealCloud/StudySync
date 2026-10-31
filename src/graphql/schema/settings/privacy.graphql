@@ -1,0 +1,27 @@
+enum ProfileVisibility {
+  everyone
+  authenticated
+  nobody
+}
+
+type PrivacySettings {
+  profileVisibility: ProfileVisibility!
+  emailVisibility: ProfileVisibility!
+  phoneVisibility: ProfileVisibility!
+  allowDirectMessages: Boolean!
+}
+
+input UpdatePrivacySettingsInput {
+  profileVisibility: ProfileVisibility
+  emailVisibility: ProfileVisibility
+  phoneVisibility: ProfileVisibility
+  allowDirectMessages: Boolean
+}
+
+extend type Query {
+  myPrivacySettings: PrivacySettings!
+}
+
+extend type Mutation {
+  updatePrivacySettings(input: UpdatePrivacySettingsInput!): PrivacySettings!
+}

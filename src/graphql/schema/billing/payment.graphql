@@ -1,0 +1,34 @@
+enum InvoiceStatus {
+  draft
+  open
+  paid
+  void
+  uncollectible
+}
+
+type PaymentMethod {
+  id: ID!
+  brand: String
+  last4: String
+  expirationMonth: Int
+  expirationYear: Int
+}
+
+type Invoice {
+  id: ID!
+  number: String!
+  amount: Int!
+  currency: String!
+  status: InvoiceStatus!
+  issuedAt: DateTime!
+  downloadUrl: String
+}
+
+extend type Query {
+  myPaymentMethods: [PaymentMethod!]!
+  myInvoices: [Invoice!]!
+}
+
+extend type Mutation {
+  removePaymentMethod(paymentMethodId: ID!): Boolean!
+}

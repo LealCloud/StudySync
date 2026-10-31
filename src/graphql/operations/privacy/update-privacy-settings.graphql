@@ -1,0 +1,8 @@
+mutation UpdatePrivacySettings($input: UpdatePrivacySettingsInput!) {
+  updatePrivacySettings(input: $input) {
+    profileVisibility
+    emailVisibility
+    phoneVisibility
+    allowDirectMessages
+  }
+}

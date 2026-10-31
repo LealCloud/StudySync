@@ -1,0 +1,12 @@
+type Certificate {
+  id: ID!
+  courseId: ID!
+  courseTitle: String!
+  certificateNumber: String!
+  issuedAt: DateTime!
+  downloadUrl: String!
+}
+
+extend type Query {
+  myCertificates: [Certificate!]!
+}

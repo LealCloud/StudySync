@@ -1,0 +1,51 @@
+enum Theme {
+  system
+  light
+  dark
+}
+
+type Preferences {
+  language: String!
+  theme: Theme!
+  timezone: String!
+  notifications: NotificationPreferences!
+  accessibility: AccessibilityPreferences!
+}
+
+type NotificationPreferences {
+  email: Boolean!
+  push: Boolean!
+  inApp: Boolean!
+}
+
+type AccessibilityPreferences {
+  reducedMotion: Boolean!
+  highContrast: Boolean!
+}
+
+input NotificationPreferencesInput {
+  email: Boolean
+  push: Boolean
+  inApp: Boolean
+}
+
+input AccessibilityPreferencesInput {
+  reducedMotion: Boolean
+  highContrast: Boolean
+}
+
+input UpdatePreferencesInput {
+  language: String
+  theme: Theme
+  timezone: String
+  notifications: NotificationPreferencesInput
+  accessibility: AccessibilityPreferencesInput
+}
+
+extend type Query {
+  myPreferences: Preferences!
+}
+
+extend type Mutation {
+  updatePreferences(input: UpdatePreferencesInput!): Preferences!
+}

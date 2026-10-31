@@ -1,0 +1,10 @@
+mutation ChangeSubscriptionPlan($plan: SubscriptionPlan!) {
+  changeSubscriptionPlan(plan: $plan) {
+    id
+    plan
+    status
+    startedAt
+    currentPeriodEnd
+    cancelAtPeriodEnd
+  }
+}
