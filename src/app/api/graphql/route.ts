@@ -32,9 +32,7 @@ function normalizeBackendErrors(result: ExecutionResult): ExecutionResult {
 
 function isAsyncIterable<T>(value: unknown): value is AsyncIterable<T> {
   return (
-    typeof value === 'object' &&
-    value !== null &&
-    Symbol.asyncIterator in value
+    typeof value === 'object' && value !== null && Symbol.asyncIterator in value
   );
 }
 
@@ -72,6 +70,7 @@ const yoga = createYoga({
     };
   },
   graphqlEndpoint: '/api/graphql',
+  fetchAPI: { Response },
 });
 
 export { yoga as GET, yoga as POST };

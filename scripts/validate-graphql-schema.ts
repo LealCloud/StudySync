@@ -1,7 +1,6 @@
-import { loadFilesSync } from '@graphql-tools/load-files';
 import { makeExecutableSchema } from '@graphql-tools/schema';
 
-const typeDefs = loadFilesSync('src/graphql/schema/**/*.graphql');
+import { typeDefs } from '../src/graphql/generated/schema';
 
 try {
   makeExecutableSchema({
