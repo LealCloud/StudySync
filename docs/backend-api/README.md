@@ -120,28 +120,33 @@ El BFF bloquea con `403` antes de llamar al backend cuando corresponde. El backe
 
 ---
 
-## Relación con el frontend
+## Relación con el código
 
-La fuente de verdad es este contrato ([`docs/backend-api/`](README.md), `v1.3.1`).
+La fuente de verdad es este contrato ([`docs/backend-api/`](README.md), `v2.0`).
 
 ```
 docs/backend-api/ (este directorio)
-      ↓
-Contrato REST
-      ↓
-src/lib/backend/types.ts
-      ↓
-Representación TypeScript del contrato
-      ↓
-RestBackendClient
+↓
+Contrato interno de métodos
+↓
+src/lib/backend/types.ts (tipos Backend)
+↓
+src/lib/domain/ (lógica de negocio)
+↓
+LocalBackendClient | MockBackendClient (implementaciones)
+↓
+src/lib/backend/client.ts (interfaz BackendClient)
+↓
+Resolvers GraphQL (consumen c.backend.)
 ```
 
 - Este directorio define el contrato.
-- `src/lib/backend/types.ts` representa ese contrato en TypeScript.
-- `RestBackendClient` implementa las llamadas al contrato.
-- Los resolvers GraphQL consumen `BackendClient`, no conocen directamente los detalles de REST.
+- `src/lib/backend/types.ts` representa ese contrato en TypeScript (tipos `Backend*`).
+- `src/lib/domain/` implementa las reglas de negocio que el contrato describe.
+- `LocalBackendClient` (Prisma + PostgreSQL) y `MockBackendClient` (en memoria) implementan la interfaz `BackendClient`.
+- Los resolvers GraphQL consumen `BackendClient` a través de `c.backend.*`; no conocen los detalles de Prisma ni de la capa de dominio.
 
-Los tipos `Backend*` **no son la fuente de verdad del contrato**.
+Los tipos `Backend*` **no son la fuente de verdad del contrato**. La fuente de verdad sigue siendo `docs/backend-api/`.
 
 ---
 
