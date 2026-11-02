@@ -152,7 +152,7 @@ Los tipos `Backend*` **no son la fuente de verdad del contrato**. La fuente de v
 
 ## Versionado
 
-- **v1.3.1** — versión actual. Ver [`_historico/historial-cambios.md`](_historico/historial-cambios.md).
+- **v2.0** — versión actual. Migración a monolito con Auth.js puro (ver `docs/backend-monolith-plan.md`). Ver [`_historico/historial-cambios.md`](_historico/historial-cambios.md).
 - Cualquier cambio incompatible debe generar una nueva versión.
-- El historial completo de v1 a v1.3.1 está en [`_historico/historial-cambios.md`](_historico/historial-cambios.md).
+- El historial completo de v1 a v2.0 está en [`_historico/historial-cambios.md`](_historico/historial-cambios.md).
 - La migración desde el backend previo está en [`_historico/migracion.md`](_historico/migracion.md).
