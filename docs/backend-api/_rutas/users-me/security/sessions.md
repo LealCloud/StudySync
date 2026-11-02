@@ -4,9 +4,13 @@ methods: [DELETE]
 auth: Required
 consumers:
   - src/graphql/resolvers/security.ts
-source_legacy: "§3.5, §3.8, §11"
-contract_version: v1.3.1
+source_legacy: '§3.5, §3.8, §11'
+contract_version: v2.0
 ---
+
+> **Estado en v2.0:** eliminado del contrato. La sesión la gestiona Auth.js
+> con su JWT firmado y no expone `sessions` en `mySecuritySettings`. Este
+> archivo se conserva como referencia histórica del contrato v1.3.1.
 
 # DELETE /users/me/security/sessions
 
@@ -46,11 +50,11 @@ La UI oculta la acción para la sesión actual (`Session.current === true`). Mot
 
 ### Errores
 
-| HTTP  | Código               | Cuándo                                |
-| ----: | -------------------- | ------------------------------------- |
-| `401` | `UNAUTHENTICATED`    | Token inválido o vencido              |
-| `404` | `NOT_FOUND`          | Sesión inexistente o de otro usuario  |
-| `409` | `SESSION_IS_CURRENT` | Intento de revocar la sesión actual   |
+|  HTTP | Código               | Cuándo                               |
+| ----: | -------------------- | ------------------------------------ |
+| `401` | `UNAUTHENTICATED`    | Token inválido o vencido             |
+| `404` | `NOT_FOUND`          | Sesión inexistente o de otro usuario |
+| `409` | `SESSION_IS_CURRENT` | Intento de revocar la sesión actual  |
 
 ---
 
@@ -77,7 +81,7 @@ La sesión utilizada para realizar la petición no debe revocarse.
 
 ### Errores
 
-| HTTP  | Código            | Cuándo                   |
+|  HTTP | Código            | Cuándo                   |
 | ----: | ----------------- | ------------------------ |
 | `401` | `UNAUTHENTICATED` | Token inválido o vencido |
 

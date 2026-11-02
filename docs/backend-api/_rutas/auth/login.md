@@ -4,10 +4,14 @@ methods: [POST]
 auth: None
 consumers:
   - src/auth.ts
-  - src/lib/backend/services/auth.ts
-source_legacy: "§3.1, §3.2, §11"
-contract_version: v1.3.1
+  - src/lib/domain/auth.ts
+source_legacy: '§3.1, §3.2, §11'
+contract_version: v2.0
 ---
+
+> **Estado en v2.0:** método interno consumido por Auth.js en `authorize()`.
+> No está expuesto como resolver GraphQL ni como método del contrato
+> interno. Se conserva como referencia del flujo de autenticación.
 
 # POST /auth/login
 
@@ -55,13 +59,13 @@ Los datos de presentación (nombre, correo, imagen, plan) no forman parte de la 
 
 ## Errores
 
-| HTTP  | Código            | Cuándo                                                  |
-| ----: | ----------------- | ------------------------------------------------------- |
-| `400` | `BAD_REQUEST`     | Petición mal formada                                    |
-| `401` | `UNAUTHENTICATED` | Credenciales incorrectas                                |
-| `422` | `VALIDATION_ERROR`| Datos inválidos                                         |
-| `429` | `RATE_LIMITED`    | Demasiados intentos                                     |
-| `500` | `INTERNAL_ERROR`  | Error interno                                           |
-| `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente                |
+|  HTTP | Código                | Cuándo                               |
+| ----: | --------------------- | ------------------------------------ |
+| `400` | `BAD_REQUEST`         | Petición mal formada                 |
+| `401` | `UNAUTHENTICATED`     | Credenciales incorrectas             |
+| `422` | `VALIDATION_ERROR`    | Datos inválidos                      |
+| `429` | `RATE_LIMITED`        | Demasiados intentos                  |
+| `500` | `INTERNAL_ERROR`      | Error interno                        |
+| `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente |
 
 Códigos generales en [`_convenciones/errores.md`](../../_convenciones/errores.md).

@@ -29,9 +29,7 @@ docs/backend-api/
 │
 ├── _rutas/
 │   ├── auth/
-│   │   ├── login.md
-│   │   ├── refresh.md
-│   │   ├── logout.md
+│   │   ├── login.md                       (interno, consumido por Auth.js)
 │   │   ├── register.md
 │   │   ├── forgot-password.md
 │   │   ├── validate-reset-token.md
@@ -50,8 +48,7 @@ docs/backend-api/
 │       │   ├── index.md
 │       │   ├── email-change.md
 │       │   ├── password.md
-│       │   ├── two-factor.md
-│       │   └── sessions.md
+│       │   └── two-factor.md
 │       ├── account.md
 │       ├── courses.md
 │       ├── certificates.md
@@ -66,46 +63,43 @@ docs/backend-api/
 
 ---
 
-## Resumen de los 36 endpoints
+## Resumen de los 31 métodos de dominio
 
-|   # | Método | Ruta                                         | Auth     | Archivo                                                                                |
-| --: | ------ | -------------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
-|   1 | POST   | `/auth/login`                                | None     | [`_rutas/auth/login.md`](_rutas/auth/login.md)                                         |
-|   2 | POST   | `/auth/refresh`                              | None     | [`_rutas/auth/refresh.md`](_rutas/auth/refresh.md)                                     |
-|   3 | POST   | `/auth/logout`                               | None     | [`_rutas/auth/logout.md`](_rutas/auth/logout.md)                                       |
-|   4 | POST   | `/auth/register`                             | None     | [`_rutas/auth/register.md`](_rutas/auth/register.md)                                   |
-|   5 | POST   | `/auth/forgot-password`                      | None     | [`_rutas/auth/forgot-password.md`](_rutas/auth/forgot-password.md)                     |
-|   6 | POST   | `/auth/validate-reset-token`                 | None     | [`_rutas/auth/validate-reset-token.md`](_rutas/auth/validate-reset-token.md)           |
-|   7 | POST   | `/auth/reset-password`                       | None     | [`_rutas/auth/reset-password.md`](_rutas/auth/reset-password.md)                       |
-|   8 | POST   | `/contact`                                   | None     | [`_rutas/contact.md`](_rutas/contact.md)                                               |
-|   9 | GET    | `/users/me`                                  | Required | [`_rutas/users-me/me.md`](_rutas/users-me/me.md)                                       |
-|  10 | GET    | `/users/:userId/profile`                     | Optional | [`_rutas/users-me/public-profile.md`](_rutas/users-me/public-profile.md)               |
-|  11 | PATCH  | `/users/me/profile`                          | Required | [`_rutas/users-me/profile.md`](_rutas/users-me/profile.md)                             |
-|  12 | GET    | `/users/me/personal-data`                    | Required | [`_rutas/users-me/personal-data.md`](_rutas/users-me/personal-data.md)                 |
-|  13 | PATCH  | `/users/me/personal-data`                    | Required | [`_rutas/users-me/personal-data.md`](_rutas/users-me/personal-data.md)                 |
-|  14 | GET    | `/users/me/privacy`                          | Required | [`_rutas/users-me/privacy.md`](_rutas/users-me/privacy.md)                             |
-|  15 | PATCH  | `/users/me/privacy`                          | Required | [`_rutas/users-me/privacy.md`](_rutas/users-me/privacy.md)                             |
-|  16 | GET    | `/users/me/security`                         | Required | [`_rutas/users-me/security/index.md`](_rutas/users-me/security/index.md)               |
-|  17 | POST   | `/users/me/security/email-change`            | Required | [`_rutas/users-me/security/email-change.md`](_rutas/users-me/security/email-change.md) |
-|  18 | PUT    | `/users/me/security/password`                | Required | [`_rutas/users-me/security/password.md`](_rutas/users-me/security/password.md)         |
-|  19 | POST   | `/users/me/security/two-factor/setup`        | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
-|  20 | POST   | `/users/me/security/two-factor/verify`       | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
-|  21 | POST   | `/users/me/security/two-factor/disable`      | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
-|  22 | DELETE | `/users/me/security/sessions/:sessionId`     | Required | [`_rutas/users-me/security/sessions.md`](_rutas/users-me/security/sessions.md)         |
-|  23 | DELETE | `/users/me/security/sessions`                | Required | [`_rutas/users-me/security/sessions.md`](_rutas/users-me/security/sessions.md)         |
-|  24 | GET    | `/users/me/preferences`                      | Required | [`_rutas/users-me/preferences.md`](_rutas/users-me/preferences.md)                     |
-|  25 | PATCH  | `/users/me/preferences`                      | Required | [`_rutas/users-me/preferences.md`](_rutas/users-me/preferences.md)                     |
-|  26 | GET    | `/users/me/account`                          | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
-|  27 | POST   | `/users/me/account/deactivation`             | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
-|  28 | DELETE | `/users/me/account/deactivation`             | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
-|  29 | GET    | `/users/me/courses`                          | Required | [`_rutas/users-me/courses.md`](_rutas/users-me/courses.md)                             |
-|  30 | GET    | `/users/me/certificates`                     | Required | [`_rutas/users-me/certificates.md`](_rutas/users-me/certificates.md)                   |
-|  31 | GET    | `/users/me/subscription`                     | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
-|  32 | PUT    | `/users/me/subscription/plan`                | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
-|  33 | POST   | `/users/me/subscription/cancellation`        | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
-|  34 | GET    | `/users/me/payment-methods`                  | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
-|  35 | DELETE | `/users/me/payment-methods/:paymentMethodId` | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
-|  36 | GET    | `/users/me/invoices`                         | Required | [`_rutas/users-me/invoices.md`](_rutas/users-me/invoices.md)                           |
+La columna `Categoría` distingue `query` (lectura) de `mutation` (escritura). La columna `Ruta` es el identificador estable del método en el contrato (`docs/backend-api/_rutas/`).
+
+|   # | Categoría | Ruta                                         | Auth     | Archivo                                                                                |
+| --: | --------- | -------------------------------------------- | -------- | -------------------------------------------------------------------------------------- |
+|   1 | mutation  | `/auth/register`                             | None     | [`_rutas/auth/register.md`](_rutas/auth/register.md)                                   |
+|   2 | mutation  | `/auth/forgot-password`                      | None     | [`_rutas/auth/forgot-password.md`](_rutas/auth/forgot-password.md)                     |
+|   3 | mutation  | `/auth/validate-reset-token`                 | None     | [`_rutas/auth/validate-reset-token.md`](_rutas/auth/validate-reset-token.md)           |
+|   4 | mutation  | `/auth/reset-password`                       | None     | [`_rutas/auth/reset-password.md`](_rutas/auth/reset-password.md)                       |
+|   5 | mutation  | `/contact`                                   | None     | [`_rutas/contact.md`](_rutas/contact.md)                                               |
+|   6 | query     | `/users/me`                                  | Required | [`_rutas/users-me/me.md`](_rutas/users-me/me.md)                                       |
+|   7 | query     | `/users/:userId/profile`                     | Optional | [`_rutas/users-me/public-profile.md`](_rutas/users-me/public-profile.md)               |
+|   8 | mutation  | `/users/me/profile`                          | Required | [`_rutas/users-me/profile.md`](_rutas/users-me/profile.md)                             |
+|   9 | query     | `/users/me/personal-data`                    | Required | [`_rutas/users-me/personal-data.md`](_rutas/users-me/personal-data.md)                 |
+|  10 | mutation  | `/users/me/personal-data`                    | Required | [`_rutas/users-me/personal-data.md`](_rutas/users-me/personal-data.md)                 |
+|  11 | query     | `/users/me/privacy`                          | Required | [`_rutas/users-me/privacy.md`](_rutas/users-me/privacy.md)                             |
+|  12 | mutation  | `/users/me/privacy`                          | Required | [`_rutas/users-me/privacy.md`](_rutas/users-me/privacy.md)                             |
+|  13 | query     | `/users/me/security`                         | Required | [`_rutas/users-me/security/index.md`](_rutas/users-me/security/index.md)               |
+|  14 | mutation  | `/users/me/security/email-change`            | Required | [`_rutas/users-me/security/email-change.md`](_rutas/users-me/security/email-change.md) |
+|  15 | mutation  | `/users/me/security/password`                | Required | [`_rutas/users-me/security/password.md`](_rutas/users-me/security/password.md)         |
+|  16 | mutation  | `/users/me/security/two-factor/setup`        | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
+|  17 | mutation  | `/users/me/security/two-factor/verify`       | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
+|  18 | mutation  | `/users/me/security/two-factor/disable`      | Required | [`_rutas/users-me/security/two-factor.md`](_rutas/users-me/security/two-factor.md)     |
+|  19 | query     | `/users/me/preferences`                      | Required | [`_rutas/users-me/preferences.md`](_rutas/users-me/preferences.md)                     |
+|  20 | mutation  | `/users/me/preferences`                      | Required | [`_rutas/users-me/preferences.md`](_rutas/users-me/preferences.md)                     |
+|  21 | query     | `/users/me/account`                          | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
+|  22 | mutation  | `/users/me/account/deactivation`             | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
+|  23 | mutation  | `/users/me/account/deactivation`             | Required | [`_rutas/users-me/account.md`](_rutas/users-me/account.md)                             |
+|  24 | query     | `/users/me/courses`                          | Required | [`_rutas/users-me/courses.md`](_rutas/users-me/courses.md)                             |
+|  25 | query     | `/users/me/certificates`                     | Required | [`_rutas/users-me/certificates.md`](_rutas/users-me/certificates.md)                   |
+|  26 | query     | `/users/me/subscription`                     | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
+|  27 | mutation  | `/users/me/subscription/plan`                | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
+|  28 | mutation  | `/users/me/subscription/cancellation`        | Required | [`_rutas/users-me/subscription.md`](_rutas/users-me/subscription.md)                   |
+|  29 | query     | `/users/me/payment-methods`                  | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
+|  30 | mutation  | `/users/me/payment-methods/:paymentMethodId` | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
+|  31 | query     | `/users/me/invoices`                         | Required | [`_rutas/users-me/invoices.md`](_rutas/users-me/invoices.md)                           |
 
 ---
 
