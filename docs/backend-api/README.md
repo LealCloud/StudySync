@@ -105,18 +105,18 @@ La columna `Categoría` distingue `query` (lectura) de `mutation` (escritura). L
 
 ## Autorización por rol
 
-La columna `Auth` indica el nivel de autenticación, no de autorización. La autorización por rol se aplica en el backend y se refuerza en el BFF:
+La columna `Auth` indica el nivel de autenticación, no de autorización. La autorización por rol se aplica en dos capas: en el BFF (`requireRole`) y en la capa de dominio (defensa en profundidad).
 
-| Endpoint(s)                                  | Roles permitidos              | Respuesta para roles no permitidos |
-| :------------------------------------------- | :---------------------------- | :--------------------------------- |
-| `POST/DELETE /users/me/account/deactivation` | `student`                     | `403 FORBIDDEN`                    |
-| `GET /users/me/courses`                      | `student`                     | `403 FORBIDDEN`                    |
-| `GET /users/me/certificates`                 | `student`                     | `403 FORBIDDEN`                    |
-| Billing (todas las rutas)                    | `student`                     | `403 FORBIDDEN`                    |
-| `POST /users/me/security/two-factor/disable` | `student`                     | `403 FORBIDDEN`                    |
-| Resto de endpoints de settings               | `student`, `teacher`, `admin` | —                                  |
+| Método(s)                                  | Roles permitidos              | Respuesta para roles no permitidos |
+| :----------------------------------------- | :---------------------------- | :--------------------------------- |
+| `/users/me/account/deactivation`           | `student`                     | `403 FORBIDDEN`                    |
+| `/users/me/courses`                        | `student`                     | `403 FORBIDDEN`                    |
+| `/users/me/certificates`                   | `student`                     | `403 FORBIDDEN`                    |
+| `/users/me/subscription` (todas las rutas) | `student`                     | `403 FORBIDDEN`                    |
+| `/users/me/security/two-factor/disable`    | `student`                     | `403 FORBIDDEN`                    |
+| Resto de métodos de settings               | `student`, `teacher`, `admin` | —                                  |
 
-El BFF bloquea con `403` antes de llamar al backend cuando corresponde. El backend vuelve a validar como defensa en profundidad. Ver [`_convenciones/errores.md`](_convenciones/errores.md).
+El BFF bloquea con `403` antes de llamar a la capa de dominio cuando corresponde. La capa de dominio vuelve a validar como defensa en profundidad. Ver [`_convenciones/errores.md`](_convenciones/errores.md).
 
 ---
 
