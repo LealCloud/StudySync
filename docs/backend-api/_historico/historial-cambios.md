@@ -1,7 +1,7 @@
 ---
 kind: history
-source_legacy: "§13"
-contract_version: v1.3.1
+source_legacy: '§13'
+contract_version: v2.0
 ---
 
 # Historial de cambios
@@ -114,3 +114,80 @@ Cambios **compatibles hacia atrás** desde el punto de vista del frontend, pero 
 - Nuevo [`../_convenciones/regex.md`](../_convenciones/regex.md): tabla consolidada de regex de referencia.
 
 **Nota de despliegue:** el frontend ya aplica estos endurecimientos desde la Fase 0.6. El backend debe adoptarlos para cumplir el contrato. Mientras no los adopte, puede aceptar payloads que el frontend ya rechaza; ese desfase es tolerado durante la ventana de migración y **no constituye un cambio de contrato**. Una vez el backend adopte los regex, ambos lados estarán alineados.
+
+## v2.0
+
+Cambio arquitectónico mayor. **No es compatible con v1.x** desde el punto de
+vista de la implementación: el backend externo se elimina y toda la lógica
+pasa al monolito Next.js.
+
+Ver `docs/backend-monolith-plan.md` para el plan de migración completo
+
+- El contrato GraphQL (`docs/backend-api/README.md` describe los métodos;
+  el schema GraphQL se mantiene).
+
+### Contexto
+
+Hasta v1.3.1, StudySync era un frontend Next.js + BFF GraphQL que hablaba con
+un backend externo (REST, Spring Boot, `API_BASE_URL`). El backend autenticaba
+con access + refresh tokens, validaba y persistía todos los datos, gestionaba
+sesiones activas, enviaba correos de recuperación y aplicaba rate limiting.
+
+En v2.0 el backend externo se elimina. Toda la lógica pasa al monolito
+(Next.js + BFF GraphQL + Prisma + PostgreSQL).
+
+### Arquitectura
+
+- **Auth.js puro** (`strategy: 'jwt'`): sin access token ni refresh token
+  externos. La sesión es el JWT firmado por Auth.js, con `maxAge` de 7 días.
+- **Prisma + PostgreSQL**: la base de datos del monolito. El modo `local`
+  reemplaza al modo `rest`.
+- **Capa de dominio** (`src/lib/domain/`): reglas de negocio, validación
+  cruzada y autorización de negocio.
+- **`LocalBackendClient`** reemplaza a `RestBackendClient`. Implementa la
+  interfaz `BackendClient` llamando a la capa de dominio.
+- **`MockBackendClient`** se conserva como modo de ejecución
+  (`BACKEND_MODE=mock`).
+
+### Autenticación
+
+- `session.user = { id, role }`. Se elimina `session.error`.
+- Se eliminan `accessToken`, `refreshToken`, `accessTokenExpires` y
+  `refreshTokenExpires` del JWT gestionado por Auth.js.
+- Se eliminan `RefreshTokenExpired` y `RefreshTokenError`.
+- Se eliminan `POST /auth/refresh` y `POST /auth/logout` del contrato.
+  Auth.js gestiona el refresco y el cierre de sesión localmente.
+- `/auth/login` se mantiene como método interno consumido por Auth.js en
+  `authorize()`, no como método del contrato.
+- Los niveles `None` / `Optional` / `Required` se conservan.
+
+### Endpoints eliminados
+
+- `POST /auth/refresh` — Auth.js renueva el JWT automáticamente.
+- `POST /auth/logout` — Auth.js invalida la cookie localmente.
+- `DELETE /users/me/security/sessions/:sessionId` — D-7 = B. La sesión la
+  gestiona Auth.js; no hay `sessions` en `mySecuritySettings`.
+- `DELETE /users/me/security/sessions` — idem.
+
+### Endpoints conservados
+
+Los 31 métodos restantes del contrato v1.3.1 se conservan sin cambios
+funcionales. La única diferencia es el modo de implementación (dominio local
+en lugar de REST externo). Los códigos HTTP, los `error.code` y las reglas de
+negocio no cambian.
+
+### Lo que **no** cambia
+
+- Las reglas de validación (`src/lib/schemas/primitives.ts`).
+- Los códigos de error por endpoint.
+- La semántica PATCH.
+- La autorización por rol (BFF + dominio).
+- La forma de los tipos `Backend*` en `src/lib/backend/types.ts`.
+- El contrato GraphQL (`docs/backend-api/README.md` describe los métodos;
+  el schema GraphQL se mantiene).
+
+### Referencias
+
+- Plan de migración: `docs/backend-monolith-plan.md`.
+- Arquitectura de destino: [`../_convenciones/arquitectura.md`](../_convenciones/arquitectura.md).
+- Autenticación: [`../_convenciones/autenticacion.md`](../_convenciones/autenticacion.md).
