@@ -1,16 +1,16 @@
 ---
 kind: index
 source_legacy: '§10, §13'
-contract_version: v1.3.1
+contract_version: v2.0
 ---
 
-# Contrato de API del backend — v1.3.1
+# Contrato interno de métodos — v2.0
 
-Este directorio es el **contrato formal de integración** entre el frontend/BFF y el backend. Define lo que ambas partes deben implementar y cómo deben interactuar.
+Este directorio es el **contrato formal** de las operaciones internas del monolito. Define qué operaciones expone la capa de dominio, con qué tipos, qué códigos de error y qué reglas aplican a cada una.
 
-Es la **fuente de verdad única** del contrato. Cualquier cambio debe reflejarse primero aquí y después en el código del frontend (`src/lib/backend/types.ts`, el schema GraphQL y `RestBackendClient`).
+Es la **fuente de verdad única** del contrato. Cualquier cambio debe reflejarse primero aquí y después en el código (`src/lib/backend/types.ts`, `src/lib/domain/`, el schema GraphQL y `LocalBackendClient`).
 
-El contrato puede implementarse en dos modos: contra un backend real (`rest`) o contra una implementación controlada que no requiere backend (`mock`). Ambos modos deben cumplir exactamente este contrato. Ver [`_convenciones/arquitectura.md`](_convenciones/arquitectura.md).
+El contrato puede implementarse en dos modos: contra la base de datos PostgreSQL del monolito (`local`) o contra una implementación en memoria que no requiere base de datos (`mock`). Ambos modos deben cumplir exactamente este contrato. Ver [`_convenciones/arquitectura.md`](_convenciones/arquitectura.md).
 
 ---
 
