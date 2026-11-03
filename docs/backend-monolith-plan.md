@@ -228,7 +228,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 ### Fase B — Capa de datos (bloqueante)
 
-- [ ] **B.1** Añadir `prisma` + `@prisma/client` a `package.json`.
+- [x] **B.0** Instalar `prisma@^6`, `@prisma/client@^6` y `bcryptjs@^3`
+      (con `@types/bcryptjs` descartado: `bcryptjs@3` incluye sus tipos).
+      Aprobar builds de Prisma en `pnpm-workspace.yaml`.
+      Commit: `5c9a323`.
+- [x] **B.0.1** Eliminar `package-lock.json` en favor de `pnpm`.
+      Commit: `ae42d93`.
+- [ ] **B.1** Verificar/crear `docker-compose.yml` y `.env.local`.
 - [ ] **B.2** Crear `prisma/schema.prisma` con los modelos del contrato
       interno:
   - `User` (id, email, passwordHash, role, image, bio, interests, createdAt)
@@ -402,3 +408,4 @@ session`, `revokeSession accepts a non-current session` y
 | —          | Decisiones D-4.1, D-4.2, D-7, D-8, D-9.1 | Cerradas    | `session.user={id,role}`, sin `error`; `sessions` eliminado (B); `bcryptjs`; Docker Compose. Listo para Fase A.                                                                                                                                                                                       |
 | —          | Limpieza del borrador                    | Cerrada     | Corregido naming `services/`→`src/lib/domain/`, Fase A.1, Fase B.2 (sin `Session`), Fase G (solo D-7 = B), Fase H (H.1, H.3 duplicada), Fase D (IDs).                                                                                                                                                 |
 | 2026-11-01 | **Fase A — Decisiones y documentación**  | **Cerrada** | 10 commits (`93281b3` … `fa4fbbe`). Contrato alineado a v2.0: `arquitectura.md`, `autenticacion.md`, `README.md` (31 métodos), `historial-cambios.md`, `.env.example`, `password.md`. D-11 = C-1 (`LocalBackendClient` con `userId`), D-12 = eliminar `services/auth.ts`. Siguiente: Fase B (Prisma). |
+| 2026-11-01 | **Fase B.0 — Dependencias**              | **Cerrada** | `prisma@6.19.3`, `@prisma/client@6.19.3`, `bcryptjs@3.0.3`. `@types/bcryptjs` descartado (bundled en v3). `pnpm-workspace.yaml` aprueba builds de `prisma` y `@prisma/engines`. `package-lock.json` eliminado. Siguiente: B.1 (Docker Compose).                                                       |
