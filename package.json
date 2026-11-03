@@ -13,7 +13,16 @@
     "graphql:codegen:watch": "graphql-codegen --config codegen.ts --watch",
     "backend:test": "tsx scripts/test-backend.ts",
     "mock:test": "tsx scripts/test-mock.ts",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:validate": "prisma validate",
+    "prisma:format": "prisma format",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:seed": "prisma db seed",
+    "prisma:studio": "prisma studio"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@graphql-typed-document-node/core": "^3.2.0",
