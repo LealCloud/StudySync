@@ -1,0 +1,415 @@
+// ============================================================
+// StudySync — Schema de Prisma
+// ============================================================
+//
+// Fuente de verdad del modelo de datos. Refleja el contrato interno
+// de métodos en `docs/backend-api/` (v2.0).
+//
+// Decisiones de diseño (ver `docs/backend-monolith-plan.md` §4 B.2):
+// - id: cuid() en todos los modelos.
+// - User: solo lo mínimo para autenticación.
+// - Profile: datos de presentación (image, bio, interests). `name`
+//   NO se duplica; se calcula en el resolver desde PersonalData.
+// - PersonalData: identidad y contacto (firstName, lastName, etc.).
+// - Sin modelo Session: D-7 = B elimina `sessions` del contrato.
+// ============================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================
+// ENUMS
+// ============================================================
+
+/// Roles del sistema. Contrato §3.1 / §10.
+enum UserRole {
+  student
+  teacher
+  admin
+}
+
+/// Tipo de documento de identidad. Contrato §3.7.
+enum DocumentType {
+  passport
+  dni
+}
+
+// ============================================================
+// USER
+// ============================================================
+
+/// Usuario autenticado. Solo lo necesario para autenticar y relacionar.
+/// Los datos de presentación viven en `Profile`. Los de identidad, en
+/// `PersonalData`.
+model User {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  /// Hash bcrypt. Nunca se expone en la API.
+  passwordHash String
+  role         UserRole
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  profile             Profile?
+  personalData        PersonalData?
+  privacySettings     PrivacySettings?
+  preferences         Preferences?
+  securitySettings    SecuritySettings?
+  account             Account?
+  subscription        Subscription?
+  paymentMethods      PaymentMethod[]
+  invoices            Invoice[]
+  courseEnrollments   CourseEnrollment[]
+  certificates        Certificate[]
+  passwordResetTokens PasswordResetToken[]
+  emailChangeTokens   EmailChangeToken[]
+
+  @@index([role])
+}
+
+// ============================================================
+// PROFILE
+// ============================================================
+
+/// Datos de presentación del usuario. Relación 1:1 con User.
+/// `name` no se almacena: se calcula desde PersonalData en el resolver.
+model Profile {
+  userId    String   @id
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image     String?
+  bio       Json?
+  interests String[] @default([])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// PERSONAL DATA
+// ============================================================
+
+/// Datos personales e identidad del usuario. Relación 1:1 con User.
+/// Semántica PATCH: `undefined` no modifica, `null` borra (excepto
+/// firstName/lastName), valor asigna. Contrato §3.7 y plan §5.2.3.
+model PersonalData {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName String
+  lastName  String
+
+  documentType DocumentType?
+  documentId   String?
+  phone        String?
+  country      String?
+  address      String?
+
+  /// Solo lectura desde el cliente. Bloquea firstName, lastName,
+  /// documentType y documentId. Contrato §3.7.
+  identityLocked Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// PRIVACY SETTINGS
+// ============================================================
+
+/// Configuración de privacidad del usuario. Relación 1:1 con User.
+/// Controla la visibilidad del perfil público (contrato §3.5, §8.2.18)
+/// y si otros usuarios pueden enviar mensajes directos.
+enum ProfileVisibility {
+  everyone
+  authenticated
+  nobody
+}
+
+model PrivacySettings {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  profileVisibility   ProfileVisibility @default(everyone)
+  emailVisibility     ProfileVisibility @default(authenticated)
+  phoneVisibility     ProfileVisibility @default(nobody)
+  allowDirectMessages Boolean           @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// PREFERENCES
+// ============================================================
+
+/// Preferencias del usuario. Relación 1:1 con User.
+/// `notifications` y `accessibility` son value objects JSON (contrato §8).
+enum Theme {
+  system
+  light
+  dark
+}
+
+model Preferences {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  language String @default("es")
+  theme    Theme  @default(system)
+  timezone String @default("America/Bogota")
+
+  /// { email: boolean, push: boolean, inApp: boolean }
+  notifications Json @default("{}")
+  /// { reducedMotion: boolean, highContrast: boolean }
+  accessibility Json @default("{}")
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// SECURITY SETTINGS
+// ============================================================
+
+/// Configuración de seguridad del usuario. Relación 1:1 con User.
+/// `twoFactorRequired` se calcula a partir del rol (student: opcional;
+/// teacher/admin: obligatorio). No se persiste, se deriva en el dominio.
+/// `sessions` NO existe: D-7 = B elimina la subsección del contrato.
+model SecuritySettings {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  emailVerified    Boolean @default(false)
+  twoFactorEnabled Boolean @default(false)
+
+  /// Secreto TOTP. Sensible: nunca se expone en la API (contrato §9).
+  /// Nullable porque 2FA puede no estar configurado.
+  twoFactorSecret String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// ACCOUNT
+// ============================================================
+
+/// Estado de la cuenta. Relación 1:1 con User.
+/// `suspended` e `inactive` solo los asigna el backend (admin o
+/// proceso automático). Contrato §5.6.
+enum AccountStatus {
+  active
+  pending_deactivation
+  suspended
+  inactive
+}
+
+model Account {
+  userId String @id
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  status                  AccountStatus @default(active)
+  deactivationScheduledAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// SUBSCRIPTION
+// ============================================================
+
+/// Suscripción del usuario. Relación 1:1 con User.
+/// `enterprise` no se asigna por API (se contrata por contacto).
+/// El sidebar consume `plan` para el `PlanCard`. Contrato §6.
+enum SubscriptionPlan {
+  free
+  premium
+  enterprise
+}
+
+enum SubscriptionStatus {
+  trialing
+  active
+  past_due
+  canceled
+  expired
+}
+
+model Subscription {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan              SubscriptionPlan   @default(free)
+  status            SubscriptionStatus @default(active)
+  startedAt         DateTime           @default(now())
+  currentPeriodEnd  DateTime?
+  cancelAtPeriodEnd Boolean            @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// PAYMENT METHOD
+// ============================================================
+
+/// Método de pago del usuario. Relación 1:N con User.
+/// Solo se exponen los campos del contrato §7 (nunca número completo,
+/// CVV ni equivalentes). Ver `_convenciones/reglas-transversales.md` §5.
+model PaymentMethod {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  brand           String?
+  last4           String?
+  expirationMonth Int?
+  expirationYear  Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// ============================================================
+// INVOICE
+// ============================================================
+
+/// Factura del usuario. Relación 1:N con User.
+/// `amount` es entero en la unidad menor de la moneda (contrato §7).
+/// `downloadUrl` puede ser null si la factura no está firmada.
+enum InvoiceStatus {
+  draft
+  open
+  paid
+  void
+  uncollectible
+}
+
+model Invoice {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  number      String
+  amount      Int
+  currency    String
+  status      InvoiceStatus @default(draft)
+  issuedAt    DateTime      @default(now())
+  downloadUrl String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, number])
+}
+
+// ============================================================
+// COURSE ENROLLMENT
+// ============================================================
+
+/// Inscripción del usuario a un curso. Relación 1:N con User.
+/// Solo lectura desde User Settings. El módulo Courses es la fuente
+/// de verdad del progreso. Contrato §5.7.
+/// `progress` es fracción `[0.0, 1.0]` (no porcentaje). El render
+/// multiplica por 100.
+enum CourseEnrollmentStatus {
+  active
+  completed
+  paused
+}
+
+model CourseEnrollment {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId    String
+  title       String
+  progress    Float                  @default(0)
+  status      CourseEnrollmentStatus @default(active)
+  enrolledAt  DateTime               @default(now())
+  completedAt DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, courseId])
+}
+
+// ============================================================
+// CERTIFICATE
+// ============================================================
+
+/// Certificado emitido al usuario. Relación 1:N con User.
+/// `downloadUrl` es una URL absoluta firmada con expiración
+/// (contrato §5.8). Solo lectura desde User Settings.
+model Certificate {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  courseId          String
+  courseTitle       String
+  certificateNumber String
+  issuedAt          DateTime @default(now())
+  downloadUrl       String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, certificateNumber])
+}
+
+// ============================================================
+// PASSWORD RESET TOKEN
+// ============================================================
+
+/// Token de recuperación de contraseña. Relación 1:N con User.
+/// Un solo uso, con expiración. Contrato §3.4 (`reset-password`,
+/// `validate-reset-token`) y §3.8 (`password`).
+///
+/// `token` es el identificador que viaja en la URL de recuperación.
+/// Se guarda hasheado en la capa de dominio (Fase C); el schema solo
+/// define el campo.
+model PasswordResetToken {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Hash del token. Nunca se expone en la API.
+  token     String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+}
+
+// ============================================================
+// EMAIL CHANGE TOKEN
+// ============================================================
+
+/// Token de confirmación de cambio de correo. Relación 1:N con User.
+/// Un solo uso, con expiración. Contrato §3.8 (`email-change`).
+///
+/// El correo no cambia hasta que el usuario confirma el enlace enviado
+/// a `newEmail`. El `token` se guarda hasheado en la capa de dominio.
+model EmailChangeToken {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Hash del token. Nunca se expone en la API.
+  token     String    @unique
+  newEmail  String
+  expiresAt DateTime
+  usedAt    DateTime?
+
+  createdAt DateTime @default(now())
+}
