@@ -1,36 +1,110 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# StudySync
 
-## Getting Started
+Plataforma educativa (dashboard de estudiante, profesor y admin, más sitio
+público). Monolito Next.js con BFF GraphQL integrado y persistencia propia
+(Prisma + PostgreSQL).
 
-First, run the development server:
+## Stack
+
+- **Next.js 16** (App Router, Server + Client Components).
+- **React 19**.
+- **TypeScript**.
+- **Auth.js v5** (`strategy: 'jwt'` puro, sin tokens externos).
+- **Prisma + PostgreSQL** (local vía Docker Compose).
+- **`bcryptjs`** para hashing de contraseñas.
+- **URQL** + `@urql/exchange-graphcache` (cliente GraphQL del dashboard).
+- **GraphQL Yoga** como BFF en `/api/graphql`.
+- **`next-intl`** (español e inglés).
+- **`react-hook-form` + `zod`**.
+- **Tailwind CSS v4**.
+
+## Requisitos
+
+- Node.js ≥ 20.9 (lo exige Next.js 16).
+- `pnpm` (ver `packageManager` en `package.json`).
+- Docker y Docker Compose.
+
+## Setup local
+
+### 1. Dependencias
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Base de datos
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+docker compose up -d
+docker compose ps   # esperar a que el contenedor esté "healthy"
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Variables de entorno
 
-## Learn More
+```bash
+cp .env.example .env
+# Generar AUTH_SECRET y pegarlo en .env
+openssl rand -base64 32
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 4. Migraciones y seed
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm prisma migrate dev
+pnpm prisma db seed
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### 5. Desarrollo
 
-## Deploy on Vercel
+```bash
+pnpm dev
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Modos de ejecución
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| `BACKEND_MODE`    | Fuente de datos                       | Cuándo                  |
+| ----------------- | ------------------------------------- | ----------------------- |
+| `local` (default) | PostgreSQL (Docker)                   | Desarrollo con DB real. |
+| `mock`            | En memoria (`globalThis.__mockStore`) | Demos, tests, Vercel.   |
+
+## Scripts
+
+| Comando                 | Descripción                   |
+| ----------------------- | ----------------------------- |
+| `pnpm dev`              | Servidor de desarrollo.       |
+| `pnpm build`            | Build de producción.          |
+| `pnpm start`            | Servidor de producción.       |
+| `pnpm lint`             | ESLint.                       |
+| `pnpm type-check`       | TypeScript (sin emitir).      |
+| `pnpm format`           | Prettier.                     |
+| `pnpm graphql:validate` | Valida el schema GraphQL.     |
+| `pnpm graphql:codegen`  | Regenera tipos y `schema.ts`. |
+| `pnpm mock:test`        | Suite del mock (in-process).  |
+
+## Estructura del proyecto
+
+```text
+docs/
+  backend-api/              Contrato interno de métodos (v2.0)
+  backend-monolith-plan.md  Plan de migración a monolito
+  user-settings-plan.md     Plan de User Settings (fases 0–5)
+prisma/
+  schema.prisma             Modelos de Prisma
+  migrations/               Migraciones
+  seed.ts                   Datos de desarrollo
+src/
+  app/                      App Router
+  lib/
+    domain/                 Lógica de negocio (Fase C)
+    backend/                Interfaz BackendClient + LocalBackendClient
+    db/prisma.ts            Singleton de PrismaClient
+    schemas/                Zod
+    errors/                 Códigos de error
+  graphql/                  Schema, resolvers, operations, generated
+```
+
+## Documentación
+
+- `docs/backend-api/` — Contrato interno de métodos.
+- `docs/backend-monolith-plan.md` — Plan de migración a monolito.
+- `docs/user-settings-plan.md` — Plan de User Settings.

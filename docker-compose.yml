@@ -1,0 +1,21 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: studysync-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: studysync
+      POSTGRES_PASSWORD: studysync
+      POSTGRES_DB: studysync
+    ports:
+      - '5432:5432'
+    volumes:
+      - studysync-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U studysync -d studysync']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  studysync-postgres-data:
