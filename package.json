@@ -11,7 +11,6 @@
     "graphql:validate": "tsx scripts/validate-graphql-schema.ts",
     "graphql:codegen": "graphql-codegen --config codegen.ts",
     "graphql:codegen:watch": "graphql-codegen --config codegen.ts --watch",
-    "backend:test": "tsx scripts/test-backend.ts",
     "mock:test": "tsx scripts/test-mock.ts",
     "type-check": "tsc --noEmit",
     "prisma:generate": "prisma generate",

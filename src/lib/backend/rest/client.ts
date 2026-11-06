@@ -8,8 +8,8 @@ import type {
   BackendCourseEnrollment,
   BackendForgotPasswordInput,
   BackendInvoice,
+  BackendLoginData,
   BackendLoginInput,
-  BackendLoginResponse,
   BackendPaymentMethod,
   BackendPersonalData,
   BackendPreferences,
@@ -22,7 +22,6 @@ import type {
   BackendSecuritySettings,
   BackendSubscription,
   BackendSubscriptionPlan,
-  BackendTokenPairResponse,
   BackendTwoFactorSetup,
   BackendUser,
   BackendValidateResetTokenInput,
@@ -156,11 +155,22 @@ export class RestBackendClient implements BackendClient {
 
   auth = {
     login: (input: BackendLoginInput) =>
-      this.postJson<BackendLoginResponse>('/auth/login', input),
+      this.postJson<{
+        status: number;
+        message: string;
+        data: BackendLoginData;
+      }>('/auth/login', input),
     refresh: (refreshToken: string) =>
-      this.postJson<BackendTokenPairResponse>('/auth/refresh', {
-        refreshToken,
-      }),
+      this.postJson<{
+        status: number;
+        message: string;
+        data: {
+          token: string;
+          refreshToken: string;
+          expiresIn: number;
+          refreshExpiresIn: number;
+        };
+      }>('/auth/refresh', { refreshToken }),
     logout: (refreshToken: string) =>
       this.postJson('/auth/logout', { refreshToken }),
     register: (input: BackendRegisterInput) =>

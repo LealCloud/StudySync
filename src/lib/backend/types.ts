@@ -44,6 +44,9 @@ export type BackendUpdatePersonalDataInput = Partial<
   Omit<BackendPersonalData, 'identityLocked'>
 >;
 
+// TODO(phase-g): eliminar junto con SessionsSection.tsx (D-7 = B).
+// El contrato v2.0 ya no expone `sessions`; se difiere a Fase G para no
+// romper SessionsSection.tsx en C.0. Ver docs/backend-monolith-plan.md §Fase G.
 export interface BackendSecuritySession {
   id: string;
   deviceName: string | null;
@@ -57,6 +60,7 @@ export interface BackendSecuritySettings {
   emailVerified: boolean;
   twoFactorEnabled: boolean;
   twoFactorRequired: boolean;
+  // TODO(phase-g): eliminar (D-7 = B). Ver nota en BackendSecuritySession.
   sessions: BackendSecuritySession[];
 }
 export interface BackendSecurityOperationResult {
@@ -198,30 +202,14 @@ export interface BackendContactInput {
   message: string;
 }
 
-export interface BackendTokenPair {
+export interface BackendLoginData {
+  id: string;
+  role: 'student' | 'teacher' | 'admin';
   token: string;
   refreshToken: string;
   expiresIn: number;
   refreshExpiresIn: number;
 }
-
-export interface BackendLoginData extends BackendTokenPair {
-  firstName: string;
-  lastName: string;
-  id: string;
-  role: 'student' | 'teacher' | 'admin';
-  subscription?: 'free' | 'premium' | 'enterprise' | null;
-  image: string | null;
-}
-
-export interface BackendDataResponse<T> {
-  status: number;
-  message: string;
-  data: T;
-}
-
-export type BackendLoginResponse = BackendDataResponse<BackendLoginData>;
-export type BackendTokenPairResponse = BackendDataResponse<BackendTokenPair>;
 
 export interface BackendResetTokenValidationResponse {
   valid: true;

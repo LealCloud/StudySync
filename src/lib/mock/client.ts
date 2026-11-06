@@ -7,7 +7,6 @@ import type {
   BackendDocumentType,
   BackendForgotPasswordInput,
   BackendLoginInput,
-  BackendLoginResponse,
   BackendPersonalData,
   BackendPreferences,
   BackendPrivacySettings,
@@ -17,8 +16,6 @@ import type {
   BackendResetTokenValidationResponse,
   BackendSecuritySession,
   BackendSubscription,
-  BackendTokenPair,
-  BackendTokenPairResponse,
   BackendUpdateBioInput,
   BackendValidateResetTokenInput,
 } from '../backend/types';
@@ -74,7 +71,7 @@ function mockApiError<T = unknown>(
   return mockResponse({ error: { code, message, details: null } } as T, status);
 }
 
-function mockTokenPair(): BackendTokenPair {
+function mockTokenPair() {
   return {
     token: MOCK_ACCESS_TOKEN,
     refreshToken: MOCK_REFRESH_TOKEN,
@@ -765,34 +762,43 @@ export class MockPublicBackendClient implements PublicBackendClient {
   auth = {
     login: async (
       input: BackendLoginInput,
-    ): Promise<RestBackendResponse<BackendLoginResponse>> => {
+    ): Promise<
+      RestBackendResponse<{
+        status: number;
+        message: string;
+        data: {
+          id: string;
+          role: 'student' | 'teacher' | 'admin';
+          token: string;
+          refreshToken: string;
+          expiresIn: number;
+          refreshExpiresIn: number;
+        };
+      }>
+    > => {
       if (
         input.email === 'invalid@example.com' ||
         input.password === 'wrong-password'
       ) {
-        return mockApiError<BackendLoginResponse>(
+        return mockApiError(
           401,
           'UNAUTHENTICATED',
           'Credenciales incorrectas.',
         );
       }
       if (input.email.startsWith('ratelimited+')) {
-        return mockApiError<BackendLoginResponse>(
+        return mockApiError(
           429,
           'RATE_LIMITED',
           'Demasiados intentos.',
         );
       }
-      const data: BackendLoginResponse = {
+      const data = {
         status: 200,
         message: 'OK',
         data: {
-          firstName: 'Test',
-          lastName: 'User',
           id: MOCK_USER_ID,
-          role: 'student',
-          subscription: 'free',
-          image: null,
+          role: 'student' as const,
           ...mockTokenPair(),
         },
       };
@@ -801,9 +807,20 @@ export class MockPublicBackendClient implements PublicBackendClient {
 
     refresh: async (
       refreshToken: string,
-    ): Promise<RestBackendResponse<BackendTokenPairResponse>> => {
+    ): Promise<
+      RestBackendResponse<{
+        status: number;
+        message: string;
+        data: {
+          token: string;
+          refreshToken: string;
+          expiresIn: number;
+          refreshExpiresIn: number;
+        };
+      }>
+    > => {
       if (!this.validRefreshTokens.has(refreshToken)) {
-        return mockApiError<BackendTokenPairResponse>(
+        return mockApiError(
           401,
           'UNAUTHENTICATED',
           'Refresh token inválido.',

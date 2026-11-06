@@ -7,8 +7,8 @@ import type {
   BackendCourseEnrollment,
   BackendForgotPasswordInput,
   BackendInvoice,
+  BackendLoginData,
   BackendLoginInput,
-  BackendLoginResponse,
   BackendPaymentMethod,
   BackendPersonalData,
   BackendPreferences,
@@ -22,7 +22,6 @@ import type {
   BackendSecuritySettings,
   BackendSubscription,
   BackendSubscriptionPlan,
-  BackendTokenPairResponse,
   BackendTwoFactorSetup,
   BackendUpdatePersonalDataInput,
   BackendUpdatePreferencesInput,
@@ -89,10 +88,27 @@ export interface PublicBackendClient {
   auth: {
     login(
       input: BackendLoginInput,
-    ): Promise<RestBackendResponse<BackendLoginResponse>>;
+    ): Promise<
+      RestBackendResponse<{
+        status: number;
+        message: string;
+        data: BackendLoginData;
+      }>
+    >;
     refresh(
       refreshToken: string,
-    ): Promise<RestBackendResponse<BackendTokenPairResponse>>;
+    ): Promise<
+      RestBackendResponse<{
+        status: number;
+        message: string;
+        data: {
+          token: string;
+          refreshToken: string;
+          expiresIn: number;
+          refreshExpiresIn: number;
+        };
+      }>
+    >;
     logout(refreshToken: string): Promise<RestBackendResponse>;
     register(input: BackendRegisterInput): Promise<RestBackendResponse>;
     forgotPassword(

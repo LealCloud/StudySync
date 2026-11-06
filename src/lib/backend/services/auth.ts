@@ -10,7 +10,6 @@ import type {
   BackendLoginData,
   BackendLoginInput,
   BackendRegisterInput,
-  BackendTokenPair,
 } from '../types';
 import {
   assertNotRateLimited,
@@ -33,24 +32,11 @@ function isLoginEnvelope(
     data?.role === 'student' ||
     data?.role === 'teacher' ||
     data?.role === 'admin';
-  const subscriptionIsValid =
-    data?.role === 'student'
-      ? 'subscription' in data &&
-        (data.subscription === null ||
-          data.subscription === 'free' ||
-          data.subscription === 'premium' ||
-          data.subscription === 'enterprise')
-      : !!data && !('subscription' in data);
-
   return (
     response.status === 200 &&
     !!data &&
-    typeof data.firstName === 'string' &&
-    typeof data.lastName === 'string' &&
     typeof data.id === 'string' &&
     roleIsValid &&
-    subscriptionIsValid &&
-    (typeof data.image === 'string' || data.image === null) &&
     typeof data.token === 'string' &&
     typeof data.refreshToken === 'string' &&
     typeof data.expiresIn === 'number' &&
@@ -60,9 +46,16 @@ function isLoginEnvelope(
   );
 }
 
-function isTokenPair(value: unknown): value is BackendTokenPair {
+interface AuthTokenPair {
+  token: string;
+  refreshToken: string;
+  expiresIn: number;
+  refreshExpiresIn: number;
+}
+
+function isTokenPair(value: unknown): value is AuthTokenPair {
   if (!value || typeof value !== 'object') return false;
-  const tokens = value as Partial<BackendTokenPair>;
+  const tokens = value as Partial<AuthTokenPair>;
   return (
     typeof tokens.token === 'string' &&
     tokens.token.length > 0 &&
@@ -101,7 +94,7 @@ export async function loginWithPassword(
 export async function refreshTokens(
   refreshToken: string,
 ): Promise<
-  | { status: 'ok'; data: BackendTokenPair }
+  | { status: 'ok'; data: AuthTokenPair }
   | { status: 'expired' }
   | { status: 'temporary' }
 > {
