@@ -70,23 +70,24 @@ este servicio monolítico (Next.js + BFF GraphQL + persistencia propia).
 
 ## 2. Decisiones cerradas
 
-| #     | Decisión                                    | Valor                                                           | Notas                                                                                                                                                                                                                                                                                                      |
-| ----- | ------------------------------------------- | --------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| D-1   | ORM + DB                                    | **Prisma + PostgreSQL**                                         | DB nueva, sin migración de datos                                                                                                                                                                                                                                                                           |
-| D-2   | Indirección `services/`                     | **Conservar** la interfaz `BackendClient`                       | Los resolvers GraphQL no cambian                                                                                                                                                                                                                                                                           |
-| D-3   | Modo `mock`                                 | **Modo de ejecución** (`BACKEND_MODE=mock`)                     | `pnpm dev` sin DB funciona                                                                                                                                                                                                                                                                                 |
-| D-4   | Auth                                        | **Auth.js puro** (sin access/refresh externos)                  |                                                                                                                                                                                                                                                                                                            |
-| D-4.1 | `session.user`                              | **`{ id, role }`**                                              | Se elimina `error` y los tokens del JWT                                                                                                                                                                                                                                                                    |
-| D-4.2 | `RefreshTokenExpired` / `RefreshTokenError` | **Eliminados**                                                  | Auth.js redirige solo                                                                                                                                                                                                                                                                                      |
-| D-5   | Contrato `docs/backend-api/`                | **Contrato interno de métodos**                                 | Se conserva el contenido, cambia el marco                                                                                                                                                                                                                                                                  |
-| D-6   | Route handlers                              | **Conservar**, llaman a funciones de dominio                    | No se migran a Server Actions                                                                                                                                                                                                                                                                              |
-| D-7   | `mySecuritySettings.sessions`               | **B — eliminar**                                                | Se borra `SessionsSection.tsx` y se actualiza el contrato                                                                                                                                                                                                                                                  |
-| D-8   | Hash de contraseñas                         | **`bcryptjs`**                                                  | Sin binarios, portable                                                                                                                                                                                                                                                                                     |
-| D-9   | Migración de datos                          | **No** (proyecto académico)                                     | Arranca con DB vacía + seed                                                                                                                                                                                                                                                                                |
-| D-9.1 | PostgreSQL                                  | **Docker Compose** (`postgres:16`) en local; **mock en Vercel** | `DATABASE_URL` en `.env.local` para desarrollo. En Vercel, la demo corre con `BACKEND_MODE=mock` y no se conecta a PostgreSQL (trabajo académico, sin costos). Docker Compose no se usa en producción.                                                                                                     |
-| D-10  | Alcance del mock                            | **A corto plazo: reimplementa** (como hoy)                      | B (compartir lógica) queda como mejora futura                                                                                                                                                                                                                                                              |
-| D-11  | Firma de `LocalBackendClient`               | **C-1: recibe `userId` en el constructor**                      | Respeta D-2 (resolvers no cambian). El `context()` de Yoga obtiene `session.user.id` vía `auth()` y lo pasa al cliente. Cada método del cliente filtra por `this.userId`. Si en el futuro se necesita multi-tenant o service accounts, se refactoriza a C-2 (userId como primer argumento de cada método). |
-| D-12  | `src/lib/backend/services/auth.ts`          | **Eliminar en Fase C.6**                                        | Los route handlers de Fase E y `authorize()` de Fase D llaman directamente a `src/lib/domain/auth.ts`. Una capa menos de indirección, menos superficie de error. `loginWithPassword` se renombra/mueve a `authenticateUser` dentro del dominio.                                                            |
+| #     | Decisión                                    | Valor                                                           | Notas                                                                                                                                                                                                                                                                                                                                                                                                    |
+| ----- | ------------------------------------------- | --------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| D-1   | ORM + DB                                    | **Prisma + PostgreSQL**                                         | DB nueva, sin migración de datos                                                                                                                                                                                                                                                                                                                                                                         |
+| D-2   | Indirección `services/`                     | **Conservar** la interfaz `BackendClient`                       | Los resolvers GraphQL no cambian                                                                                                                                                                                                                                                                                                                                                                         |
+| D-3   | Modo `mock`                                 | **Modo de ejecución** (`BACKEND_MODE=mock`)                     | `pnpm dev` sin DB funciona                                                                                                                                                                                                                                                                                                                                                                               |
+| D-4   | Auth                                        | **Auth.js puro** (sin access/refresh externos)                  |                                                                                                                                                                                                                                                                                                                                                                                                          |
+| D-4.1 | `session.user`                              | **`{ id, role }`**                                              | Se elimina `error` y los tokens del JWT                                                                                                                                                                                                                                                                                                                                                                  |
+| D-4.2 | `RefreshTokenExpired` / `RefreshTokenError` | **Eliminados**                                                  | Auth.js redirige solo                                                                                                                                                                                                                                                                                                                                                                                    |
+| D-5   | Contrato `docs/backend-api/`                | **Contrato interno de métodos**                                 | Se conserva el contenido, cambia el marco                                                                                                                                                                                                                                                                                                                                                                |
+| D-6   | Route handlers                              | **Conservar**, llaman a funciones de dominio                    | No se migran a Server Actions                                                                                                                                                                                                                                                                                                                                                                            |
+| D-7   | `mySecuritySettings.sessions`               | **B — eliminar**                                                | Se borra `SessionsSection.tsx` y se actualiza el contrato                                                                                                                                                                                                                                                                                                                                                |
+| D-8   | Hash de contraseñas                         | **`bcryptjs`**                                                  | Sin binarios, portable                                                                                                                                                                                                                                                                                                                                                                                   |
+| D-9   | Migración de datos                          | **No** (proyecto académico)                                     | Arranca con DB vacía + seed                                                                                                                                                                                                                                                                                                                                                                              |
+| D-9.1 | PostgreSQL                                  | **Docker Compose** (`postgres:16`) en local; **mock en Vercel** | `DATABASE_URL` en `.env.local` para desarrollo. En Vercel, la demo corre con `BACKEND_MODE=mock` y no se conecta a PostgreSQL (trabajo académico, sin costos). Docker Compose no se usa en producción.                                                                                                                                                                                                   |
+| D-10  | Alcance del mock                            | **A corto plazo: reimplementa** (como hoy)                      | B (compartir lógica) queda como mejora futura                                                                                                                                                                                                                                                                                                                                                            |
+| D-11  | Firma de `LocalBackendClient`               | **C-1: recibe `userId` en el constructor**                      | Respeta D-2 (resolvers no cambian). El `context()` de Yoga obtiene `session.user.id` vía `auth()` y lo pasa al cliente. Cada método del cliente filtra por `this.userId`. Si en el futuro se necesita multi-tenant o service accounts, se refactoriza a C-2 (userId como primer argumento de cada método).                                                                                               |
+| D-12  | `src/lib/backend/services/auth.ts`          | **Eliminar en Fase C.6**                                        | Los route handlers de Fase E y `authorize()` de Fase D llaman directamente a `src/lib/domain/auth.ts`. Una capa menos de indirección, menos superficie de error. `loginWithPassword` se renombra/mueve a `authenticateUser` dentro del dominio.                                                                                                                                                          |
+| D-13  | Versión de Prisma                           | **Fijada en 6.x (6.19.3)**                                      | El warning `datasource.url is no longer supported` que aparece en algunos entornos proviene de Prisma 7+ y **no aplica** a nuestro proyecto. Prisma 6 acepta `url = env("DATABASE_URL")` en el bloque `datasource`, y la migración B.3 se aplicó correctamente. No se migra a `prisma.config.ts` hasta que el plan lo requiera explícitamente. Referencia: §"Deudas conocidas" de `Rol y propósito.txt`. |
 
 ---
 
@@ -226,7 +227,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 **Commit sugerido:** `docs(contract): reescribir contrato como monolito con Auth.js puro`
 
-### Fase B — Capa de datos (bloqueante)
+### Fase B — Capa de datos (bloqueante) ✅ CERRADA
 
 - [x] **B.0** Instalar `prisma@^6`, `@prisma/client@^6` y `bcryptjs@^3`
       (con `@types/bcryptjs` descartado: `bcryptjs@3` incluye sus tipos).
@@ -234,43 +235,111 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       Commit: `5c9a323`.
 - [x] **B.0.1** Eliminar `package-lock.json` en favor de `pnpm`.
       Commit: `ae42d93`.
-- [ ] **B.1** Verificar/crear `docker-compose.yml` y `.env.local`.
-- [ ] **B.2** Crear `prisma/schema.prisma` con los modelos del contrato
-      interno:
-  - `User` (id, email, passwordHash, role, image, bio, interests, createdAt)
+- [x] **B.1** Crear `docker-compose.yml` (`postgres:16`, volumen nombrado,
+      healthcheck) y consolidar `.env` (renombrado desde `.env.local`:
+      Prisma CLI lee `.env`, no `.env.local`). Reescritura de `README.md`.
+      Commit: `667afe7`.
+- [x] **B.2** Crear `prisma/schema.prisma` con 14 modelos + 9 enums.
+      El schema real difiere del borrador original:
+  - `User` (id, email, passwordHash, role, createdAt, updatedAt).
+    **No** lleva `image`, `bio`, `interests` (viven en `Profile`).
+  - `Profile` (userId, image, bio Json, interests String[]). Relación 1:1.
   - `PersonalData` (userId, firstName, lastName, documentType, documentId,
-    phone, country, address, identityLocked)
+    phone, country, address, identityLocked). Relación 1:1.
   - `PrivacySettings` (userId, profileVisibility, emailVisibility,
-    phoneVisibility, allowDirectMessages)
-  - `Preferences` (userId, language, theme, timezone, notifications JSON,
-    accessibility JSON)
+    phoneVisibility, allowDirectMessages). Relación 1:1.
+  - `Preferences` (userId, language, theme, timezone, notifications Json,
+    accessibility Json). Relación 1:1.
   - `SecuritySettings` (userId, emailVerified, twoFactorEnabled,
-    twoFactorRequired, twoFactorSecret)
+    twoFactorSecret). **No** lleva `twoFactorRequired` (se deriva del rol
+    en la capa de dominio). Relación 1:1.
   - _(no se crea modelo `Session`: D-7 = B elimina `sessions` del contrato)_
-  - `Account` (userId, status, deactivationScheduledAt)
-  - `Subscription` (id, userId, plan, status, startedAt, currentPeriodEnd,
-    cancelAtPeriodEnd)
+  - `Account` (userId, status, deactivationScheduledAt). Relación 1:1.
+  - `Subscription` (id, userId @unique, plan, status, startedAt,
+    currentPeriodEnd, cancelAtPeriodEnd). Relación 1:1.
   - `PaymentMethod` (id, userId, brand, last4, expirationMonth,
-    expirationYear)
-  - `Invoice` (id, userId, number, amount, currency, status, issuedAt,
-    downloadUrl)
+    expirationYear). Relación 1:N.
+  - `Invoice` (id, userId, number, amount Int, currency, status, issuedAt,
+    downloadUrl). Relación 1:N. `@@unique([userId, number])`.
   - `Certificate` (id, userId, courseId, courseTitle, certificateNumber,
-    issuedAt, downloadUrl)
-  - `CourseEnrollment` (id, userId, courseId, title, progress, status,
-    enrolledAt, completedAt)
-  - `PasswordResetToken` (token, userId, expiresAt, usedAt)
-  - `EmailChangeToken` (token, userId, newEmail, expiresAt, usedAt)
-- [ ] **B.3** Crear `prisma/seed.ts` con un usuario de desarrollo
-      (`test@example.com` / `ValidPass1!`) y datos fixture (una suscripción
-      `free`, un método de pago, una factura, un certificado, un curso,
-      `PersonalData` completo, `SecuritySettings` sin 2FA).
-- [ ] **B.4** `pnpm prisma migrate dev --name init` y commitear la migración.
-- [ ] **B.5** Crear `src/lib/db/prisma.ts` (singleton de `PrismaClient` para
-      Next.js, con `globalThis` para HMR).
+    issuedAt, downloadUrl). Relación 1:N.
+    `@@unique([userId, certificateNumber])`.
+  - `CourseEnrollment` (id, userId, courseId, title, progress Float,
+    status, enrolledAt, completedAt). Relación 1:N.
+    `@@unique([userId, courseId])`.
+  - `PasswordResetToken` (id, userId, token @unique, expiresAt, usedAt).
+    Relación 1:N.
+  - `EmailChangeToken` (id, userId, token @unique, newEmail, expiresAt,
+    usedAt). Relación 1:N.
+  - Scripts de Prisma en `package.json` (`prisma:generate`, `:validate`,
+    `:format`, `:migrate`, `:seed`, `:studio`). Bloque
+    `"prisma": { "seed": "tsx prisma/seed.ts" }`.
+  - Commits: `bcdc76f`, `9a5af2a`.
+- [x] **B.3** `pnpm prisma:migrate --name init` aplicada: migración
+      `20261104015947_init`. 14 tablas + `_prisma_migrations` (15 en `\dt`),
+      9 enums en `\dT+`, 13 FKs `ON DELETE CASCADE`, uniques e índices
+      verificados. Cliente de Prisma regenerado (`v6.19.3`).
+      Commit: `c933b2c`.
+- [x] **B.4** Crear `prisma/seed.ts` idempotente vía `upsert` por PK.
+      **3 usuarios** (no 1):
+  - `student@example.com` (datos ricos: subscription `premium`, payment
+    method Visa `4242`, invoice `INV-2026-001`, certificate
+    `CERT-2026-001`, enrollment `course_graphql_basico` con progress 0.65).
+  - `teacher@example.com` (mínimos).
+  - `admin@example.com` (mínimos).
+  - Password común: `ValidPass1!` (bcryptjs, rounds 10).
+  - IDs fijos para determinismo: `usr_student`, `usr_teacher`, `usr_admin`,
+    `sub_student`, `pm_student_001`, `inv_student_001`,
+    `enr_student_001`, `cert_student_001`.
+  - Decisiones: D-B4.1 (seed crudo con `PrismaClient`), D-B4.2 (3
+    usuarios), D-B4.3 (import directo de `@prisma/client`), D-B4.4
+    (`TODO(seed-shared-prisma)` diferido a después de B.5).
+  - Verificado: 2 ejecuciones seguidas sin errores de unique constraint,
+    conteos idénticos (`users=3`, `subs=1`, `pms=1`, `invoices=1`,
+    `enrollments=1`, `certs=1`).
+  - Commit: `<hash_B4>`.
+- [x] **B.5** Crear `src/lib/db/prisma.ts` (singleton de `PrismaClient`
+      para el runtime de Next.js). Patrón `globalThis.prisma` (D-B5.1),
+      `import 'server-only'` como salvaguarda (D-B5.2),
+      `logLevels` variable por `NODE_ENV` (D-B5.3), `server-only@0.0.1`
+      añadido a `dependencies`.
+      Smoke test `SELECT 1` directo validado (`[ { ok: 1 } ]`).
+      Nota: el smoke test **no** puede importar `prisma.ts` desde `tsx`
+      (el `server-only` lanza por el runtime), por eso se valida con
+      `PrismaClient` directo. El singleton en sí queda validado
+      indirectamente (mismo constructor, mismo `DATABASE_URL`).
+      Commit: `<hash_B5>`.
 
 **Commit sugerido:** `feat(db): introducir Prisma y schema inicial`
 
 ### Fase C — Capa de dominio (bloqueante)
+
+- [ ] **C.0** Auditar el contrato v2.0 (`docs/backend-api/**`) contra los
+      tipos `Backend*` en `src/lib/backend/types.ts`.
+  - **Motivo:** los tipos se escribieron contra el contrato v1.3.1 (REST
+    externo). La Fase A migró el contrato a v2.0 (monolito con Auth.js
+    puro), y ese cambio tocó campos que pueden no estar reflejados. Si
+    arrancamos C.1 sin auditar, implementaremos la capa de dominio contra
+    tipos obsoletos y descubriremos los desfases uno por uno.
+  - **Casos conocidos a resolver en C.0:**
+    - `BackendSecuritySettings.sessions` → eliminar (D-7 = B, no hay
+      modelo `Session`).
+    - `BackendLoginData` y todo lo relacionado con tokens externos
+      (`BackendTokenPairResponse`, refresh, logout) → evaluar si se
+      elimina o se reduce a `{ id, role }` para `authenticateUser`.
+    - Resto de interfaces `Backend*` → cruzar contra
+      `docs/backend-api/_rutas/**` v2.0 y contra
+      `prisma/schema.prisma` (14 modelos + 9 enums).
+  - **Entregable:** tabla `Interfaz | Campo | Estado | Acción` en un
+    turno de solo lectura, sin tocar código.
+  - **Resolución:** parches al archivo `src/lib/backend/types.ts` en
+    bloques "antes / después", un bloque por interfaz tocada.
+  - **Validación:** `pnpm type-check` + `pnpm lint`. `pnpm mock:test`
+    puede romper (el mock todavía usa las interfaces viejas); los
+    ajustes al mock se difieren a C.6 o a una sub-fase propia, decisión
+    en el momento.
+  - **Commit sugerido:** `refactor(types): alinear Backend* con el
+contrato v2.0`
 
 - [ ] **C.1** Crear `src/lib/domain/*` con funciones de negocio, una por
       método de `BackendClient`:
@@ -402,10 +471,16 @@ session`, `revokeSession accepts a non-current session` y
 
 ## 5. Bitácora
 
-| Fecha      | Fase                                     | Estado      | Notas                                                                                                                                                                                                                                                                                                 |
-| ---------- | ---------------------------------------- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| —          | Plan creado                              | Borrador    | Decisiones D-1 a D-10 cerradas.                                                                                                                                                                                                                                                                       |
-| —          | Decisiones D-4.1, D-4.2, D-7, D-8, D-9.1 | Cerradas    | `session.user={id,role}`, sin `error`; `sessions` eliminado (B); `bcryptjs`; Docker Compose. Listo para Fase A.                                                                                                                                                                                       |
-| —          | Limpieza del borrador                    | Cerrada     | Corregido naming `services/`→`src/lib/domain/`, Fase A.1, Fase B.2 (sin `Session`), Fase G (solo D-7 = B), Fase H (H.1, H.3 duplicada), Fase D (IDs).                                                                                                                                                 |
-| 2026-11-01 | **Fase A — Decisiones y documentación**  | **Cerrada** | 10 commits (`93281b3` … `fa4fbbe`). Contrato alineado a v2.0: `arquitectura.md`, `autenticacion.md`, `README.md` (31 métodos), `historial-cambios.md`, `.env.example`, `password.md`. D-11 = C-1 (`LocalBackendClient` con `userId`), D-12 = eliminar `services/auth.ts`. Siguiente: Fase B (Prisma). |
-| 2026-11-01 | **Fase B.0 — Dependencias**              | **Cerrada** | `prisma@6.19.3`, `@prisma/client@6.19.3`, `bcryptjs@3.0.3`. `@types/bcryptjs` descartado (bundled en v3). `pnpm-workspace.yaml` aprueba builds de `prisma` y `@prisma/engines`. `package-lock.json` eliminado. Siguiente: B.1 (Docker Compose).                                                       |
+| Fecha      | Fase                                     | Estado      | Notas                                                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------- | ---------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| —          | Plan creado                              | Borrador    | Decisiones D-1 a D-10 cerradas.                                                                                                                                                                                                                                                                                                                                                                                     |
+| —          | Decisiones D-4.1, D-4.2, D-7, D-8, D-9.1 | Cerradas    | `session.user={id,role}`, sin `error`; `sessions` eliminado (B); `bcryptjs`; Docker Compose. Listo para Fase A.                                                                                                                                                                                                                                                                                                     |
+| —          | Limpieza del borrador                    | Cerrada     | Corregido naming `services/`→`src/lib/domain/`, Fase A.1, Fase B.2 (sin `Session`), Fase G (solo D-7 = B), Fase H (H.1, H.3 duplicada), Fase D (IDs).                                                                                                                                                                                                                                                               |
+| 2026-11-01 | **Fase A — Decisiones y documentación**  | **Cerrada** | 10 commits (`93281b3` … `fa4fbbe`). Contrato alineado a v2.0: `arquitectura.md`, `autenticacion.md`, `README.md` (31 métodos), `historial-cambios.md`, `.env.example`, `password.md`. D-11 = C-1 (`LocalBackendClient` con `userId`), D-12 = eliminar `services/auth.ts`. Siguiente: Fase B (Prisma).                                                                                                               |
+| 2026-11-01 | **Fase B.0 — Dependencias**              | **Cerrada** | `prisma@6.19.3`, `@prisma/client@6.19.3`, `bcryptjs@3.0.3`. `@types/bcryptjs` descartado (bundled en v3). `pnpm-workspace.yaml` aprueba builds de `prisma` y `@prisma/engines`. `package-lock.json` eliminado. Siguiente: B.1 (Docker Compose).                                                                                                                                                                     |
+| 2026-11-01 | **Fase B.1 — Docker + entorno**          | **Cerrada** | `docker-compose.yml` con `postgres:16` (volumen nombrado, healthcheck). `.env` consolidado (renombrado desde `.env.local`: Prisma CLI lee `.env`, no `.env.local`). `README.md` reescrito. Commit `667afe7`.                                                                                                                                                                                                        |
+| 2026-11-01 | **Fase B.2 — Schema Prisma**             | **Cerrada** | `prisma/schema.prisma` con 14 modelos + 9 enums. Scripts de Prisma en `package.json`. Bloque `"prisma": { "seed": "tsx prisma/seed.ts" }`. Commits `bcdc76f`, `9a5af2a`.                                                                                                                                                                                                                                            |
+| 2026-11-03 | **Fase B.3 — Migración inicial**         | **Cerrada** | Migración `20261104015947_init` aplicada. 14 tablas + `_prisma_migrations` (15 en `\dt`), 9 enums en `\dT+`, FKs, uniques e índices verificados. Commit `c933b2c`.                                                                                                                                                                                                                                                  |
+| 2026-11-03 | **Fase B.4 — Seed**                      | **Cerrada** | `prisma/seed.ts` con 3 usuarios (`student@example.com`, `teacher@example.com`, `admin@example.com`, password `ValidPass1!`), idempotente vía `upsert` por PK. Student con datos ricos (subscription, payment method, invoice, certificate, enrollment). D-B4.1 (crudo con PrismaClient), D-B4.2 (3 usuarios), D-B4.3 (import directo), D-B4.4 (`TODO(seed-shared-prisma)` diferido). Commit `<hash_B4>` (sin push). |
+| 2026-11-05 | **Fase B.5 — Singleton PrismaClient**    | **Cerrada** | `src/lib/db/prisma.ts` con patrón `globalThis.prisma`, `import 'server-only'` (D-B5.1), `logLevels` variable por `NODE_ENV` (D-B5.3), `server-only@0.0.1` añadido a `dependencies`. Smoke test directo `SELECT 1` validado (`[ { ok: 1 } ]`). Commit `<hash_B5>` (sin push).                                                                                                                                        |
+| 2026-11-05 | **Fase B — COMPLETA**                    | **Cerrada** | B.0 a B.5 cerradas. Prisma + PostgreSQL operativos. Siguiente: **C.0 (auditoría de tipos `Backend*` vs. contrato v2.0)** antes de arrancar C.1. Decisión registrada: **no se migra a Prisma 7 ni a `prisma.config.ts`** (ver §6 deuda de Prisma 8 RC en `Rol y propósito.txt`).                                                                                                                                     |
