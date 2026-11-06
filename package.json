@@ -12,6 +12,7 @@
     "graphql:codegen": "graphql-codegen --config codegen.ts",
     "graphql:codegen:watch": "graphql-codegen --config codegen.ts --watch",
     "mock:test": "tsx scripts/test-mock.ts",
+    "domain:test": "node --conditions=react-server --import tsx scripts/test-domain.ts",
     "type-check": "tsc --noEmit",
     "prisma:generate": "prisma generate",
     "prisma:validate": "prisma validate",
