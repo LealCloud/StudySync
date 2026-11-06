@@ -450,20 +450,84 @@ compleja (C.1.b)`).
         no funciona en runtime multi-instancia. Persistir el secret
         pendiente antes de Fase E (`TODO(two-factor-persistence)`).
 
+  - [x] **C.1.c** `removePaymentMethod` en el dominio (sub-fase pequeña,
+        descubierta al auditar C.2):
+    - `billing.ts`: `removePaymentMethod(userId, paymentMethodId)`.
+      404 si no existe, 409 si es el último método de una suscripción
+      premium `active` (contrato §7). `LocalBackendClient` delega al
+      dominio (sin 501).
+    - `scripts/test-domain.ts`: 6º test con los 4 casos del contrato.
+    - **Commit:** `2669c10` (`feat(domain): implementar removePaymentMethod
+(C.1.c)`).
+    - **Estado:** ✅ Cerrada.
+    - **Notas de cierre:**
+      - Añadida `removePaymentMethod` a `billing.ts` con la regla del
+        `409 CONFLICT` completa (`plan === 'premium'` **y**
+        `status === 'active'` **y** count === 1).
+      - `LocalBackendClient.billing.removePaymentMethod` delega al
+        dominio (se elimina el `TODO(domain-billing-remove)`).
+      - Validaciones: `type-check` 0, `lint` 0, `mock:test` 59/59,
+        `domain:test` 6/6.
+
 - [ ] **C.2** Crear `src/lib/backend/local/client.ts` con `LocalBackendClient`
       que implementa `BackendClient` llamando a `src/lib/domain/*`.
-- [ ] **C.3** Reescribir `src/lib/backend/index.ts`:
-  - `createBackendClient()` sin `accessToken` (Auth.js puro).
-  - `createPublicBackendClient()` sigue existiendo para los route handlers
-    (que ahora llaman a `LocalBackendClient.auth.*`).
-- [ ] **C.4** Eliminar `src/lib/backend/rest/client.ts`.
-- [ ] **C.5** Eliminar `src/lib/backend/http.ts` (o reducirlo a
-      `BackendOperationError` si se sigue usando; verificar).
-- [ ] **C.6** Reescribir `src/lib/backend/services/*` como wrappers finos
-      sobre `src/lib/domain/*` (o eliminarlos si `LocalBackendClient` ya
-      los reemplaza; decidir en el momento).
-- [ ] **C.7** `src/lib/backend/routeErrors.ts`: `backendRouteError()` ya no
+- [x] **C.3** Reescribir `src/lib/backend/index.ts`:
+  - `createBackendClient(userId?: string)` (Auth.js puro).
+  - `createPublicBackendClient()` sigue existiendo para los route handlers,
+    pero en modo local lanza `Error` hasta C.6 (los route handlers del
+    sitio público se reescriben en C.6).
+  - `src/app/api/graphql/route.ts` usa `session?.user?.id` en lugar de
+    `token?.accessToken`. Se elimina `getToken` residual.
+  - **Commit:** `dd6d4d4` (junto con C.4+C.7).
+  - **Estado:** ✅ Cerrada.
+- [x] **C.4** Eliminar `src/lib/backend/rest/client.ts` y sus re-exports
+      de `@/lib/backend`.
+  - **Commit:** `dd6d4d4` (junto con C.3+C.7).
+  - **Estado:** ✅ Cerrada.
+  - **Notas:** los consumidores rotos (`routeErrors.ts`,
+    `services/call.ts`) se resolvieron en C.7 y en una excepción mínima
+    de C.6.
+- [ ] **C.5** Eliminar `src/lib/backend/http.ts`.
+  - **Estado:** ⏸️ Diferida hasta **después de C.6**.
+  - **Motivo:** `http.ts` define `RestBackendResponse`,
+    `readBackendErrorCode`, `isBackendRateLimited` e
+    `isInvalidResetToken`. Los tres últimos los usa `services/call.ts`
+    (que se elimina en C.6), y `RestBackendResponse` lo usan
+    `services/auth.ts` y `services/contact.ts` (que se eliminan en C.6).
+    Al cerrar C.6, `http.ts` no tendrá consumidores y se podrá eliminar
+    entero.
+  - **Nota de orden:** el plan original decía C.5 antes de C.6. Se
+    invierte el orden porque C.6 libera a C.5.
+- [ ] **C.6** Eliminar `src/lib/backend/services/*` y reescribir los 5
+      route handlers del sitio público para llamar directamente a las
+      funciones de dominio (adelanto parcial de Fase E):
+  - **Eliminar:**
+    - `src/lib/backend/services/auth.ts`.
+    - `src/lib/backend/services/contact.ts`.
+    - `src/lib/backend/services/call.ts`.
+  - **Reescribir** (llamando a `src/lib/domain/*`):
+    - `src/app/api/auth/register/route.ts` → `registerUser`.
+    - `src/app/api/auth/forgot-password/route.ts` →
+      `requestPasswordReset`.
+    - `src/app/api/auth/reset-password/route.ts` → `resetPassword`.
+    - `src/app/api/auth/validate-reset-token/route.ts` →
+      `validateResetToken`.
+    - `src/app/api/contact/route.ts` → `submitContact`.
+  - **Simplificar:**
+    - `src/lib/backend/routeErrors.ts`: `backendRouteError()` sigue
+      manejando `BackendOperationError` (útil en los 5 route handlers
+      reescritos). Sin cambios funcionales.
+  - **Motivo del adelanto de Fase E:** los 5 route handlers son los
+    únicos consumidores de `services/*`. Sin reescribirlos, no se puede
+    eliminar `services/*`, y sin eliminar `services/*`, C.5 no se puede
+    cerrar.
+  - **Alcance diferido a Fase E completa:** el resto de route handlers
+    (los del dashboard GraphQL, `api/auth/[...nextauth]`) no cambian en
+    C.6. Solo los 5 del sitio público.
+- [x] **C.7** `src/lib/backend/routeErrors.ts`: `backendRouteError()` ya no
       maneja `RestBackendNotConfiguredError`. Se simplifica.
+  - **Commit:** `dd6d4d4` (junto con C.3+C.4).
+  - **Estado:** ✅ Cerrada.
 
 **Commit sugerido:** `feat(domain): implementar lógica de negocio en Prisma`
 
@@ -489,17 +553,22 @@ compleja (C.1.b)`).
 
 **Commit sugerido:** `refactor(auth): simplificar a Auth.js puro sin refresh externo`
 
-### Fase E — Route handlers (diferible)
+### Fase E — Route handlers (parcialmente adelantada a C.6)
 
-- [ ] **E.1** Reescribir `src/app/api/auth/register/route.ts` para llamar
-      a `registerUser()` directamente (o a `createPublicBackendClient().auth.register()`,
-      que ahora resuelve al `LocalBackendClient`).
-- [ ] **E.2** Idem `forgot-password`, `reset-password`,
-      `validate-reset-token`, `contact`.
-- [ ] **E.3** Verificar que `backendRouteError()` sigue traduciendo
-      `BackendOperationError` correctamente.
+> **Nota (2026-11-05):** E.1 y E.2 se adelantan a C.6, porque los 5 route
+> handlers del sitio público son los únicos consumidores de `services/*`,
+> y sin reescribirlos no se puede eliminar `services/*` (ni cerrar C.5).
+> El alcance de E.1 y E.2 en C.6 es exactamente el descrito aquí. E.3 se
+> resuelve en C.6.
 
-**Commit sugerido:** `refactor(routes): route handlers llaman a dominio local`
+- [x] **E.1** Reescribir `src/app/api/auth/register/route.ts` para llamar
+      a `registerUser()` directamente. → **Adelantado a C.6.**
+- [x] **E.2** Idem `forgot-password`, `reset-password`,
+      `validate-reset-token`, `contact`. → **Adelantado a C.6.**
+- [x] **E.3** Verificar que `backendRouteError()` sigue traduciendo
+      `BackendOperationError` correctamente. → **Adelantado a C.6.**
+
+**Commit sugerido:** `refactor(routes): route handlers llaman a dominio local` (dentro de C.6)
 
 ### Fase F — Resolvers GraphQL y BFF (diferible)
 
@@ -585,3 +654,5 @@ session`, `revokeSession accepts a non-current session` y
 | 2026-11-05 | **Fase C.0 — Auditoría de tipos `Backend*`** | **Cerrada** | Eliminados `BackendTokenPair`, `BackendTokenPairResponse`, `BackendDataResponse<T>` y `BackendLoginResponse`. `BackendLoginData` reducido a `{ id, role, token, refreshToken, expiresIn, refreshExpiresIn }`. Ajustados `PublicBackendClient`, `RestBackendClient`, `MockBackendClient`, `services/auth.ts` (con `AuthTokenPair` local) con tipos inline. Diferida la eliminación de `BackendSecuritySession`/`sessions` a Fase G (`TODO(phase-g)`). Adelantada la eliminación de `scripts/test-backend.ts` y del script `"backend:test"`. Validaciones en verde (type-check 0, lint 0, mock:test 59/59). Commit `6ed6070` (sin push).                                                                                                                                                                                                                                    |
 | 2026-11-05 | **Fase C.1.a — Dominio básico**              | **Cerrada** | 8 archivos creados en `src/lib/domain/` (`users`, `personal-data`, `privacy`, `preferences`, `account`, `courses`, `certificates`, `billing`). Sin imports cruzados. `getPublicProfile` aplica matriz de visibilidad (§8.2.18) y devuelve `null`. `updateProfile` con PATCH anidado de `bio` y `Prisma.DbNull` para borrar la bio completa. `updatePersonalData` con `identityLocked` atómico (403) y rechazo de `null` en nombres (422). `updatePrivacy` y `updatePreferences` rechazan `null` (422). Fechas ISO 8601. Sin validación de roles (eso vive en BFF + C.2). Validaciones: type-check 0, lint 0, mock:test 59/59. Commit `727dcfa` (sin push).                                                                                                                                                                                                                |
 | 2026-11-05 | **Fase C.1.b — Dominio complejo**            | **Cerrada** | 4 archivos creados en `src/lib/domain/` (`auth`, `security`, `subscription`, `contact`) + `scripts/test-domain.ts` + script `domain:test`. `registerUser` con `$transaction` atómica (7 inserciones), `P2002` → `409 CONFLICT`. Reset de contraseña con tokens SHA-256, TTL 1h, doble validación dentro del `tx`. `changePassword` sin revocar otras sesiones (no hay modelo `Session`). 2FA simulado sin email (`TODO(two-factor-code-validation)`). Stubs `revokeSession`/`revokeOtherSessions` (404). `changePlan` upgrade inmediato, downgrade a fin de período, `PAYMENT_METHOD_REQUIRED`, `enterprise` prohibido. `cancelSubscription` solo `cancelAtPeriodEnd`. `contact` stub (`console.info`). Deuda anotada: `pendingSetups` in-memory, persistir en Fase E. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 5/5. Commit `8e278b4` (sin push). |
+| 2026-11-05 | **Fase C.1.c — removePaymentMethod**         | **Cerrada** | Sub-fase pequeña descubierta al auditar C.2. `billing.ts` con `removePaymentMethod` (404 si no existe, 409 si es el último método de premium `active`, contrato §7). `LocalBackendClient` delega al dominio. 6º test de dominio. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `2669c10` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2026-11-05 | **Fase C.3+C.4+C.7 — Limpieza de backend**   | **Cerrada** | `createBackendClient(userId?: string)` devuelve `LocalBackendClient` en modo local y `MockBackendClient` en mock. `createPublicBackendClient()` lanza `Error` en local hasta C.6. `src/app/api/graphql/route.ts` usa `session?.user?.id` y elimina `getToken`. Elimina `src/lib/backend/rest/client.ts` y sus re-exports. `routeErrors.ts` simplificado (sin `RestBackendNotConfiguredError`). Excepción mínima en `services/call.ts` (`callBackend` como alias de `fn()` con `TODO(phase-c6)`). C.5 diferida hasta después de C.6: `http.ts` sigue siendo consumido por `services/*`. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `dd6d4d4` (sin push).                                                                                                                                                                                 |
