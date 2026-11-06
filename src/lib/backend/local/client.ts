@@ -30,6 +30,7 @@ import {
   getSubscription,
   getPaymentMethods,
   getInvoices,
+  removePaymentMethod,
 } from '@/lib/domain/billing';
 import { changePlan, cancelSubscription } from '@/lib/domain/subscription';
 
@@ -105,9 +106,7 @@ export class LocalBackendClient implements BackendClient {
   billing: BackendClient['billing'] = {
     getPaymentMethods: () => getPaymentMethods(this.requireUserId()),
     getInvoices: () => getInvoices(this.requireUserId()),
-    removePaymentMethod: (_paymentMethodId) => {
-      // TODO(domain-billing-remove): implement in the domain later.
-      throw new BackendOperationError(501, 'NOT_IMPLEMENTED');
-    },
+    removePaymentMethod: (paymentMethodId) =>
+      removePaymentMethod(this.requireUserId(), paymentMethodId),
   };
 }

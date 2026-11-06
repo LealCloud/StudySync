@@ -4,6 +4,7 @@ import { prisma } from '../src/lib/db/prisma';
 import { updatePersonalData } from '../src/lib/domain/personal-data';
 import { getPublicProfile, updateProfile } from '../src/lib/domain/users';
 import { changePlan } from '../src/lib/domain/subscription';
+import { removePaymentMethod } from '../src/lib/domain/billing';
 import { submitContact } from '../src/lib/domain/contact';
 
 type TestCase = { name: string; run: () => Promise<void> };
@@ -204,6 +205,49 @@ const tests: TestCase[] = [
       });
       assert(result === undefined, 'Contact stub should resolve void');
     },
+  },
+  {
+    name: 'removePaymentMethod rejects last premium card and deletes otherwise',
+    run: () =>
+      withUser(async (userId) => {
+        const pm1 = await prisma.paymentMethod.create({
+          data: { userId, brand: 'Visa', last4: '4242' },
+        });
+        const removed1 = await removePaymentMethod(userId, pm1.id);
+        assert(removed1 === true, 'Expected true when no subscription');
+        const after1 = await prisma.paymentMethod.count({ where: { userId } });
+        assert(after1 === 0, 'Payment method was not deleted');
+
+        await prisma.subscription.create({
+          data: { userId, plan: 'premium', status: 'active' },
+        });
+        const pm2 = await prisma.paymentMethod.create({
+          data: { userId, brand: 'Visa', last4: '4242' },
+        });
+        await expectDomainError(
+          () => removePaymentMethod(userId, pm2.id),
+          409,
+          'CONFLICT',
+        );
+
+        const pm3 = await prisma.paymentMethod.create({
+          data: { userId, brand: 'Mastercard', last4: '5555' },
+        });
+        const removed3 = await removePaymentMethod(userId, pm2.id);
+        assert(removed3 === true, 'Expected true when 2 payment methods');
+        const after3 = await prisma.paymentMethod.count({ where: { userId } });
+        assert(after3 === 1, 'Expected 1 payment method remaining');
+
+        await expectDomainError(
+          () => removePaymentMethod(userId, 'nonexistent-id'),
+          404,
+          'NOT_FOUND',
+        );
+
+        await prisma.paymentMethod.deleteMany({ where: { userId } });
+        await prisma.subscription.deleteMany({ where: { userId } });
+        void pm3;
+      }),
   },
 ];
 

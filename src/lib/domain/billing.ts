@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/db/prisma';
+import { BackendOperationError } from '@/lib/backend/errors';
 import type {
   BackendInvoice,
   BackendPaymentMethod,
@@ -40,4 +41,32 @@ export async function getInvoices(userId: string): Promise<BackendInvoice[]> {
     issuedAt: issuedAt.toISOString(),
     downloadUrl,
   }));
+}
+
+export async function removePaymentMethod(
+  userId: string,
+  paymentMethodId: string,
+): Promise<boolean> {
+  const paymentMethod = await prisma.paymentMethod.findFirst({
+    where: { id: paymentMethodId, userId },
+    select: { id: true },
+  });
+  if (!paymentMethod) throw new BackendOperationError(404, 'NOT_FOUND');
+
+  const subscription = await prisma.subscription.findUnique({
+    where: { userId },
+    select: { plan: true, status: true },
+  });
+  if (
+    subscription?.plan === 'premium' &&
+    subscription.status === 'active' &&
+    (await prisma.paymentMethod.count({ where: { userId } })) === 1
+  ) {
+    throw new BackendOperationError(409, 'CONFLICT');
+  }
+
+  await prisma.paymentMethod.deleteMany({
+    where: { id: paymentMethodId, userId },
+  });
+  return true;
 }
