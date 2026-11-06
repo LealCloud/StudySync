@@ -1,18 +1,13 @@
 import { BackendOperationError } from '../errors';
 import { isBackendRateLimited, type RestBackendResponse } from '../http';
-import { RestBackendUnavailableError } from '../rest/client';
 
+// TODO(phase-c6): eliminar este wrapper cuando services/* se reescriba
+// sobre la capa de dominio. Hoy es un alias de fn() para no tocar
+// services/auth.ts ni services/contact.ts en esta fase.
 export async function callBackend<T>(
   fn: () => Promise<RestBackendResponse<T>>,
 ): Promise<RestBackendResponse<T>> {
-  try {
-    return await fn();
-  } catch (error) {
-    if (error instanceof RestBackendUnavailableError) {
-      throw new BackendOperationError(503, 'unavailable');
-    }
-    throw error;
-  }
+  return fn();
 }
 
 export function assertNotRateLimited(response: RestBackendResponse): void {

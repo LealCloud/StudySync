@@ -3,7 +3,6 @@ import { createBackendClient } from '@/lib/backend';
 import { BackendOperationError } from '@/lib/backend/errors';
 import { createYoga, type Plugin } from 'graphql-yoga';
 import { GraphQLError, type ExecutionResult } from 'graphql';
-import { getToken } from 'next-auth/jwt';
 import { schema } from '../../../graphql';
 
 function normalizeBackendErrors(result: ExecutionResult): ExecutionResult {
@@ -57,16 +56,12 @@ const backendOperationErrorPlugin: Plugin = {
 const yoga = createYoga({
   schema,
   plugins: [backendOperationErrorPlugin],
-  context: async ({ request }) => {
+  context: async () => {
     const session = await auth();
-    const token = await getToken({
-      req: request,
-      secret: process.env.AUTH_SECRET,
-    });
 
     return {
       session,
-      backend: createBackendClient(token?.accessToken as string | undefined),
+      backend: createBackendClient(session?.user?.id),
     };
   },
   graphqlEndpoint: '/api/graphql',

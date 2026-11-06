@@ -1,32 +1,16 @@
 import { MockBackendClient, MockPublicBackendClient } from '../mock/client';
+import { LocalBackendClient } from './local/client';
 import type { BackendClient, PublicBackendClient } from './client';
-import {
-  createRestBackendClient,
-  readBackendErrorCode,
-  RestBackendClient,
-  RestBackendNotConfiguredError,
-  RestBackendUnavailableError,
-} from './rest/client';
-
-export type { RestBackendResponse } from './rest/client';
-export {
-  createRestBackendClient,
-  readBackendErrorCode,
-  RestBackendClient,
-  RestBackendNotConfiguredError,
-  RestBackendUnavailableError,
-};
 
 function isMockMode(): boolean {
   return process.env.BACKEND_MODE === 'mock';
 }
 
-export function createBackendClient(accessToken?: string): BackendClient {
+export function createBackendClient(userId?: string): BackendClient {
   if (isMockMode()) {
     return new MockBackendClient();
   }
-
-  return createRestBackendClient(accessToken);
+  return new LocalBackendClient(userId ?? null);
 }
 
 export function createPublicBackendClient(): PublicBackendClient {
@@ -34,5 +18,10 @@ export function createPublicBackendClient(): PublicBackendClient {
     return new MockPublicBackendClient();
   }
 
-  return createRestBackendClient();
+  // TODO(phase-c6): implementar LocalPublicBackendClient. Hasta entonces,
+  // los route handlers del sitio público fallan en modo local. En modo mock
+  // funcionan (pnpm mock:test sigue pasando 59/59).
+  throw new Error(
+    'createPublicBackendClient is not implemented in local mode until C.6',
+  );
 }
