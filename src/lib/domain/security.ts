@@ -49,7 +49,6 @@ export async function getSecuritySettings(
     emailVerified: user.securitySettings.emailVerified,
     twoFactorEnabled: user.securitySettings.twoFactorEnabled,
     twoFactorRequired: user.role !== 'student',
-    sessions: [],
   };
 }
 
@@ -141,22 +140,4 @@ export async function disableTwoFactor(
   });
   if (settings.count === 0) throw new BackendOperationError(404, 'NOT_FOUND');
   return { success: true, message: null };
-}
-
-// TODO(phase-g): eliminar junto con SessionsSection.tsx (D-7 = B).
-// El contrato v2.0 no tiene modelo `Session`, así que estas funciones
-// no se pueden implementar. Se mantienen como stubs para satisfacer la
-// interfaz `BackendClient` mientras `SessionsSection.tsx` siga existiendo.
-// Se eliminan en Fase G.
-export async function revokeSession(
-  _userId: string,
-  _sessionId: string,
-): Promise<BackendSecurityOperationResult> {
-  throw new BackendOperationError(404, 'NOT_FOUND');
-}
-
-export async function revokeOtherSessions(
-  _userId: string,
-): Promise<BackendSecurityOperationResult> {
-  throw new BackendOperationError(404, 'NOT_FOUND');
 }

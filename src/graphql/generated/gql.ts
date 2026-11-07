@@ -36,10 +36,8 @@ type Documents = {
     "mutation BeginTwoFactorSetup {\n  beginTwoFactorSetup {\n    secret\n    qrCode\n  }\n}": typeof types.BeginTwoFactorSetupDocument,
     "mutation ChangePassword($input: ChangePasswordInput!) {\n  changePassword(input: $input) {\n    success\n    message\n  }\n}": typeof types.ChangePasswordDocument,
     "mutation DisableTwoFactor($code: String!) {\n  disableTwoFactor(code: $code) {\n    success\n    message\n  }\n}": typeof types.DisableTwoFactorDocument,
-    "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n    sessions {\n      id\n      deviceName\n      browser\n      ipAddress\n      lastActiveAt\n      current\n    }\n  }\n}": typeof types.MySecuritySettingsDocument,
+    "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n  }\n}": typeof types.MySecuritySettingsDocument,
     "mutation RequestEmailChange($input: RequestEmailChangeInput!) {\n  requestEmailChange(input: $input) {\n    success\n    message\n  }\n}": typeof types.RequestEmailChangeDocument,
-    "mutation RevokeOtherSessions {\n  revokeOtherSessions {\n    success\n    message\n  }\n}": typeof types.RevokeOtherSessionsDocument,
-    "mutation RevokeSession($sessionId: ID!) {\n  revokeSession(sessionId: $sessionId) {\n    success\n    message\n  }\n}": typeof types.RevokeSessionDocument,
     "mutation VerifyTwoFactorSetup($code: String!) {\n  verifyTwoFactorSetup(code: $code) {\n    success\n    message\n  }\n}": typeof types.VerifyTwoFactorSetupDocument,
     "query MyPersonalData {\n  myPersonalData {\n    firstName\n    lastName\n    documentType\n    documentId\n    phone\n    country\n    address\n    identityLocked\n  }\n}": typeof types.MyPersonalDataDocument,
     "mutation UpdatePersonalData($input: UpdatePersonalDataInput!) {\n  updatePersonalData(input: $input) {\n    firstName\n    lastName\n    documentType\n    documentId\n    phone\n    country\n    address\n    identityLocked\n  }\n}": typeof types.UpdatePersonalDataDocument,
@@ -67,10 +65,8 @@ const documents: Documents = {
     "mutation BeginTwoFactorSetup {\n  beginTwoFactorSetup {\n    secret\n    qrCode\n  }\n}": types.BeginTwoFactorSetupDocument,
     "mutation ChangePassword($input: ChangePasswordInput!) {\n  changePassword(input: $input) {\n    success\n    message\n  }\n}": types.ChangePasswordDocument,
     "mutation DisableTwoFactor($code: String!) {\n  disableTwoFactor(code: $code) {\n    success\n    message\n  }\n}": types.DisableTwoFactorDocument,
-    "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n    sessions {\n      id\n      deviceName\n      browser\n      ipAddress\n      lastActiveAt\n      current\n    }\n  }\n}": types.MySecuritySettingsDocument,
+    "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n  }\n}": types.MySecuritySettingsDocument,
     "mutation RequestEmailChange($input: RequestEmailChangeInput!) {\n  requestEmailChange(input: $input) {\n    success\n    message\n  }\n}": types.RequestEmailChangeDocument,
-    "mutation RevokeOtherSessions {\n  revokeOtherSessions {\n    success\n    message\n  }\n}": types.RevokeOtherSessionsDocument,
-    "mutation RevokeSession($sessionId: ID!) {\n  revokeSession(sessionId: $sessionId) {\n    success\n    message\n  }\n}": types.RevokeSessionDocument,
     "mutation VerifyTwoFactorSetup($code: String!) {\n  verifyTwoFactorSetup(code: $code) {\n    success\n    message\n  }\n}": types.VerifyTwoFactorSetupDocument,
     "query MyPersonalData {\n  myPersonalData {\n    firstName\n    lastName\n    documentType\n    documentId\n    phone\n    country\n    address\n    identityLocked\n  }\n}": types.MyPersonalDataDocument,
     "mutation UpdatePersonalData($input: UpdatePersonalDataInput!) {\n  updatePersonalData(input: $input) {\n    firstName\n    lastName\n    documentType\n    documentId\n    phone\n    country\n    address\n    identityLocked\n  }\n}": types.UpdatePersonalDataDocument,
@@ -181,19 +177,11 @@ export function graphql(source: "mutation DisableTwoFactor($code: String!) {\n  
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n    sessions {\n      id\n      deviceName\n      browser\n      ipAddress\n      lastActiveAt\n      current\n    }\n  }\n}"): (typeof documents)["query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n    sessions {\n      id\n      deviceName\n      browser\n      ipAddress\n      lastActiveAt\n      current\n    }\n  }\n}"];
+export function graphql(source: "query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n  }\n}"): (typeof documents)["query MySecuritySettings {\n  mySecuritySettings {\n    email\n    emailVerified\n    twoFactorEnabled\n    twoFactorRequired\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "mutation RequestEmailChange($input: RequestEmailChangeInput!) {\n  requestEmailChange(input: $input) {\n    success\n    message\n  }\n}"): (typeof documents)["mutation RequestEmailChange($input: RequestEmailChangeInput!) {\n  requestEmailChange(input: $input) {\n    success\n    message\n  }\n}"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "mutation RevokeOtherSessions {\n  revokeOtherSessions {\n    success\n    message\n  }\n}"): (typeof documents)["mutation RevokeOtherSessions {\n  revokeOtherSessions {\n    success\n    message\n  }\n}"];
-/**
- * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
- */
-export function graphql(source: "mutation RevokeSession($sessionId: ID!) {\n  revokeSession(sessionId: $sessionId) {\n    success\n    message\n  }\n}"): (typeof documents)["mutation RevokeSession($sessionId: ID!) {\n  revokeSession(sessionId: $sessionId) {\n    success\n    message\n  }\n}"];
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

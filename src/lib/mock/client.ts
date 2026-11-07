@@ -16,7 +16,6 @@ import type {
   BackendRegisterInput,
   BackendResetPasswordInput,
   BackendResetTokenValidationResponse,
-  BackendSecuritySession,
   BackendSubscription,
   BackendUpdateBioInput,
   BackendValidateResetTokenInput,
@@ -41,8 +40,6 @@ type MockOperation =
   | 'security.beginTwoFactorSetup'
   | 'security.verifyTwoFactorSetup'
   | 'security.disableTwoFactor'
-  | 'security.revokeSession'
-  | 'security.revokeOtherSessions'
   | 'preferences.getMe'
   | 'preferences.update'
   | 'account.getMe'
@@ -107,7 +104,6 @@ interface MockStore {
     twoFactorEnabled: boolean;
     twoFactorRequired: boolean;
     twoFactorSetupStarted: boolean;
-    sessions: BackendSecuritySession[];
   };
   accountState: BackendAccount;
   subscriptionState: BackendSubscription | null;
@@ -164,24 +160,6 @@ function createInitialStore(): MockStore {
       twoFactorEnabled: false,
       twoFactorRequired: false,
       twoFactorSetupStarted: false,
-      sessions: [
-        {
-          id: 'session-current',
-          deviceName: 'Test device',
-          browser: 'Test browser',
-          ipAddress: '127.0.0.1',
-          lastActiveAt: '2026-10-04T12:00:00.000Z',
-          current: true,
-        },
-        {
-          id: 'session-other',
-          deviceName: 'Other device',
-          browser: 'Test browser',
-          ipAddress: '127.0.0.2',
-          lastActiveAt: '2026-10-03T12:00:00.000Z',
-          current: false,
-        },
-      ],
     },
     accountState: {
       status: 'active',
@@ -438,14 +416,12 @@ export class MockBackendClient implements BackendClient {
         emailVerified,
         twoFactorEnabled,
         twoFactorRequired,
-        sessions,
       } = this.store.securityState;
       return {
         email,
         emailVerified,
         twoFactorEnabled,
         twoFactorRequired,
-        sessions: sessions.map((session) => ({ ...session })),
       };
     },
     requestEmailChange: async (
@@ -482,8 +458,6 @@ export class MockBackendClient implements BackendClient {
       ) {
         throw new BackendOperationError(422, 'VALIDATION_ERROR');
       }
-      this.store.securityState.sessions =
-        this.store.securityState.sessions.filter((session) => session.current);
       return { success: true, message: 'Password updated' };
     },
     beginTwoFactorSetup: async () => {
@@ -522,24 +496,6 @@ export class MockBackendClient implements BackendClient {
       }
       this.store.securityState.twoFactorEnabled = false;
       return { success: true, message: 'Two factor disabled' };
-    },
-    revokeSession: async (sessionId: string) => {
-      this.failIfConfigured('security.revokeSession');
-      const sessionIndex = this.store.securityState.sessions.findIndex(
-        (session) => session.id === sessionId,
-      );
-      if (sessionIndex < 0) throw new BackendOperationError(404, 'NOT_FOUND');
-      if (this.store.securityState.sessions[sessionIndex]?.current) {
-        throw new BackendOperationError(409, 'SESSION_IS_CURRENT');
-      }
-      this.store.securityState.sessions.splice(sessionIndex, 1);
-      return { success: true, message: 'Session revoked' };
-    },
-    revokeOtherSessions: async () => {
-      this.failIfConfigured('security.revokeOtherSessions');
-      this.store.securityState.sessions =
-        this.store.securityState.sessions.filter((session) => session.current);
-      return { success: true, message: 'Other sessions revoked' };
     },
   };
 

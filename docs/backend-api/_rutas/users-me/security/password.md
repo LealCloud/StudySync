@@ -59,4 +59,6 @@ El conjunto exacto de caracteres especiales está en [`_convenciones/regex.md`](
 
 Una contraseña actual incorrecta **no** debe responder `401` (ver [`_convenciones/errores.md`](../../../_convenciones/errores.md), regla del 401).
 
+Cambiar la contraseña no revoca otras sesiones: StudySync no mantiene un modelo de sesiones activas.
+
 Códigos generales en [`_convenciones/errores.md`](../../../_convenciones/errores.md).

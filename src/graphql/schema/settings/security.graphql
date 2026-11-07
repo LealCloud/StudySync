@@ -3,16 +3,6 @@ type SecuritySettings {
   emailVerified: Boolean!
   twoFactorEnabled: Boolean!
   twoFactorRequired: Boolean!
-  sessions: [Session!]!
-}
-
-type Session {
-  id: ID!
-  deviceName: String
-  browser: String
-  ipAddress: String
-  lastActiveAt: DateTime!
-  current: Boolean!
 }
 
 type SecurityOperationResult {
@@ -49,7 +39,4 @@ extend type Mutation {
 
   disableTwoFactor(code: String!): SecurityOperationResult!
 
-  revokeSession(sessionId: ID!): SecurityOperationResult!
-
-  revokeOtherSessions: SecurityOperationResult!
 }

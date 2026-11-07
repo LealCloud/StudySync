@@ -421,8 +421,7 @@
         "errors": {
           "invalidCredentials": "Correo electrónico o contraseña incorrectos.",
           "unexpected": "No se pudo iniciar sesión. Inténtalo de nuevo.",
-          "rateLimited": "Demasiados intentos. Inténtalo de nuevo más tarde.",
-          "unavailable": "El servicio de inicio de sesión no está disponible. Inténtalo más tarde."
+          "rateLimited": "Demasiados intentos. Inténtalo de nuevo más tarde."
         },
         "footer": {
           "prompt": "¿Todavía no tienes una cuenta?",
@@ -1153,9 +1152,7 @@
           "twoFactor": "Autenticación de dos factores (2FA)",
           "twoFactorEnabled": "Activado",
           "twoFactorDisabled": "Desactivado",
-          "twoFactorRequired": "Obligatorio para tu rol",
-          "sessions": "Sesiones activas",
-          "sessionsCount": "{count, plural, =0 {Sin sesiones} =1 {# sesión} other {# sesiones}}"
+          "twoFactorRequired": "Obligatorio para tu rol"
         },
         "changePassword": {
           "title": "Cambiar contraseña",
@@ -1237,33 +1234,6 @@
             "INVALID_CODE": "El código no es correcto.",
             "CONFLICT": "La operación no es válida en este momento. Inténtalo de nuevo.",
             "FORBIDDEN": "No puedes desactivar el 2FA con tu rol.",
-            "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
-          }
-        },
-        "sessions": {
-          "title": "Sesiones activas",
-          "description": "Dispositivos donde tu cuenta tiene una sesión iniciada. Revoca cualquiera que no reconozcas.",
-          "currentBadge": "Sesión actual",
-          "unknownDevice": "Dispositivo desconocido",
-          "unknownBrowser": "Navegador desconocido",
-          "unknownIp": "IP desconocida",
-          "lastActive": "Última actividad: {date}",
-          "revoke": "Revocar",
-          "revokeAllOthers": "Cerrar otras sesiones",
-          "empty": "No hay otras sesiones activas.",
-          "confirmRevokeTitle": "Revocar sesión",
-          "confirmRevokeDescription": "¿Seguro que quieres cerrar la sesión en {device}? Tendrás que volver a iniciar sesión en ese dispositivo.",
-          "confirmRevokeOthersTitle": "Cerrar otras sesiones",
-          "confirmRevokeOthersDescription": "Se cerrarán todas las sesiones excepto la actual. Tendrás que volver a iniciar sesión en esos dispositivos.",
-          "confirm": "Revocar",
-          "confirmOthers": "Cerrar todas",
-          "cancel": "Cancelar",
-          "revoking": "Revocando...",
-          "successRevoked": "Sesión revocada.",
-          "successRevokedOthers": "Se cerraron las otras sesiones.",
-          "errors": {
-            "NOT_FOUND": "La sesión ya no existe. Actualiza la página.",
-            "SESSION_IS_CURRENT": "No puedes revocar tu sesión actual desde aquí.",
             "INTERNAL_ERROR": "Ocurrió un error inesperado. Inténtalo de nuevo."
           }
         },

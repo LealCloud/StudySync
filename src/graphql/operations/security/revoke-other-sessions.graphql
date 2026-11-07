@@ -1,6 +1,0 @@
-mutation RevokeOtherSessions {
-  revokeOtherSessions {
-    success
-    message
-  }
-}

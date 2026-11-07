@@ -62,7 +62,6 @@ export default async function LoginPage() {
       invalidCredentials: t('form.errors.invalidCredentials'),
       unexpected: t('form.errors.unexpected'),
       rateLimited: t('form.errors.rateLimited'),
-      unavailable: t('form.errors.unavailable'),
     },
     footer: {
       prompt: t('form.footer.prompt'),

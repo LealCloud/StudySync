@@ -44,24 +44,11 @@ export type BackendUpdatePersonalDataInput = Partial<
   Omit<BackendPersonalData, 'identityLocked'>
 >;
 
-// TODO(phase-g): eliminar junto con SessionsSection.tsx (D-7 = B).
-// El contrato v2.0 ya no expone `sessions`; se difiere a Fase G para no
-// romper SessionsSection.tsx en C.0. Ver docs/backend-monolith-plan.md §Fase G.
-export interface BackendSecuritySession {
-  id: string;
-  deviceName: string | null;
-  browser: string | null;
-  ipAddress: string | null;
-  lastActiveAt: string;
-  current: boolean;
-}
 export interface BackendSecuritySettings {
   email: string;
   emailVerified: boolean;
   twoFactorEnabled: boolean;
   twoFactorRequired: boolean;
-  // TODO(phase-g): eliminar (D-7 = B). Ver nota en BackendSecuritySession.
-  sessions: BackendSecuritySession[];
 }
 export interface BackendSecurityOperationResult {
   success: boolean;

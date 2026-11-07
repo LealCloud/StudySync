@@ -11,7 +11,6 @@ import { ChangePasswordSection } from './ChangePasswordSection';
 import type { ValidationDict } from '@/lib/validation';
 import { EmailChangeSection } from './EmailChangeSection';
 import { TwoFactorSection } from './TwoFactorSection';
-import { SessionsSection } from './SessionsSection';
 
 type SecuritySettings = MySecuritySettingsQuery['mySecuritySettings'];
 
@@ -24,8 +23,6 @@ interface SecurityOverviewMessages {
     twoFactorEnabled: string;
     twoFactorDisabled: string;
     twoFactorRequired: string;
-    sessions: string;
-    sessionsCount: string;
   };
   errors: {
     INTERNAL_ERROR: string;
@@ -102,33 +99,6 @@ interface SecurityOverviewMessages {
       INTERNAL_ERROR: string;
     };
   };
-  sessions: {
-    title: string;
-    description: string;
-    currentBadge: string;
-    unknownDevice: string;
-    unknownBrowser: string;
-    unknownIp: string;
-    lastActive: string;
-    revoke: string;
-    revokeAllOthers: string;
-    empty: string;
-    confirmRevokeTitle: string;
-    confirmRevokeDescription: string;
-    confirmRevokeOthersTitle: string;
-    confirmRevokeOthersDescription: string;
-    confirm: string;
-    confirmOthers: string;
-    cancel: string;
-    revoking: string;
-    successRevoked: string;
-    successRevokedOthers: string;
-    errors: {
-      NOT_FOUND: string;
-      SESSION_IS_CURRENT: string;
-      INTERNAL_ERROR: string;
-    };
-  };
 }
 
 interface SecurityOverviewClientProps {
@@ -146,8 +116,8 @@ interface SecurityOverviewClientProps {
  *     cada mutación exitosa dispara un refetch `network-only` (ver prompt
  *     de rol v4.2 y plan §5.3.9).
  *
- * En este paso todavía no renderiza los subformularios (ChangePassword,
- * EmailChange, TwoFactor, Sessions); se añaden en 4.2–4.5.
+ * El contenedor renderiza los subformularios de contraseña, cambio de correo
+ * y autenticación de dos factores.
  */
 export function SecurityOverviewClient({
   messages,
@@ -177,7 +147,6 @@ export function SecurityOverviewClient({
   if (!result.data) return null;
 
   const security: SecuritySettings = result.data.mySecuritySettings;
-  const sessionCount = security.sessions.length;
 
   // TODO(4.2–4.5): los subformularios reciben `security` y `refetchSecurity`.
   // Mientras tanto, mostramos solo el resumen de solo lectura.
@@ -228,17 +197,6 @@ export function SecurityOverviewClient({
           )}
         </div>
 
-        <div className="border-border bg-background rounded-xl border p-4 sm:col-span-2">
-          <dt className="text-foreground-muted text-xs font-semibold">
-            {messages.overview.sessions}
-          </dt>
-          <dd className="text-foreground mt-1 text-sm">
-            {messages.overview.sessionsCount.replace(
-              '{count}',
-              String(sessionCount),
-            )}
-          </dd>
-        </div>
       </dl>
 
       <ChangePasswordSection
@@ -261,11 +219,6 @@ export function SecurityOverviewClient({
         onRefetchSecurity={refetchSecurity}
       />
 
-      <SessionsSection
-        messages={messages.sessions}
-        sessions={security.sessions}
-        onRefetchSecurity={refetchSecurity}
-      />
     </div>
   );
 }

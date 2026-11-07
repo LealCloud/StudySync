@@ -55,8 +55,6 @@ export interface BackendClient {
     beginTwoFactorSetup(): Promise<BackendTwoFactorSetup>;
     verifyTwoFactorSetup(code: string): Promise<BackendSecurityOperationResult>;
     disableTwoFactor(code: string): Promise<BackendSecurityOperationResult>;
-    revokeSession(sessionId: string): Promise<BackendSecurityOperationResult>;
-    revokeOtherSessions(): Promise<BackendSecurityOperationResult>;
   };
   preferences: {
     getMe(): Promise<BackendPreferences>;

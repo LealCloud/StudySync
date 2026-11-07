@@ -159,14 +159,6 @@ const tests: TestCase[] = [
           emailVerified
           twoFactorEnabled
           twoFactorRequired
-          sessions {
-            id
-            deviceName
-            browser
-            ipAddress
-            lastActiveAt
-            current
-          }
         }
       }
     `,
@@ -224,33 +216,6 @@ const tests: TestCase[] = [
     query: /* GraphQL */ `
       mutation DisableTwoFactor {
         disableTwoFactor(code: "123456") {
-          success
-          message
-        }
-      }
-    `,
-  },
-
-  {
-    name: 'revokeSession',
-    query: /* GraphQL */ `
-      mutation RevokeSession($sessionId: ID!) {
-        revokeSession(sessionId: $sessionId) {
-          success
-          message
-        }
-      }
-    `,
-    variables: {
-      sessionId: 'session-other',
-    },
-  },
-
-  {
-    name: 'revokeOtherSessions',
-    query: /* GraphQL */ `
-      mutation RevokeOtherSessions {
-        revokeOtherSessions {
           success
           message
         }
@@ -793,17 +758,6 @@ async function runPersonalDataSecurityTests(): Promise<{
       }
     }
   `;
-  const securityQuery = /* GraphQL */ `
-    query MySecuritySettings {
-      mySecuritySettings {
-        sessions {
-          id
-          current
-        }
-      }
-    }
-  `;
-
   const setIdentityLocked = async () => {
     await backend.personalData.getMe();
     const store = globalThis.__mockStore;
@@ -1003,79 +957,6 @@ async function runPersonalDataSecurityTests(): Promise<{
           return;
         }
         throw new Error('Expected mock to reject unsupported documentType');
-      },
-    },
-    {
-      name: 'revokeSession rejects current session',
-      run: async () => {
-        const result = await graphql({
-          schema,
-          source: /* GraphQL */ `
-            mutation {
-              revokeSession(sessionId: "session-current") {
-                success
-              }
-            }
-          `,
-          contextValue,
-        });
-        expectGraphQLError(result, 'SESSION_IS_CURRENT', 409);
-      },
-    },
-    {
-      name: 'revokeSession accepts a non-current session',
-      run: async () => {
-        const result = await graphql({
-          schema,
-          source: /* GraphQL */ `
-            mutation {
-              revokeSession(sessionId: "session-other") {
-                success
-              }
-            }
-          `,
-          contextValue,
-        });
-        expectGraphQLSuccess(result);
-      },
-    },
-    {
-      name: 'changePassword closes other sessions',
-      run: async () => {
-        const result = await graphql({
-          schema,
-          source: /* GraphQL */ `
-            mutation ChangePassword($input: ChangePasswordInput!) {
-              changePassword(input: $input) {
-                success
-              }
-            }
-          `,
-          variableValues: {
-            input: {
-              currentPassword: 'old-password',
-              newPassword: 'NewPass1!',
-            },
-          },
-          contextValue,
-        });
-        expectGraphQLSuccess(result);
-        const security = await graphql({
-          schema,
-          source: securityQuery,
-          contextValue,
-        });
-        expectGraphQLSuccess(security);
-        const sessions = readPath(
-          security.data,
-          'mySecuritySettings',
-          'sessions',
-        );
-        assertBehavior(Array.isArray(sessions), 'Expected sessions array');
-        assertBehavior(
-          sessions.length === 1 && readPath(sessions[0], 'current') === true,
-          'Expected only the current session after password change',
-        );
       },
     },
     {

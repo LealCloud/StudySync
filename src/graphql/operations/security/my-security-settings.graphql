@@ -4,13 +4,5 @@ query MySecuritySettings {
     emailVerified
     twoFactorEnabled
     twoFactorRequired
-    sessions {
-      id
-      deviceName
-      browser
-      ipAddress
-      lastActiveAt
-      current
-    }
   }
 }

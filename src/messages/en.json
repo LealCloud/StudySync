@@ -416,8 +416,7 @@
         "errors": {
           "invalidCredentials": "Incorrect email or password.",
           "unexpected": "We couldn't log you in. Please try again.",
-          "rateLimited": "Too many attempts. Please try again later.",
-          "unavailable": "The sign-in service is unavailable. Please try again later."
+          "rateLimited": "Too many attempts. Please try again later."
         },
         "footer": {
           "prompt": "Don't have an account yet?",
@@ -1144,9 +1143,7 @@
           "twoFactor": "Two-factor authentication (2FA)",
           "twoFactorEnabled": "Enabled",
           "twoFactorDisabled": "Disabled",
-          "twoFactorRequired": "Required for your role",
-          "sessions": "Active sessions",
-          "sessionsCount": "{count, plural, =0 {No sessions} =1 {# session} other {# sessions}}"
+          "twoFactorRequired": "Required for your role"
         },
         "changePassword": {
           "title": "Cambiar contraseña",
@@ -1228,33 +1225,6 @@
             "INVALID_CODE": "The code is incorrect.",
             "CONFLICT": "The operation isn't valid right now. Please try again.",
             "FORBIDDEN": "You can't disable 2FA with your role.",
-            "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
-          }
-        },
-        "sessions": {
-          "title": "Active sessions",
-          "description": "Devices where your account is signed in. Revoke any you don't recognize.",
-          "currentBadge": "Current session",
-          "unknownDevice": "Unknown device",
-          "unknownBrowser": "Unknown browser",
-          "unknownIp": "Unknown IP",
-          "lastActive": "Last active: {date}",
-          "revoke": "Revoke",
-          "revokeAllOthers": "Sign out other sessions",
-          "empty": "No other active sessions.",
-          "confirmRevokeTitle": "Revoke session",
-          "confirmRevokeDescription": "Are you sure you want to sign out {device}? You'll have to sign in again on that device.",
-          "confirmRevokeOthersTitle": "Sign out other sessions",
-          "confirmRevokeOthersDescription": "All sessions except the current one will be closed. You'll have to sign in again on those devices.",
-          "confirm": "Revoke",
-          "confirmOthers": "Sign out all",
-          "cancel": "Cancel",
-          "revoking": "Revoking...",
-          "successRevoked": "Session revoked.",
-          "successRevokedOthers": "Other sessions were closed.",
-          "errors": {
-            "NOT_FOUND": "The session no longer exists. Refresh the page.",
-            "SESSION_IS_CURRENT": "You can't revoke your current session from here.",
             "INTERNAL_ERROR": "An unexpected error occurred. Please try again."
           }
         },

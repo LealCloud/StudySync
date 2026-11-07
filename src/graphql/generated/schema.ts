@@ -96,8 +96,6 @@ type Mutation {
   removePaymentMethod(paymentMethodId: ID!): Boolean!
   requestAccountDeactivation: Account!
   requestEmailChange(input: RequestEmailChangeInput!): SecurityOperationResult!
-  revokeOtherSessions: SecurityOperationResult!
-  revokeSession(sessionId: ID!): SecurityOperationResult!
   updatePersonalData(input: UpdatePersonalDataInput!): PersonalData!
   updatePreferences(input: UpdatePreferencesInput!): Preferences!
   updatePrivacySettings(input: UpdatePrivacySettingsInput!): PrivacySettings!
@@ -200,18 +198,8 @@ type SecurityOperationResult {
 type SecuritySettings {
   email: String!
   emailVerified: Boolean!
-  sessions: [Session!]!
   twoFactorEnabled: Boolean!
   twoFactorRequired: Boolean!
-}
-
-type Session {
-  browser: String
-  current: Boolean!
-  deviceName: String
-  id: ID!
-  ipAddress: String
-  lastActiveAt: DateTime!
 }
 
 enum SubscriptionPlan {

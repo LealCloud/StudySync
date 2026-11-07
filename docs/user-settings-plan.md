@@ -408,6 +408,8 @@ Validaciones por campo (se aplican solo si el campo se envía, respetando la sem
 
 ### 5.3 Security
 
+> La subsección de sesiones activas se eliminó por la decisión D-7 = B del [plan de migración a monolito](backend-monolith-plan.md#fase-g--security-eliminar-subsección-de-sesiones-diferible-d-7--b). Auth.js gestiona la sesión de acceso y el dominio no mantiene un modelo de sesiones revocables.
+
 #### 5.3.1 Tipos GraphQL
 
 ```graphql
@@ -416,16 +418,6 @@ type SecuritySettings {
   emailVerified: Boolean!
   twoFactorEnabled: Boolean!
   twoFactorRequired: Boolean!
-  sessions: [Session!]!
-}
-
-type Session {
-  id: ID!
-  deviceName: String
-  browser: String
-  ipAddress: String
-  lastActiveAt: DateTime!
-  current: Boolean!
 }
 
 type SecurityOperationResult {
@@ -456,18 +448,18 @@ Notas:
 #### 5.3.2 Queries
 
 - `mySecuritySettings -> SecuritySettings!` (fuente de datos de esta sección). Operation existente: `src/graphql/operations/security/my-security-settings.graphql`.
-- La sección se renderiza como una sola `<SectionCard>` con 5 subsecciones: Email, Contraseña, 2FA, Sesiones, Medio de verificación 2FA.
+- La sección se renderiza como una sola `<SectionCard>` con las subsecciones Email, Contraseña y 2FA.
 
 #### 5.3.3 Mutations
 
-Siete mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResult` o `TwoFactorSetup`). Por tanto, la actualización de graphcache se hace por `updates` explícitos o por refetch puntual.
+Cinco mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResult` o `TwoFactorSetup`). Por tanto, la actualización de graphcache se hace por `updates` explícitos o por refetch puntual.
 
 **`requestEmailChange`** — input `{ newEmail }`. El email no cambia hasta que el usuario confirma el enlace del correo de verificación. Errores:
 
 - `409 EMAIL_TAKEN` → "Ese correo ya está registrado".
 - `409 EMAIL_UNCHANGED` → "Es tu correo actual" (también pre-validado en cliente).
 
-**`changePassword`** — input `{ currentPassword, newPassword }`. Efecto secundario: **el backend revoca todas las otras sesiones** del usuario. La UI muestra aviso "Se cerraron tus otras sesiones por seguridad" y refresca `mySecuritySettings` con `network-only`. Errores:
+**`changePassword`** — input `{ currentPassword, newPassword }`. No revoca otras sesiones: Auth.js administra la sesión y el dominio no mantiene sesiones revocables. Errores:
 
 - `422 VALIDATION_ERROR` (reglas de `newPassword`).
 - `422 INVALID_CURRENT_PASSWORD` (error en `currentPassword`).
@@ -488,13 +480,6 @@ Siete mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResu
 - `403 FORBIDDEN` (defensa en profundidad).
 - `422 VALIDATION_ERROR`, `422 INVALID_CODE`.
 
-**`revokeSession`** — input `{ sessionId }`. Errores:
-
-- `404 NOT_FOUND` ("la sesión ya no existe").
-- `409 CONFLICT` (intento de revocar la sesión actual).
-
-**`revokeOtherSessions`** — sin input. Deja solo la sesión actual.
-
 #### 5.3.4 Campos editables vs. solo lectura
 
 | Campo               | Editable aquí                                        | Notas                                       |
@@ -503,7 +488,6 @@ Siete mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResu
 | `emailVerified`     | ❌                                                   | Solo lectura.                               |
 | `twoFactorEnabled`  | ✅ (vía `verifyTwoFactorSetup` / `disableTwoFactor`) | Desactivación bloqueada para teacher/admin. |
 | `twoFactorRequired` | ❌                                                   | Solo lectura. Discriminador de rol.         |
-| `sessions`          | ✅ (vía `revokeSession` / `revokeOtherSessions`)     | La sesión actual no se puede revocar.       |
 | `secret`, `qrCode`  | ❌ (no se exponen en UI)                             | Datos sensibles.                            |
 
 #### 5.3.5 Restricciones por rol
@@ -517,7 +501,6 @@ Siete mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResu
 
 - **Loading:** primer fetch de `mySecuritySettings`.
 - **Populated:** estado normal.
-- **Empty (sin sesiones):** estado defensivo. La sesión actual siempre está.
 - **Editing / Saving / Success / Error** por mutación (ver 5.3.3).
 - **Errores comunes:**
   - `401` → "Tu sesión expiró".
@@ -532,20 +515,17 @@ Siete mutaciones, ninguna devuelve entidad completa (solo `SecurityOperationResu
 
 - `401 UNAUTHENTICATED`.
 - `403 FORBIDDEN` (disable 2FA para teacher/admin, email-change en casos específicos).
-- `404 NOT_FOUND` (revoke session inexistente).
-- `409 CONFLICT` (email duplicado, email sin cambio, nueva password igual a la actual, intento de revocar la sesión actual).
+- `409 CONFLICT` (email duplicado, email sin cambio, nueva password igual a la actual).
 - `422 VALIDATION_ERROR`, `422 INVALID_CURRENT_PASSWORD`, `422 INVALID_CODE`.
 
 Reglas específicas:
 
 - `newPassword`: 6-15 caracteres, 1 minúscula, 1 mayúscula, 1 especial. Mismas reglas que registro/reset.
 - `code`: 6 dígitos numéricos (`/^\d{6}$/`).
-- Cambio de contraseña cierra otras sesiones automáticamente.
 
 #### 5.3.8 Decisiones de UX
 
 - Subsecciones en `<SectionCard>`, no modales (D8).
-- `<ConfirmDialog>` para `revokeSession` y `revokeOtherSessions`.
 - Formularios inline para `changePassword`, `requestEmailChange`, `verifyTwoFactorSetup`, `disableTwoFactor`.
 - `secret` y `qrCode` no se muestran en UI (2FA por correo).
 - `confirmPassword` nunca sale del cliente.
@@ -553,15 +533,13 @@ Reglas específicas:
 
 #### 5.3.9 Interacciones con otras partes del sistema
 
-- **Graphcache:** política global `cache-and-network`. Puntual `network-only` en el refetch de `mySecuritySettings` tras `changePassword`.
+- **Graphcache:** política global `cache-and-network`. Los subformularios pueden disparar `network-only` para mantener `mySecuritySettings` actualizado.
 - **Clasificación por mutación:**
   - `requestEmailChange` → sin updates.
   - `changePassword` → refetch `network-only`.
   - `beginTwoFactorSetup` → sin updates.
   - `verifyTwoFactorSetup` → update explícito (`twoFactorEnabled = true`).
   - `disableTwoFactor` → update explícito (`twoFactorEnabled = false`).
-  - `revokeSession` → update explícito (quitar de la lista).
-  - `revokeOtherSessions` → update explícito (dejar solo current).
 - **`me { email }`:** cuando el cambio de email se confirme, hay que invalidar/actualizar también `me` y `SidebarData`.
 - **`auth.ts`:** TODO para 2FA en login (fuera de alcance).
 - **`UrqlProvider`:** asegurar que `TwoFactorSetup` NO se declara como entidad normalizada (contiene `secret` y `qrCode`).

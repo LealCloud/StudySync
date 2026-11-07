@@ -49,21 +49,5 @@ export const securityResolvers = {
       requireRole(context, ['student']);
       return context.backend.security.disableTwoFactor(args.code);
     },
-    revokeSession: (
-      _: unknown,
-      args: { sessionId: string },
-      context: GraphQLContext,
-    ) => {
-      requireAuth(context);
-      return context.backend.security.revokeSession(args.sessionId);
-    },
-    revokeOtherSessions: (
-      _: unknown,
-      __: unknown,
-      context: GraphQLContext,
-    ) => {
-      requireAuth(context);
-      return context.backend.security.revokeOtherSessions();
-    },
   },
 };

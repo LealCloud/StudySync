@@ -16,8 +16,6 @@ import {
   beginTwoFactorSetup,
   verifyTwoFactorSetup,
   disableTwoFactor,
-  revokeSession,
-  revokeOtherSessions,
 } from '@/lib/domain/security';
 import {
   getAccount,
@@ -73,9 +71,6 @@ export class LocalBackendClient implements BackendClient {
     verifyTwoFactorSetup: (code) =>
       verifyTwoFactorSetup(this.requireUserId(), code),
     disableTwoFactor: (code) => disableTwoFactor(this.requireUserId(), code),
-    revokeSession: (sessionId) =>
-      revokeSession(this.requireUserId(), sessionId),
-    revokeOtherSessions: () => revokeOtherSessions(this.requireUserId()),
   };
 
   preferences: BackendClient['preferences'] = {
