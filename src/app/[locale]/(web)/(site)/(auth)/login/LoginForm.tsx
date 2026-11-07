@@ -37,7 +37,6 @@ export interface LoginFormMessages {
     invalidCredentials: string;
     unexpected: string;
     rateLimited: string;
-    unavailable: string;
   };
   footer: { prompt: string; link: string };
 }
@@ -94,9 +93,7 @@ export default function LoginForm({
         setMessage(
           code === 'rateLimited'
             ? messages.errors.rateLimited
-            : code === 'unavailable'
-              ? messages.errors.unavailable
-              : messages.errors.invalidCredentials,
+            : messages.errors.invalidCredentials,
         );
         setMessageType('error');
         return;

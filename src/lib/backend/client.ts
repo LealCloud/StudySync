@@ -2,21 +2,14 @@ import type {
   BackendAccount,
   BackendCertificate,
   BackendChangePasswordInput,
-  BackendContactInput,
   BackendCourseEnrollment,
-  BackendForgotPasswordInput,
   BackendInvoice,
-  BackendLoginData,
-  BackendLoginInput,
   BackendPaymentMethod,
   BackendPersonalData,
   BackendPreferences,
   BackendPrivacySettings,
   BackendPublicProfile,
-  BackendRegisterInput,
   BackendRequestEmailChangeInput,
-  BackendResetPasswordInput,
-  BackendResetTokenValidationResponse,
   BackendSecurityOperationResult,
   BackendSecuritySettings,
   BackendSubscription,
@@ -27,7 +20,6 @@ import type {
   BackendUpdatePrivacySettingsInput,
   BackendUpdateProfileInput,
   BackendUser,
-  BackendValidateResetTokenInput,
 } from './types';
 
 export interface RestBackendResponse<T = unknown> {
@@ -86,43 +78,5 @@ export interface BackendClient {
     getPaymentMethods(): Promise<BackendPaymentMethod[]>;
     getInvoices(): Promise<BackendInvoice[]>;
     removePaymentMethod(paymentMethodId: string): Promise<boolean>;
-  };
-}
-
-export interface PublicBackendClient {
-  auth: {
-    login(input: BackendLoginInput): Promise<
-      RestBackendResponse<{
-        status: number;
-        message: string;
-        data: BackendLoginData;
-      }>
-    >;
-    refresh(refreshToken: string): Promise<
-      RestBackendResponse<{
-        status: number;
-        message: string;
-        data: {
-          token: string;
-          refreshToken: string;
-          expiresIn: number;
-          refreshExpiresIn: number;
-        };
-      }>
-    >;
-    logout(refreshToken: string): Promise<RestBackendResponse>;
-    register(input: BackendRegisterInput): Promise<RestBackendResponse>;
-    forgotPassword(
-      input: BackendForgotPasswordInput,
-    ): Promise<RestBackendResponse>;
-    validateResetToken(
-      input: BackendValidateResetTokenInput,
-    ): Promise<RestBackendResponse<BackendResetTokenValidationResponse>>;
-    resetPassword(
-      input: BackendResetPasswordInput,
-    ): Promise<RestBackendResponse>;
-  };
-  contact: {
-    submit(input: BackendContactInput): Promise<RestBackendResponse>;
   };
 }

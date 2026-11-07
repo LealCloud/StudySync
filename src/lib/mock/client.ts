@@ -1,6 +1,5 @@
 import type {
   BackendClient,
-  PublicBackendClient,
   RestBackendResponse,
 } from '../backend/client';
 import { BackendOperationError } from '../backend/errors';
@@ -758,7 +757,7 @@ export class MockBackendClient implements BackendClient {
   };
 }
 
-export class MockPublicBackendClient implements PublicBackendClient {
+export class MockPublicBackendClient {
   private readonly validRefreshTokens = new Set([MOCK_REFRESH_TOKEN]);
   private readonly resetTokens = new Set([MOCK_RESET_TOKEN]);
 
@@ -907,7 +906,7 @@ export class MockPublicBackendClient implements PublicBackendClient {
     },
   };
 
-  contact: PublicBackendClient['contact'] = {
+  contact = {
     submit: async (input: BackendContactInput) => {
       if (
         !isValidName(input.name) ||

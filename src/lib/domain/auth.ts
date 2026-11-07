@@ -170,3 +170,24 @@ export async function resetPassword(
     });
   });
 }
+
+export async function authenticateUser(
+  email: string,
+  password: string,
+): Promise<{ id: string; role: 'student' | 'teacher' | 'admin' }> {
+  const user = await prisma.user.findUnique({
+    where: { email },
+    select: { id: true, role: true, passwordHash: true },
+  });
+
+  if (!user) {
+    throw new BackendOperationError(401, 'UNAUTHENTICATED');
+  }
+
+  const matches = await bcrypt.compare(password, user.passwordHash);
+  if (!matches) {
+    throw new BackendOperationError(401, 'UNAUTHENTICATED');
+  }
+
+  return { id: user.id, role: user.role };
+}
