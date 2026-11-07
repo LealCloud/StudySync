@@ -3,7 +3,7 @@
 > Documento vivo. Se actualiza conforme avanza el trabajo.  
 > Fuente de verdad para la migración arquitectónica del proyecto.
 >
-> **Estado:** Fases A, B, C y D completas. Siguiente: F + G + H (mecánicas).
+> **Estado:** Fases A–H completas. Siguiente: Fase I (docs).
 >
 > **Documento hermano:** `docs/user-settings-plan.md` documenta las fases 0–5
 > ya cerradas (User Settings). Este documento **no** reemplaza ese plan; lo
@@ -297,7 +297,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   - Verificado: 2 ejecuciones seguidas sin errores de unique constraint,
     conteos idénticos (`users=3`, `subs=1`, `pms=1`, `invoices=1`,
     `enrollments=1`, `certs=1`).
-  - Commit: `<hash_B4>`.
+  - Commit: `07cc9027d893841db00d4608897153400b466705`.
 - [x] **B.5** Crear `src/lib/db/prisma.ts` (singleton de `PrismaClient`
       para el runtime de Next.js). Patrón `globalThis.prisma` (D-B5.1),
       `import 'server-only'` como salvaguarda (D-B5.2),
@@ -308,7 +308,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       (el `server-only` lanza por el runtime), por eso se valida con
       `PrismaClient` directo. El singleton en sí queda validado
       indirectamente (mismo constructor, mismo `DATABASE_URL`).
-      Commit: `<hash_B5>`.
+      Commit: `bdee485d1ae51c7461cf7b8ef784dbf683d23142`.
 
 **Commit sugerido:** `feat(db): introducir Prisma y schema inicial`
 
@@ -709,56 +709,109 @@ call}.ts` D, `http.ts` D.
 
 **Commit sugerido:** `refactor(routes): route handlers llaman a dominio local` (dentro de C.6)
 
-### Fase F — Resolvers GraphQL y BFF (diferible)
+### Fase F — Resolvers GraphQL y BFF (diferible) ✅ CERRADA
 
-- [ ] **F.1** Verificar que los 10 resolvers no cambian (si D-2 = A).
-- [ ] **F.2** Ajustar `src/app/api/graphql/route.ts`:
+> **Estado:** ✅ Cerrada el 2026-11-06. Los 9 resolvers fuera de
+> `security.ts` verificados sin cambios. `security.ts` se modificó en
+> Fase G (eliminación de `revokeSession` y `revokeOtherSessions`).
+> `route.ts` y `auth.ts` verificados.
+
+- [x] **F.1** Verificar que los 10 resolvers no cambian (si D-2 = A).
+  - **Estado:** ✅ Cerrada. 9 resolvers verificados sin cambios:
+    `account`, `billing`, `certificates`, `courses`, `personal-data`,
+    `preferences`, `privacy`, `profile`, `user`. `security.ts` se
+    modifica en G (eliminación de `revokeSession`/`revokeOtherSessions`).
+- [x] **F.2** Ajustar `src/app/api/graphql/route.ts`:
   - Contexto: `createBackendClient()` sin `accessToken`.
   - `backendOperationErrorPlugin`: sigue mapeando `BackendOperationError`.
-- [ ] **F.3** Verificar `requireAuth` / `requireRole` (no cambian).
+  - **Estado:** ✅ Cerrada sin cambios. Ya usaba
+    `session?.user?.id` desde C.3.
+- [x] **F.3** Verificar `requireAuth` / `requireRole` (no cambian).
+  - **Estado:** ✅ Cerrada sin cambios.
 
 **Commit sugerido:** `refactor(bff): contexto GraphQL sin access token externo`
 
-### Fase G — Security: eliminar subsección de sesiones (diferible, D-7 = B)
+### Fase G — Security: eliminar subsección de sesiones (diferible, D-7 = B) ✅ CERRADA
 
-- [ ] **G.1** Actualizar `src/graphql/schema/settings/security.graphql`:
+> **Estado:** ✅ Cerrada el 2026-11-06. `Session` y `sessions` eliminados
+> del schema GraphQL, de la operation, del resolver, del mock, de los
+> tipos, del cliente local y del dominio. `SessionsSection.tsx` eliminado.
+> `SecurityOverviewClient.tsx` sin sesiones. Mensajes i18n limpiados.
+> `graphql:validate` válido.
+
+- [x] **G.1** Actualizar `src/graphql/schema/settings/security.graphql`:
       eliminar `sessions` del tipo `SecuritySettings` y el tipo `Session`.
-- [ ] **G.2** Actualizar `src/graphql/operations/security/my-security-settings.graphql`
+- [x] **G.2** Actualizar `src/graphql/operations/security/my-security-settings.graphql`
       (eliminar el bloque `sessions { ... }`).
-- [ ] **G.3** Regenerar `src/graphql/generated/graphql.ts` con
+- [x] **G.3** Regenerar `src/graphql/generated/graphql.ts` con
       `pnpm graphql:codegen`.
-- [ ] **G.4** Borrar `src/app/[locale]/(web)/dashboard/user-settings/SessionsSection.tsx`.
-- [ ] **G.5** Actualizar `SecurityOverviewClient.tsx`: eliminar
+- [x] **G.4** Borrar `src/app/[locale]/(web)/dashboard/user-settings/SessionsSection.tsx`.
+- [x] **G.5** Actualizar `SecurityOverviewClient.tsx`: eliminar
       `<SessionsSection />`, el contador de sesiones del `overview` y los
       mensajes `sessions` de `SecurityOverviewMessages`.
-- [ ] **G.6** Actualizar `src/messages/{es,en}.json`: eliminar
+- [x] **G.6** Actualizar `src/messages/{es,en}.json`: eliminar
       `dashboard.userSettings.security.sessions.*` y las claves de
       `overview` de sesiones.
-- [ ] **G.7** Actualizar `src/lib/mock/client.ts`: eliminar `sessions` de
+- [x] **G.7** Actualizar `src/lib/mock/client.ts`: eliminar `sessions` de
       `security.getMe`, `revokeSession`, `revokeOtherSessions`, y el
       `MockOperation` correspondiente.
-- [ ] **G.8** Actualizar `scripts/test-mock.ts`: eliminar los tests
+- [x] **G.8** Actualizar `scripts/test-mock.ts`: eliminar los tests
       `revokeSession`, `revokeOtherSessions`, `revokeSession rejects current
 session`, `revokeSession accepts a non-current session` y
       `changePassword closes other sessions`.
-- [ ] **G.9** Actualizar `docs/backend-api/_rutas/users-me/security/password.md`:
+- [x] **G.9** Actualizar `docs/backend-api/_rutas/users-me/security/password.md`:
       eliminar la mención "el backend revoca todas las sesiones excepto la
       actual" (ya no aplica).
-- [ ] **G.10** Actualizar `docs/user-settings-plan.md` §5.3 (Security):
+- [x] **G.10** Actualizar `docs/user-settings-plan.md` §5.3 (Security):
       marcar `sessions` como eliminado con referencia a este plan.
+- [x] **G.11** Eliminar `BackendSecuritySession` y `sessions` de
+      `BackendSecuritySettings` en `src/lib/backend/types.ts`.
+- [x] **G.12** Eliminar `revokeSession`/`revokeOtherSessions` de
+      `BackendClient['security']` en `src/lib/backend/client.ts`.
+- [x] **G.13** Eliminar `revokeSession`/`revokeOtherSessions` de
+      `LocalBackendClient.security` en `src/lib/backend/local/client.ts`.
+- [x] **G.14** Eliminar los stubs `revokeSession`/`revokeOtherSessions`
+      de `src/lib/domain/security.ts`.
+- [x] **G.15** Eliminar `revokeSession`/`revokeOtherSessions` del resolver
+      `securityResolvers.Mutation` en `src/graphql/resolvers/security.ts`.
+- [x] **G.16** Eliminar `src/graphql/operations/security/revoke-session.graphql`
+      y `revoke-other-sessions.graphql`.
 
 **Commit sugerido:** `refactor(security): eliminar subsección de sesiones activas`
 
-### Fase H — Limpieza y verificación (bloqueante al cierre)
+### Fase H — Limpieza y verificación (bloqueante al cierre) ✅ CERRADA
 
-- [ ] **H.1** Eliminar `scripts/test-backend.ts`.
-- [ ] **H.2** Verificar que `scripts/test-mock.ts` sigue pasando 59/59.
-- [ ] **H.3** Eliminar `RestBackendNotConfiguredError`,
+> **Estado:** ✅ Cerrada el 2026-11-06. `scripts/test-backend.ts` no
+> existe. Cero residuos de `RestBackendNotConfiguredError` /
+> `RestBackendUnavailableError`. Claves i18n huérfanas limpiadas.
+> Placeholders `<hash_B4>` y `<hash_B5>` resueltos con los hashes
+> reales `07cc902` y `bdee485`. README ya documentaba el setup.
+> Validaciones: `type-check` 0, `lint` 0, `mock:test` 54/54,
+> `domain:test` 6/6, `graphql:validate` válido.
+
+- [x] **H.1** Eliminar `scripts/test-backend.ts`.
+  - **Estado:** ✅ Ya eliminado en C.0.
+- [x] **H.2** Verificar que `scripts/test-mock.ts` sigue pasando 59/59.
+  - **Estado:** ✅ 54/54 (bajó 5 por los tests de sesiones eliminados
+    en Fase G).
+- [x] **H.3** Eliminar `RestBackendNotConfiguredError`,
       `RestBackendUnavailableError`, `RestBackendResponse` donde queden
       referencias.
-- [ ] **H.4** `pnpm type-check`, `pnpm lint`, `pnpm mock:test`,
+  - **Estado:** ✅ Cero residuos. `RestBackendResponse<T>` se conserva
+    en `client.ts` porque `MockPublicBackendClient` lo usa.
+- [x] **H.4** `pnpm type-check`, `pnpm lint`, `pnpm mock:test`,
       `pnpm graphql:validate` en verde.
-- [ ] **H.5** Actualizar `README.md` con el nuevo setup (Prisma, `pnpm prisma migrate dev`, `pnpm prisma db seed`, `BACKEND_MODE=local|mock`).
+  - **Estado:** ✅ Los 4 en verde.
+- [x] **H.5** Actualizar `README.md` con el nuevo setup (Prisma, `pnpm prisma migrate dev`, `pnpm prisma db seed`, `BACKEND_MODE=local|mock`).
+  - **Estado:** ✅ Ya documentado desde Fase B. Sin cambios.
+
+- [x] **H.6 (nueva)** Limpiar claves i18n huérfanas:
+      `auth.login.form.errors.unavailable` eliminada; `unexpected`
+      conservada; `unavailable` de registro y recuperación conservadas
+      (sus formularios aún las usan). Ajustar
+      `src/app/[locale]/(web)/(site)/(auth)/login/page.tsx` para dejar
+      de pedir la clave eliminada.
+  - **Estado:** ✅ Cerrada.
 
 **Commit sugerido:** `chore(monolith): eliminar residuos del backend externo y actualizar setup`
 
@@ -787,8 +840,8 @@ session`, `revokeSession accepts a non-current session` y
 | 2026-11-01 | **Fase B.1 — Docker + entorno**                  | **Cerrada** | `docker-compose.yml` con `postgres:16` (volumen nombrado, healthcheck). `.env` consolidado (renombrado desde `.env.local`: Prisma CLI lee `.env`, no `.env.local`). `README.md` reescrito. Commit `667afe7`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
 | 2026-11-01 | **Fase B.2 — Schema Prisma**                     | **Cerrada** | `prisma/schema.prisma` con 14 modelos + 9 enums. Scripts de Prisma en `package.json`. Bloque `"prisma": { "seed": "tsx prisma/seed.ts" }`. Commits `bcdc76f`, `9a5af2a`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  |
 | 2026-11-03 | **Fase B.3 — Migración inicial**                 | **Cerrada** | Migración `20261104015947_init` aplicada. 14 tablas + `_prisma_migrations` (15 en `\dt`), 9 enums en `\dT+`, FKs, uniques e índices verificados. Commit `c933b2c`.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        |
-| 2026-11-03 | **Fase B.4 — Seed**                              | **Cerrada** | `prisma/seed.ts` con 3 usuarios (`student@example.com`, `teacher@example.com`, `admin@example.com`, password `ValidPass1!`), idempotente vía `upsert` por PK. Student con datos ricos (subscription, payment method, invoice, certificate, enrollment). D-B4.1 (crudo con PrismaClient), D-B4.2 (3 usuarios), D-B4.3 (import directo), D-B4.4 (`TODO(seed-shared-prisma)` diferido). Commit `<hash_B4>` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
-| 2026-11-05 | **Fase B.5 — Singleton PrismaClient**            | **Cerrada** | `src/lib/db/prisma.ts` con patrón `globalThis.prisma`, `import 'server-only'` (D-B5.1), `logLevels` variable por `NODE_ENV` (D-B5.3), `server-only@0.0.1` añadido a `dependencies`. Smoke test directo `SELECT 1` validado (`[ { ok: 1 } ]`). Commit `<hash_B5>` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 2026-11-03 | **Fase B.4 — Seed**                              | **Cerrada** | `prisma/seed.ts` con 3 usuarios (`student@example.com`, `teacher@example.com`, `admin@example.com`, password `ValidPass1!`), idempotente vía `upsert` por PK. Student con datos ricos (subscription, payment method, invoice, certificate, enrollment). D-B4.1 (crudo con PrismaClient), D-B4.2 (3 usuarios), D-B4.3 (import directo), D-B4.4 (`TODO(seed-shared-prisma)` diferido). Commit `07cc9027d893841db00d4608897153400b466705` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| 2026-11-05 | **Fase B.5 — Singleton PrismaClient**            | **Cerrada** | `src/lib/db/prisma.ts` con patrón `globalThis.prisma`, `import 'server-only'` (D-B5.1), `logLevels` variable por `NODE_ENV` (D-B5.3), `server-only@0.0.1` añadido a `dependencies`. Smoke test directo `SELECT 1` validado (`[ { ok: 1 } ]`). Commit `bdee485d1ae51c7461cf7b8ef784dbf683d23142` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 2026-11-05 | **Fase B — COMPLETA**                            | **Cerrada** | B.0 a B.5 cerradas. Prisma + PostgreSQL operativos. Siguiente: **C.0 (auditoría de tipos `Backend*` vs. contrato v2.0)** antes de arrancar C.1. Decisión registrada: **no se migra a Prisma 7 ni a `prisma.config.ts`** (ver §6 deuda de Prisma 8 RC en `Rol y propósito.txt`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           |
 | 2026-11-05 | **Fase C.0 — Auditoría de tipos `Backend*`**     | **Cerrada** | Eliminados `BackendTokenPair`, `BackendTokenPairResponse`, `BackendDataResponse<T>` y `BackendLoginResponse`. `BackendLoginData` reducido a `{ id, role, token, refreshToken, expiresIn, refreshExpiresIn }`. Ajustados `PublicBackendClient`, `RestBackendClient`, `MockBackendClient`, `services/auth.ts` (con `AuthTokenPair` local) con tipos inline. Diferida la eliminación de `BackendSecuritySession`/`sessions` a Fase G (`TODO(phase-g)`). Adelantada la eliminación de `scripts/test-backend.ts` y del script `"backend:test"`. Validaciones en verde (type-check 0, lint 0, mock:test 59/59). Commit `6ed6070` (sin push).                                                                                                                                                                                                                                    |
 | 2026-11-05 | **Fase C.1.a — Dominio básico**                  | **Cerrada** | 8 archivos creados en `src/lib/domain/` (`users`, `personal-data`, `privacy`, `preferences`, `account`, `courses`, `certificates`, `billing`). Sin imports cruzados. `getPublicProfile` aplica matriz de visibilidad (§8.2.18) y devuelve `null`. `updateProfile` con PATCH anidado de `bio` y `Prisma.DbNull` para borrar la bio completa. `updatePersonalData` con `identityLocked` atómico (403) y rechazo de `null` en nombres (422). `updatePrivacy` y `updatePreferences` rechazan `null` (422). Fechas ISO 8601. Sin validación de roles (eso vive en BFF + C.2). Validaciones: type-check 0, lint 0, mock:test 59/59. Commit `727dcfa` (sin push).                                                                                                                                                                                                                |
@@ -798,5 +851,8 @@ session`, `revokeSession accepts a non-current session` y
 | 2026-11-06 | **Fase C.2 — LocalBackendClient (bookkeeping)**  | **Cerrada** | C.2 estaba funcionalmente completa desde C.3 pero no tachada en el plan. `LocalBackendClient` implementa los 12 grupos de métodos de `BackendClient`, recibe `userId` en el constructor (D-11 = C-1) y filtra por `this.userId`. `createBackendClient(userId)` en `index.ts` lo instancia en modo local. Verificado con `grep` + `tsc --noEmit`. Sin commit propio (el código ya estaba en C.3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | 2026-11-06 | **Fase C.6 + C.6.1 — Route handlers al dominio** | **Cerrada** | 5 route handlers del sitio público llaman directamente a `src/lib/domain/*` con traducción inline de `BackendOperationError`. Eliminados `services/{auth,contact,call}.ts` y `http.ts`. `RestBackendResponse<T>` movido a `client.ts`. Conservados `PublicBackendClient`/`MockPublicBackendClient`/`createPublicBackendClient` para no romper `src/auth.ts` (Fase D). 11 archivos tocados (7 M + 4 D). Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6 (requirió PostgreSQL activo). Commit `30c42f0` (sin push).                                                                                                                                                                                                                                                                                                                                    |
 | 2026-11-06 | **Fase C — COMPLETA**                            | **Cerrada** | C.0 a C.7 cerradas, incluida C.6.1 (desbloqueo de infraestructura). `src/lib/backend/services/` y `src/lib/backend/http.ts` ya no existen. Los 5 route handlers del sitio público llaman al dominio. `RestBackendResponse<T>` vive en `client.ts`. Siguiente: **Fase D (Auth.js puro)** — reescribir `src/auth.ts`, mover `authenticateUser` al dominio, eliminar `PublicBackendClient`/`MockPublicBackendClient`/`createPublicBackendClient` cuando `src/auth.ts` deje de usarlos.                                                                                                                                                                                                                                                                                                                                                                                       |
-| 2026-11-06 | **Fase D — Auth.js puro**                        | **Cerrada** | `authenticateUser(email, password)` en `src/lib/domain/auth.ts` (bcrypt + `select: { id, role, passwordHash }`). `src/auth.ts` reescrito (143 líneas, era 394): `authorize()` → `authenticateUser`, callbacks `{ id, role }`, sin `events.signOut`, sin `UnavailableError`, sin `TokenPairSchema`/`refreshAccessToken`/`refreshInFlight`/`isLoginSuccessResponse`. `next-auth.d.ts` sin `Session.error` ni tokens. `client.ts` sin `PublicBackendClient`. `index.ts` sin `createPublicBackendClient`. `MockPublicBackendClient` sin `implements` (conserva contrato para `mock:test`). `LoginForm.tsx` sin `unavailable`. 7 archivos, +62/-404. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `fb1e2e5` (sin push).                                                                                                             |
-| 2026-11-06 | **Fase D — COMPLETA**                            | **Cerrada** | D.1, D.2, D.3, D.4 y D.5 (nueva) cerradas. Auth.js puro con JWT firmado propio. Sin access/refresh tokens externos. `authenticateUser` vive en el dominio. `PublicBackendClient` y `createPublicBackendClient` eliminados. Siguiente: **F + G + H** (mecánicas). Fase I diferible. Deuda diferida a H: claves i18n huérfanas, `<hash_B4>`, `<hash_B5>` en bitácora.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2026-11-06 | **Fase D — Auth.js puro**                        | **Cerrada** | `authenticateUser(email, password)` en `src/lib/domain/auth.ts` (bcrypt + `select: { id, role, passwordHash }`). `src/auth.ts` reescrito (143 líneas, era 394): `authorize()` → `authenticateUser`, callbacks `{ id, role }`, sin `events.signOut`, sin `UnavailableError`, sin `TokenPairSchema`/`refreshAccessToken`/`refreshInFlight`/`isLoginSuccessResponse`. `next-auth.d.ts` sin `Session.error` ni tokens. `client.ts` sin `PublicBackendClient`. `index.ts` sin `createPublicBackendClient`. `MockPublicBackendClient` sin `implements` (conserva contrato para `mock:test`). `LoginForm.tsx` sin `unavailable`. 7 archivos, +62/-404. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `fb1e2e5` (sin push).                                                                                                                        |
+| 2026-11-06 | **Fase D — COMPLETA**                            | **Cerrada** | D.1, D.2, D.3, D.4 y D.5 (nueva) cerradas. Auth.js puro con JWT firmado propio. Sin access/refresh tokens externos. `authenticateUser` vive en el dominio. `PublicBackendClient` y `createPublicBackendClient` eliminados. Siguiente: **F + G + H** (mecánicas). Fase I diferible. Deuda diferida a H: claves i18n huérfanas, `07cc9027d893841db00d4608897153400b466705`, `bdee485d1ae51c7461cf7b8ef784dbf683d23142` en bitácora.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 2026-11-06 | **Fase F — Verificación de resolvers**           | **Cerrada** | Los 9 resolvers restantes intactos (`account`, `billing`, `certificates`, `courses`, `personal-data`, `preferences`, `privacy`, `profile`, `user`). `security.ts` se ajustó en G.15. `route.ts` y `auth.ts` verificados sin cambios. Sin archivos modificados. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
+| 2026-11-06 | **Fase G — Eliminar sesiones de Security**       | **Cerrada** | `Session`, `sessions`, `revokeSession` y `revokeOtherSessions` eliminados del schema, operation, resolver, mock, tipos, cliente local y dominio. `SessionsSection.tsx` borrado. `SecurityOverviewClient.tsx` sin `<SessionsSection />` ni contador. Mensajes i18n limpios en es/en. `mock:test` 59→54 (-5 tests). `graphql:validate` verde. 15 archivos M + 3 D. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
+| 2026-11-06 | **Fase H — Limpieza y verificación**             | **Cerrada** | `scripts/test-backend.ts` ya eliminado en C.0. Cero residuos `RestBackend*`. Claves i18n huérfanas limpiadas (`auth.login.form.errors.unavailable`; `login/page.tsx` ajustado). Placeholders `<hash_B4>` / `<hash_B5>` resueltos con `07cc902` y `bdee485`. README ya documentado. `mock:test` 54/54, `domain:test` 6/6, `graphql:validate` verde, `type-check` 0, `lint` 0. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
