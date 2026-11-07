@@ -3,7 +3,7 @@
 > Documento vivo. Se actualiza conforme avanza el trabajo.  
 > Fuente de verdad para la migración arquitectónica del proyecto.
 >
-> **Estado:** Fases A–H completas. Siguiente: Fase I (docs).
+> **Estado:** Fases A–I completas. Plan cerrado.
 >
 > **Documento hermano:** `docs/user-settings-plan.md` documenta las fases 0–5
 > ya cerradas (User Settings). Este documento **no** reemplaza ese plan; lo
@@ -815,16 +815,21 @@ session`, `revokeSession accepts a non-current session` y
 
 **Commit sugerido:** `chore(monolith): eliminar residuos del backend externo y actualizar setup`
 
-### Fase I — Actualizar `user-settings-plan.md` (diferible)
+### Fase I — Actualizar `user-settings-plan.md` (diferible) ✅ CERRADA
 
-- [ ] **I.1** Añadir una nota al inicio de `docs/user-settings-plan.md`
+> **Estado:** ✅ Cerrada el 2026-11-07. `docs/user-settings-plan.md`
+> referencia el plan de migración en su cabecera y en la bitácora (§9).
+> Ambos documentos quedan sincronizados. Con esta fase, el plan de
+> migración a monolito queda completo (A–I cerradas).
+
+- [x] **I.1** Añadir una nota al inicio de `docs/user-settings-plan.md`
       indicando que el plan sigue vigente para las fases 0–5, pero que la
       arquitectura de backend cambió y este documento es la fuente de
       verdad del cambio.
-- [ ] **I.2** Añadir una entrada a la bitácora (§9 de
+- [x] **I.2** Añadir una entrada a la bitácora (§9 de
       `user-settings-plan.md`) con fecha y referencia a este documento.
 
-**Commit sugerido:** `docs(user-settings): referenciar plan de migración a monolito`
+**Commit aplicado:** `4d7e6ae` (`docs(user-settings): referenciar plan de migración a monolito`).
 
 ---
 
@@ -855,4 +860,6 @@ session`, `revokeSession accepts a non-current session` y
 | 2026-11-06 | **Fase D — COMPLETA**                            | **Cerrada** | D.1, D.2, D.3, D.4 y D.5 (nueva) cerradas. Auth.js puro con JWT firmado propio. Sin access/refresh tokens externos. `authenticateUser` vive en el dominio. `PublicBackendClient` y `createPublicBackendClient` eliminados. Siguiente: **F + G + H** (mecánicas). Fase I diferible. Deuda diferida a H: claves i18n huérfanas, `07cc9027d893841db00d4608897153400b466705`, `bdee485d1ae51c7461cf7b8ef784dbf683d23142` en bitácora.                                                                                                                                                                                                                                                                                                                                                                                                                                         |
 | 2026-11-06 | **Fase F — Verificación de resolvers**           | **Cerrada** | Los 9 resolvers restantes intactos (`account`, `billing`, `certificates`, `courses`, `personal-data`, `preferences`, `privacy`, `profile`, `user`). `security.ts` se ajustó en G.15. `route.ts` y `auth.ts` verificados sin cambios. Sin archivos modificados. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               |
 | 2026-11-06 | **Fase G — Eliminar sesiones de Security**       | **Cerrada** | `Session`, `sessions`, `revokeSession` y `revokeOtherSessions` eliminados del schema, operation, resolver, mock, tipos, cliente local y dominio. `SessionsSection.tsx` borrado. `SecurityOverviewClient.tsx` sin `<SessionsSection />` ni contador. Mensajes i18n limpios en es/en. `mock:test` 59→54 (-5 tests). `graphql:validate` verde. 15 archivos M + 3 D. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                             |
-| 2026-11-06 | **Fase H — Limpieza y verificación**             | **Cerrada** | `scripts/test-backend.ts` ya eliminado en C.0. Cero residuos `RestBackend*`. Claves i18n huérfanas limpiadas (`auth.login.form.errors.unavailable`; `login/page.tsx` ajustado). Placeholders `<hash_B4>` / `<hash_B5>` resueltos con `07cc902` y `bdee485`. README ya documentado. `mock:test` 54/54, `domain:test` 6/6, `graphql:validate` verde, `type-check` 0, `lint` 0. Commit `240652f` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                 |
+| 2026-11-06 | **Fase H — Limpieza y verificación**             | **Cerrada** | `scripts/test-backend.ts` ya eliminado en C.0. Cero residuos `RestBackend*`. Claves i18n huérfanas limpiadas (`auth.login.form.errors.unavailable`; `login/page.tsx` ajustado). Placeholders `<hash_B4>` / `<hash_B5>` resueltos con `07cc902` y `bdee485`. README ya documentado. `mock:test` 54/54, `domain:test` 6/6, `graphql:validate` verde, `type-check` 0, `lint` 0. Commits: `240652f` (código) + `27354f9` (plan).                                                                                                                                                                                                                                                                                                                                                                                                                                              |
+| 2026-11-07 | **Fase I — Cierre del plan**                     | **Cerrada** | `docs/user-settings-plan.md` referencia el plan de migración en su cabecera (nota de migración) y en la bitácora (§9). Ambos documentos quedan sincronizados. Commit `4d7e6ae` (`docs(user-settings): referenciar plan de migración a monolito`).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         |
+| 2026-11-07 | **Fases A–I — PLAN COMPLETO**                    | **Cerrada** | Migración arquitectónica cerrada. Backend externo eliminado. Monolito Next.js 16 + Prisma + PostgreSQL + Auth.js puro + BFF GraphQL + capa de dominio. `src/lib/backend/services/*` y `src/lib/backend/http.ts` ya no existen. `session.user = { id, role }`. `security.sessions` eliminado (D-7 = B). `mock:test` 54/54, `domain:test` 6/6, `graphql:validate` verde. `type-check` 0, `lint` 0. Commits clave: `30c42f0` (C.6+C.6.1), `fb1e2e5` (D), `240652f` (F+G+H), `27354f9` (plan F+G+H), `4d7e6ae` (Fase I).                                                                                                                                                                                                                                                                                                                                                      |
