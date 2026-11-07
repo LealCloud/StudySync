@@ -1,7 +1,8 @@
 import { apiError, apiOk } from '@/lib/apiResponse';
+import { BackendOperationError } from '@/lib/backend/errors';
 import { backendRouteError } from '@/lib/backend/routeErrors';
-import { submitContact } from '@/lib/backend/services/contact';
 import { getClientIp } from '@/lib/clientIp';
+import { submitContact } from '@/lib/domain/contact';
 import { contactSchema } from '@/lib/schemas/contact/contact.schema';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { NextRequest, NextResponse } from 'next/server';
@@ -29,6 +30,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await submitContact(result.data);
     return apiOk();
   } catch (error) {
+    if (error instanceof BackendOperationError) {
+      switch (error.code) {
+        case 'VALIDATION_ERROR':
+          return apiError(422, 'invalidData');
+        case 'INTERNAL_ERROR':
+          return apiError(500, 'sendFailed');
+        default:
+          return backendRouteError(error, 'contacto');
+      }
+    }
     return backendRouteError(error, 'contacto');
   }
 }

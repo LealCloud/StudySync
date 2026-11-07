@@ -1,4 +1,3 @@
-import type { RestBackendResponse } from './http';
 import type {
   BackendAccount,
   BackendCertificate,
@@ -30,6 +29,12 @@ import type {
   BackendUser,
   BackendValidateResetTokenInput,
 } from './types';
+
+export interface RestBackendResponse<T = unknown> {
+  status: number;
+  ok: boolean;
+  body: T | null;
+}
 
 export interface BackendClient {
   users: {
@@ -86,18 +91,14 @@ export interface BackendClient {
 
 export interface PublicBackendClient {
   auth: {
-    login(
-      input: BackendLoginInput,
-    ): Promise<
+    login(input: BackendLoginInput): Promise<
       RestBackendResponse<{
         status: number;
         message: string;
         data: BackendLoginData;
       }>
     >;
-    refresh(
-      refreshToken: string,
-    ): Promise<
+    refresh(refreshToken: string): Promise<
       RestBackendResponse<{
         status: number;
         message: string;

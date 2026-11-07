@@ -1,7 +1,7 @@
 import { apiError, apiOk } from '@/lib/apiResponse';
 import { backendRouteError } from '@/lib/backend/routeErrors';
-import { requestPasswordReset } from '@/lib/backend/services/auth';
 import { getClientIp } from '@/lib/clientIp';
+import { requestPasswordReset } from '@/lib/domain/auth';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { forgotPasswordSchema } from '@/lib/schemas/auth/forgot-password.schema';
 import { NextRequest, NextResponse } from 'next/server';

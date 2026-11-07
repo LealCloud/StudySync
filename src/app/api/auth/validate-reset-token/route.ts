@@ -1,7 +1,8 @@
 import { apiError, apiOk } from '@/lib/apiResponse';
+import { BackendOperationError } from '@/lib/backend/errors';
 import { backendRouteError } from '@/lib/backend/routeErrors';
-import { validateResetToken } from '@/lib/backend/services/auth';
 import { getClientIp } from '@/lib/clientIp';
+import { validateResetToken } from '@/lib/domain/auth';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { resetPasswordTokenSchema } from '@/lib/schemas/auth/reset-password.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -37,9 +38,17 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
     if (!tokenRateLimitResult.success) return apiError(429, 'rateLimited');
 
-    const data = await validateResetToken(token);
-    return apiOk(data);
+    await validateResetToken(token);
+    return apiOk({ valid: true });
   } catch (error) {
+    if (error instanceof BackendOperationError) {
+      switch (error.code) {
+        case 'INVALID_RESET_TOKEN':
+          return apiError(400, 'invalidToken');
+        default:
+          return backendRouteError(error, 'validate-reset-token');
+      }
+    }
     return backendRouteError(error, 'validate-reset-token');
   }
 }

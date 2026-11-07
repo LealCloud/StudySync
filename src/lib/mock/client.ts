@@ -1,6 +1,9 @@
-import type { BackendClient, PublicBackendClient } from '../backend/client';
+import type {
+  BackendClient,
+  PublicBackendClient,
+  RestBackendResponse,
+} from '../backend/client';
 import { BackendOperationError } from '../backend/errors';
-import type { RestBackendResponse } from '../backend/http';
 import type {
   BackendAccount,
   BackendContactInput,
@@ -787,11 +790,7 @@ export class MockPublicBackendClient implements PublicBackendClient {
         );
       }
       if (input.email.startsWith('ratelimited+')) {
-        return mockApiError(
-          429,
-          'RATE_LIMITED',
-          'Demasiados intentos.',
-        );
+        return mockApiError(429, 'RATE_LIMITED', 'Demasiados intentos.');
       }
       const data = {
         status: 200,
@@ -820,11 +819,7 @@ export class MockPublicBackendClient implements PublicBackendClient {
       }>
     > => {
       if (!this.validRefreshTokens.has(refreshToken)) {
-        return mockApiError(
-          401,
-          'UNAUTHENTICATED',
-          'Refresh token inválido.',
-        );
+        return mockApiError(401, 'UNAUTHENTICATED', 'Refresh token inválido.');
       }
 
       // Rotación: el token usado deja de ser válido y se emite uno nuevo.

@@ -1,7 +1,8 @@
 import { apiError, apiOk } from '@/lib/apiResponse';
+import { BackendOperationError } from '@/lib/backend/errors';
 import { backendRouteError } from '@/lib/backend/routeErrors';
-import { registerAccount } from '@/lib/backend/services/auth';
 import { getClientIp } from '@/lib/clientIp';
+import { registerUser } from '@/lib/domain/auth';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { registerSchema } from '@/lib/schemas/auth/register.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -34,7 +35,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     );
     if (!emailRateLimitResult.success) return apiError(429, 'rateLimited');
 
-    await registerAccount({
+    await registerUser({
       firstName: result.data.firstName,
       lastName: result.data.lastName,
       email,
@@ -43,6 +44,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
 
     return apiOk();
   } catch (error) {
+    if (error instanceof BackendOperationError) {
+      switch (error.code) {
+        case 'CONFLICT':
+          return apiError(409, 'emailTaken');
+        case 'VALIDATION_ERROR':
+          return apiError(422, 'invalidData');
+        default:
+          return backendRouteError(error, 'registro');
+      }
+    }
     return backendRouteError(error, 'registro');
   }
 }

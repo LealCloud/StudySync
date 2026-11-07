@@ -1,7 +1,8 @@
 import { apiError, apiOk } from '@/lib/apiResponse';
+import { BackendOperationError } from '@/lib/backend/errors';
 import { backendRouteError } from '@/lib/backend/routeErrors';
-import { resetPassword } from '@/lib/backend/services/auth';
 import { getClientIp } from '@/lib/clientIp';
+import { resetPassword } from '@/lib/domain/auth';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { resetPasswordRequestSchema } from '@/lib/schemas/auth/reset-password.schema';
 import { NextRequest, NextResponse } from 'next/server';
@@ -40,6 +41,16 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
     await resetPassword(token, password);
     return apiOk();
   } catch (error) {
+    if (error instanceof BackendOperationError) {
+      switch (error.code) {
+        case 'INVALID_RESET_TOKEN':
+          return apiError(400, 'invalidToken');
+        case 'VALIDATION_ERROR':
+          return apiError(422, 'invalidData');
+        default:
+          return backendRouteError(error, 'reset-password');
+      }
+    }
     return backendRouteError(error, 'reset-password');
   }
 }
