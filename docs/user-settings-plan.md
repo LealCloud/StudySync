@@ -3,6 +3,17 @@
 > Documento vivo. Se actualiza conforme avanza el trabajo.
 > Fuente de verdad para el desarrollo de la sección de configuración de usuario.
 
+> **Nota de migración (2026-11-07).** Este plan sigue vigente para las
+> fases 0–5 (implementación de User Settings). La arquitectura de backend
+> cambió en `docs/backend-monolith-plan.md`: el backend externo se
+> eliminó y toda la lógica vive en el monolito Next.js + Prisma +
+> PostgreSQL con Auth.js puro. Para el detalle del cambio
+> arquitectónico, las decisiones cerradas (D-1 a D-13) y las fases A–H
+> cerradas, ver [`docs/backend-monolith-plan.md`](backend-monolith-plan.md).
+>
+> `BACKEND_MODE=local` reemplaza al antiguo `BACKEND_MODE=rest`.
+> `MockBackendClient` sigue siendo un modo de ejecución (`BACKEND_MODE=mock`).
+
 ---
 
 ## 1. Contexto
@@ -2001,6 +2012,7 @@ el comportamiento esperado.
 | 2026-10-28 | Fase 5.2 / `CoursesSection`                     | Cerrado   | `5b6ca39`. `CoursesSection` (Server) + `CoursesClient` (Client). Solo lectura; cada curso enlaza a `/courses/{courseId}`. `<progress>` nativo con estilos webkit/moz contra las variables del tema. `completedAt` se estrecha de `unknown` a `string \| null` antes de usarlo en JSX. Claves i18n en es/en. `pnpm type-check` + `pnpm lint` en verde.                                                                                                                                                                                                                                                                                                                                   |
 | 2026-10-28 | Fase 5.3 / `CertificatesSection`                | Cerrado   | `58a0862`. `CertificatesSection` (Server) + `CertificatesClient` (Client). **Refactor:** `CertificateEligibility` se mueve de `ProfileSection` a `CertificatesSection`. `ProfileSection` simplificado (avatar + form). `page.tsx` sin `showCertificates`. `downloadUrl` con `<a target="_blank" rel="noopener noreferrer">`. `issuedAt` estrechado de `unknown`. Claves i18n reorganizadas bajo `certificates.eligibility`. `pnpm type-check` + `pnpm lint` en verde.                                                                                                                                                                                                                   |
 | 2026-10-28 | **Fase 5 ✅ CERRADA**                           | Cerrado   | Los 4 subpasos y el prerrequisito de infraestructura están cerrados y commiteados: `7781616` + `43ea6d2` + `5b6ca39` + `58a0862` + `d437fcd` + `0f25c40`. La sección `billing` se dividió en dos commits (lectura / mutaciones) para aislar la verificación del `updates.Mutation.removePaymentMethod` (primera activación real en Fase 5, verificada manualmente). Con Fase 5 cerrada, las 9 secciones del plan están implementadas. Siguiente: Fase 6 (endurecimiento).                                                                                                                                                                                                               |
+| 2026-11-07 | Migración a monolito (Fases A–H)                | Cerrada   | Ver [`docs/backend-monolith-plan.md`](backend-monolith-plan.md). Fases A–H cerradas: backend externo eliminado, Prisma + PostgreSQL + Auth.js puro + capa de dominio. `src/lib/backend/services/*` y `src/lib/backend/http.ts` eliminados. `session.user = { id, role }` (sin `error` ni tokens externos). `security.sessions` eliminado (D-7 = B). `mock:test` 54/54 (-5 tests de sessions). `domain:test` 6/6. `graphql:validate` verde. Commits clave: `30c42f0` (C.6+C.6.1), `fb1e2e5` (D), `240652f` (F+G+H). Fase I cierra el plan.                                                                                                                                               |
 
 ---
 
