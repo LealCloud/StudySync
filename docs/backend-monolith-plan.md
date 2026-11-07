@@ -3,7 +3,7 @@
 > Documento vivo. Se actualiza conforme avanza el trabajo.  
 > Fuente de verdad para la migración arquitectónica del proyecto.
 >
-> **Estado:** Fases A, B y C completas. Siguiente: Fase D (Auth.js puro).
+> **Estado:** Fases A, B, C y D completas. Siguiente: F + G + H (mecánicas).
 >
 > **Documento hermano:** `docs/user-settings-plan.md` documenta las fases 0–5
 > ya cerradas (User Settings). Este documento **no** reemplaza ese plan; lo
@@ -621,25 +621,74 @@ call}.ts` D, `http.ts` D.
 
 **Commit sugerido:** `feat(domain): implementar lógica de negocio en Prisma`
 
-### Fase D — Autenticación (bloqueante, depende de D-4.1 y D-4.2)
+### Fase D — Autenticación (bloqueante, depende de D-4.1 y D-4.2) ✅ CERRADA
 
-- [ ] **D.1** Reescribir `src/auth.ts`:
+> **Estado:** ✅ Cerrada el 2026-11-06. `authenticateUser` vive en
+> `src/lib/domain/auth.ts`. `src/auth.ts` es Auth.js puro con
+> `{ id, role }` en sesión y JWT. Eliminados el flujo de tokens
+> externos, `PublicBackendClient`, `createPublicBackendClient` y
+> `UnavailableError`. Validaciones: `type-check` 0, `lint` 0,
+> `mock:test` 59/59, `domain:test` 6/6.
+
+- [x] **D.1** Reescribir `src/auth.ts`:
   - `authorize()` llama a `authenticateUser(email, password)`.
   - Devuelve `{ id, role }`.
   - Se elimina `TokenPairSchema`, `refreshAccessToken`, `refreshInFlight`,
-    `LoginSuccessResponse`, `UnavailableError`, `events.signOut` (o se
-    reduce a log).
+    `LoginSuccessResponse`, `UnavailableError`, `events.signOut`.
   - `callbacks.jwt` solo copia `id` y `role` en el primer login.
   - `callbacks.session` copia `id` y `role` (sin `error`).
-- [ ] **D.2** Reescribir `src/types/next-auth.d.ts`:
+  - **Estado:** ✅ Cerrada. `normalizedEmail = email.toLowerCase()` se
+    calcula una vez y se reutiliza en rate limit y `authenticateUser`.
+    `LoginSuccessResponse` e `isLoginSuccessResponse` también se
+    eliminaron (no listados en el prompt original; aparecieron al
+    auditar).
+- [x] **D.2** Reescribir `src/types/next-auth.d.ts`:
   - `Session.user = { id, role }`.
   - Eliminar `Session.error`.
   - Eliminar tokens de `User` y `JWT`.
-- [ ] **D.3** Verificar `src/proxy.ts` (no debería cambiar; solo usa
+  - **Estado:** ✅ Cerrada. `User` y `JWT` conservan `Partial<UserProfile>`
+    para los campos `id` y `role`. Sin `accessToken`, `refreshToken`,
+    `accessTokenExpires`, `refreshTokenExpires`.
+- [x] **D.3** Verificar `src/proxy.ts` (no debería cambiar; solo usa
       `req.auth`).
-- [ ] **D.4** Verificar `LoginForm.tsx` (sigue manejando `code` de
+  - **Estado:** ✅ Cerrada. Sin cambios. `req.auth` + `handleI18nRouting`
+    - matcher intactos.
+- [x] **D.4** Verificar `LoginForm.tsx` (sigue manejando `code` de
       `CredentialsSignin`; `RateLimitedError` se conserva, `UnavailableError`
       se elimina o se reduce a `invalidCredentials`).
+  - **Estado:** ✅ Cerrada. `code === 'unavailable'` eliminado. El
+    fallback a `invalidCredentials` cubre los errores de `authenticateUser`.
+    Las claves i18n `errors.unavailable` en `src/messages/{es,en}.json`
+    quedan huérfanas; se limpian en Fase H.
+- [x] **D.5 (nueva)** Eliminar `PublicBackendClient` de
+      `src/lib/backend/client.ts` y `createPublicBackendClient` de
+      `src/lib/backend/index.ts`. Conservar `MockPublicBackendClient` en
+      `src/lib/mock/client.ts` como helper interno (sin `implements`).
+  - **Estado:** ✅ Cerrada. `MockPublicBackendClient` conserva sus
+    métodos `auth.*` y `contact.submit` para `scripts/test-mock.ts`
+    (que no se toca). `mock:test` sigue en 59/59.
+
+**Notas de cierre (2026-11-06):**
+
+- 7 archivos tocados: `src/auth.ts`, `src/lib/domain/auth.ts`,
+  `src/types/next-auth.d.ts`, `src/lib/backend/client.ts`,
+  `src/lib/backend/index.ts`, `src/lib/mock/client.ts`,
+  `src/app/[locale]/(web)/(site)/(auth)/login/LoginForm.tsx`.
+- Neto: **+62 / -404** líneas. `src/auth.ts` pasa de 394 a 143 líneas
+  (eliminación del 64% del archivo, todo flujo de tokens externos).
+- `src/lib/domain/auth.ts`: nueva `authenticateUser(email, password)`.
+  `select: { id, role, passwordHash }` (no trae relaciones), `bcrypt.compare`,
+  `BackendOperationError(401, UNAUTHENTICATED)` en ambos fallos.
+- `src/lib/backend/client.ts`: elimina `PublicBackendClient`. Conserva
+  `BackendClient` y `RestBackendResponse<T>` (que el mock sigue usando).
+- `src/lib/backend/index.ts`: elimina `createPublicBackendClient`. Solo
+  exporta `createBackendClient(userId?)`.
+- `src/lib/mock/client.ts`: `MockPublicBackendClient` sin `implements`.
+  `contact` con tipo inferido en lugar de `PublicBackendClient['contact']`.
+- `LoginForm.tsx`: elimina el caso `code === 'unavailable'`. Queda
+  `rateLimited` + fallback `invalidCredentials`.
+- Deuda diferida a Fase H: claves i18n huérfanas `errors.unavailable`
+  (y posiblemente `errors.unexpected`) en `src/messages/{es,en}.json`.
 
 **Commit sugerido:** `refactor(auth): simplificar a Auth.js puro sin refresh externo`
 
@@ -747,5 +796,7 @@ session`, `revokeSession accepts a non-current session` y
 | 2026-11-05 | **Fase C.1.c — removePaymentMethod**             | **Cerrada** | Sub-fase pequeña descubierta al auditar C.2. `billing.ts` con `removePaymentMethod` (404 si no existe, 409 si es el último método de premium `active`, contrato §7). `LocalBackendClient` delega al dominio. 6º test de dominio. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `2669c10` (sin push).                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
 | 2026-11-05 | **Fase C.3+C.4+C.7 — Limpieza de backend**       | **Cerrada** | `createBackendClient(userId?: string)` devuelve `LocalBackendClient` en modo local y `MockBackendClient` en mock. `createPublicBackendClient()` lanza `Error` en local hasta C.6. `src/app/api/graphql/route.ts` usa `session?.user?.id` y elimina `getToken`. Elimina `src/lib/backend/rest/client.ts` y sus re-exports. `routeErrors.ts` simplificado (sin `RestBackendNotConfiguredError`). Excepción mínima en `services/call.ts` (`callBackend` como alias de `fn()` con `TODO(phase-c6)`). C.5 diferida hasta después de C.6: `http.ts` sigue siendo consumido por `services/*`. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `dd6d4d4` (sin push).                                                                                                                                                                                 |
 | 2026-11-06 | **Fase C.2 — LocalBackendClient (bookkeeping)**  | **Cerrada** | C.2 estaba funcionalmente completa desde C.3 pero no tachada en el plan. `LocalBackendClient` implementa los 12 grupos de métodos de `BackendClient`, recibe `userId` en el constructor (D-11 = C-1) y filtra por `this.userId`. `createBackendClient(userId)` en `index.ts` lo instancia en modo local. Verificado con `grep` + `tsc --noEmit`. Sin commit propio (el código ya estaba en C.3).                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
-| 2026-11-06 | **Fase C.6 + C.6.1 — Route handlers al dominio** | **Cerrada** | 5 route handlers del sitio público llaman directamente a `src/lib/domain/*` con traducción inline de `BackendOperationError`. Eliminados `services/{auth,contact,call}.ts` y `http.ts`. `RestBackendResponse<T>` movido a `client.ts`. Conservados `PublicBackendClient`/`MockPublicBackendClient`/`createPublicBackendClient` para no romper `src/auth.ts` (Fase D). 11 archivos tocados (7 M + 4 D). Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6 (requirió PostgreSQL activo). Commit `30c42f0` (sin push).                                                                                                                                                                                                                                                                                                                    |
+| 2026-11-06 | **Fase C.6 + C.6.1 — Route handlers al dominio** | **Cerrada** | 5 route handlers del sitio público llaman directamente a `src/lib/domain/*` con traducción inline de `BackendOperationError`. Eliminados `services/{auth,contact,call}.ts` y `http.ts`. `RestBackendResponse<T>` movido a `client.ts`. Conservados `PublicBackendClient`/`MockPublicBackendClient`/`createPublicBackendClient` para no romper `src/auth.ts` (Fase D). 11 archivos tocados (7 M + 4 D). Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6 (requirió PostgreSQL activo). Commit `30c42f0` (sin push).                                                                                                                                                                                                                                                                                                                                    |
 | 2026-11-06 | **Fase C — COMPLETA**                            | **Cerrada** | C.0 a C.7 cerradas, incluida C.6.1 (desbloqueo de infraestructura). `src/lib/backend/services/` y `src/lib/backend/http.ts` ya no existen. Los 5 route handlers del sitio público llaman al dominio. `RestBackendResponse<T>` vive en `client.ts`. Siguiente: **Fase D (Auth.js puro)** — reescribir `src/auth.ts`, mover `authenticateUser` al dominio, eliminar `PublicBackendClient`/`MockPublicBackendClient`/`createPublicBackendClient` cuando `src/auth.ts` deje de usarlos.                                                                                                                                                                                                                                                                                                                                                                                       |
+| 2026-11-06 | **Fase D — Auth.js puro**                        | **Cerrada** | `authenticateUser(email, password)` en `src/lib/domain/auth.ts` (bcrypt + `select: { id, role, passwordHash }`). `src/auth.ts` reescrito (143 líneas, era 394): `authorize()` → `authenticateUser`, callbacks `{ id, role }`, sin `events.signOut`, sin `UnavailableError`, sin `TokenPairSchema`/`refreshAccessToken`/`refreshInFlight`/`isLoginSuccessResponse`. `next-auth.d.ts` sin `Session.error` ni tokens. `client.ts` sin `PublicBackendClient`. `index.ts` sin `createPublicBackendClient`. `MockPublicBackendClient` sin `implements` (conserva contrato para `mock:test`). `LoginForm.tsx` sin `unavailable`. 7 archivos, +62/-404. Validaciones: type-check 0, lint 0, mock:test 59/59, domain:test 6/6. Commit `fb1e2e5` (sin push).                                                                                                             |
+| 2026-11-06 | **Fase D — COMPLETA**                            | **Cerrada** | D.1, D.2, D.3, D.4 y D.5 (nueva) cerradas. Auth.js puro con JWT firmado propio. Sin access/refresh tokens externos. `authenticateUser` vive en el dominio. `PublicBackendClient` y `createPublicBackendClient` eliminados. Siguiente: **F + G + H** (mecánicas). Fase I diferible. Deuda diferida a H: claves i18n huérfanas, `<hash_B4>`, `<hash_B5>` en bitácora.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       |
