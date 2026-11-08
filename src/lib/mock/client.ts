@@ -1,7 +1,4 @@
-import type {
-  BackendClient,
-  RestBackendResponse,
-} from '../backend/client';
+import type { BackendClient, RestBackendResponse } from '../backend/client';
 import { BackendOperationError } from '../backend/errors';
 import type {
   BackendAccount,
@@ -23,7 +20,6 @@ import type {
 
 const MOCK_USER_ID = 'test-user-001';
 const MOCK_ACCESS_TOKEN = 'mock-access-token';
-const MOCK_REFRESH_TOKEN = 'mock-refresh-token';
 const MOCK_RESET_TOKEN = 'mock-reset-token';
 
 type MockOperation =
@@ -68,15 +64,6 @@ function mockApiError<T = unknown>(
   message: string,
 ): RestBackendResponse<T> {
   return mockResponse({ error: { code, message, details: null } } as T, status);
-}
-
-function mockTokenPair() {
-  return {
-    token: MOCK_ACCESS_TOKEN,
-    refreshToken: MOCK_REFRESH_TOKEN,
-    expiresIn: 3600,
-    refreshExpiresIn: 60 * 60 * 24 * 7,
-  };
 }
 
 /* ============================================================
@@ -411,12 +398,8 @@ export class MockBackendClient implements BackendClient {
   security = {
     getMe: async () => {
       this.failIfConfigured('security.getMe');
-      const {
-        email,
-        emailVerified,
-        twoFactorEnabled,
-        twoFactorRequired,
-      } = this.store.securityState;
+      const { email, emailVerified, twoFactorEnabled, twoFactorRequired } =
+        this.store.securityState;
       return {
         email,
         emailVerified,
@@ -714,7 +697,6 @@ export class MockBackendClient implements BackendClient {
 }
 
 export class MockPublicBackendClient {
-  private readonly validRefreshTokens = new Set([MOCK_REFRESH_TOKEN]);
   private readonly resetTokens = new Set([MOCK_RESET_TOKEN]);
 
   auth = {
@@ -728,9 +710,7 @@ export class MockPublicBackendClient {
           id: string;
           role: 'student' | 'teacher' | 'admin';
           token: string;
-          refreshToken: string;
           expiresIn: number;
-          refreshExpiresIn: number;
         };
       }>
     > => {
@@ -753,49 +733,11 @@ export class MockPublicBackendClient {
         data: {
           id: MOCK_USER_ID,
           role: 'student' as const,
-          ...mockTokenPair(),
+          token: MOCK_ACCESS_TOKEN,
+          expiresIn: 3600,
         },
       };
       return mockResponse(data);
-    },
-
-    refresh: async (
-      refreshToken: string,
-    ): Promise<
-      RestBackendResponse<{
-        status: number;
-        message: string;
-        data: {
-          token: string;
-          refreshToken: string;
-          expiresIn: number;
-          refreshExpiresIn: number;
-        };
-      }>
-    > => {
-      if (!this.validRefreshTokens.has(refreshToken)) {
-        return mockApiError(401, 'UNAUTHENTICATED', 'Refresh token inválido.');
-      }
-
-      // Rotación: el token usado deja de ser válido y se emite uno nuevo.
-      this.validRefreshTokens.delete(refreshToken);
-
-      const pair = mockTokenPair();
-      this.validRefreshTokens.add(pair.refreshToken);
-
-      return mockResponse({
-        status: 200,
-        message: 'OK',
-        data: pair,
-      });
-    },
-
-    logout: async (refreshToken: string) => {
-      if (!this.validRefreshTokens.has(refreshToken)) {
-        return mockApiError(401, 'UNAUTHENTICATED', 'Refresh token inválido.');
-      }
-      this.validRefreshTokens.delete(refreshToken);
-      return mockResponse({ status: 200, message: 'OK' });
     },
 
     register: async (input: BackendRegisterInput) => {

@@ -115,6 +115,38 @@ Cambios **compatibles hacia atrás** desde el punto de vista del frontend, pero 
 
 **Nota de despliegue:** el frontend ya aplica estos endurecimientos desde la Fase 0.6. El backend debe adoptarlos para cumplir el contrato. Mientras no los adopte, puede aceptar payloads que el frontend ya rechaza; ese desfase es tolerado durante la ventana de migración y **no constituye un cambio de contrato**. Una vez el backend adopte los regex, ambos lados estarán alineados.
 
+## v2.0.2
+
+Cambio compatible hacia atrás. Alinea el contrato de
+`POST /auth/validate-reset-token` con la implementación real v2.0.
+
+- Frontmatter de los 4 `.md` de `_rutas/auth/` (`register`,
+  `forgot-password`, `validate-reset-token`, `reset-password`)
+  actualizado a `contract_version: v2.0`. Eliminadas referencias a
+  `src/lib/backend/services/auth.ts` (eliminado en la migración a
+  monolito) y a `source_legacy` de v1.
+- `validate-reset-token.md`: el ejemplo de error se actualiza a la
+  forma real de `apiError` (`{ status, code, details }`). Se
+  documenta que el código de dominio `INVALID_RESET_TOKEN` se
+  traduce al código público `invalidToken` que consume la UI.
+  Se añade una sección de rate limiting (10/15m por IP,
+  5/15m por token).
+- `src/app/api/auth/validate-reset-token/route.ts`: rate limit por
+  token baja de 10 a 5 peticiones / 15 minutos.
+- Eliminados `_rutas/auth/refresh.md` y `_rutas/auth/logout.md`: son
+  residuos de v1 que v2.0 ya declaró eliminados (Auth.js gestiona
+  refresco y cierre de sesión localmente). No tienen consumidores en
+  código ni aparecen en el índice del contrato.
+- `MockPublicBackendClient`: eliminados `auth.refresh` y `auth.logout`,
+  junto con la constante `MOCK_REFRESH_TOKEN`, la función
+  `mockTokenPair` y el estado `validRefreshTokens`. `auth.login` deja
+  de devolver `refreshToken` y `refreshExpiresIn`, coherente con v2.0.
+- `scripts/test-mock.ts`: eliminadas las dos entradas de
+  `publicApiChecks` que ejercían `POST /auth/refresh` y
+  `POST /auth/logout`.
+- Sin cambios en la forma del request, del response ni en los
+  `error.code` del contrato.
+
 ## v2.0.1
 
 Cambio compatible hacia atrás. Documenta la implementación real del

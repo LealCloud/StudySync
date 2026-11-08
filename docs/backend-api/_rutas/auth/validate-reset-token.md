@@ -4,9 +4,7 @@ methods: [POST]
 auth: None
 consumers:
   - src/app/api/auth/validate-reset-token/route.ts
-  - src/lib/backend/services/auth.ts
-source_legacy: "§3.4, §11"
-contract_version: v1.3.1
+contract_version: v2.0
 ---
 
 # POST /auth/validate-reset-token
@@ -51,17 +49,21 @@ Si el token es inválido, vencido o ya fue utilizado, responde:
 400
 ```
 
-con el código `INVALID_RESET_TOKEN`:
+con el código `INVALID_RESET_TOKEN`. La respuesta sigue la forma
+común de error v2.0 (`apiError`):
 
 ```json
 {
-  "error": {
-    "code": "INVALID_RESET_TOKEN",
-    "message": "El token de recuperación no es válido o ha expirado.",
-    "details": null
-  }
+  "status": 400,
+  "code": "invalidToken"
 }
 ```
+
+El código de dominio del contrato es `INVALID_RESET_TOKEN`; el
+route handler lo traduce al código público `invalidToken` que
+consume la UI (ver `src/lib/errors/auth-errors.ts`). El campo
+`message` no forma parte de la respuesta v2.0: el frontend
+traduce por `code`, nunca por texto.
 
 El frontend debe utilizar este endpoint para determinar si puede mostrar la página de restablecimiento de contraseña.
 
@@ -77,3 +79,13 @@ La validación del token no debe consumirlo. El token únicamente se consume cua
 | `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente     |
 
 Códigos generales en [`_convenciones/errores.md`](../../_convenciones/errores.md).
+
+## Rate limiting
+
+- Por IP: `10` peticiones / `15` minutos.
+- Por valor de token: `5` peticiones / `15` minutos.
+
+Ambos límites responden `429 RATE_LIMITED`. El límite por token
+protege contra reintentos automatizados sobre un mismo enlace; el
+límite por IP protege contra sondeo masivo de tokens desde un
+mismo origen.

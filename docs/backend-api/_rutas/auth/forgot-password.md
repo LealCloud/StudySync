@@ -4,9 +4,7 @@ methods: [POST]
 auth: None
 consumers:
   - src/app/api/auth/forgot-password/route.ts
-  - src/lib/backend/services/auth.ts
-source_legacy: "§3.4, §11"
-contract_version: v1.3.1
+contract_version: v2.0
 ---
 
 # POST /auth/forgot-password

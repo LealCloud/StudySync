@@ -1107,14 +1107,6 @@ async function main() {
       ),
     ],
     [
-      'POST /auth/refresh',
-      withFreshPublicMock((c) => c.auth.refresh('mock-refresh-token')),
-    ],
-    [
-      'POST /auth/logout',
-      withFreshPublicMock((c) => c.auth.logout('mock-refresh-token')),
-    ],
-    [
       'POST /auth/register',
       withFreshPublicMock((c) =>
         c.auth.register({

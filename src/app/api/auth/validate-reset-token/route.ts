@@ -8,7 +8,7 @@ import { resetPasswordTokenSchema } from '@/lib/schemas/auth/reset-password.sche
 import { NextRequest, NextResponse } from 'next/server';
 
 const IP_RATE_LIMIT = { max: 10, window: '15 m' } as const;
-const TOKEN_RATE_LIMIT = { max: 10, window: '15 m' } as const;
+const TOKEN_RATE_LIMIT = { max: 5, window: '15 m' } as const;
 
 export async function POST(request: NextRequest): Promise<NextResponse> {
   try {
