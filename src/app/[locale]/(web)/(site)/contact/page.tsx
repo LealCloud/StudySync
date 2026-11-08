@@ -1,5 +1,6 @@
 import { AppIcon, type UiIconName } from '@/lib/iconMap';
 import type { ValidationDict } from '@/lib/validation';
+import { getContactToEmail } from '@/config/contact';
 import { getMessages, getTranslations } from 'next-intl/server';
 import { ContactForm } from './ContactForm';
 
@@ -14,18 +15,22 @@ interface ContactChannel {
   href?: string;
 }
 
-// TODO: reemplazar estos datos de ejemplo por los canales reales de StudySync.
-
 function getContactChannels(
   t: (key: string) => string,
 ): readonly ContactChannel[] {
-  return [
-    {
+  const email = getContactToEmail();
+  const channels: ContactChannel[] = [];
+
+  if (email) {
+    channels.push({
       icon: 'mail',
       title: t('page.channels.email.title'),
-      description: 'soporte@studysync.co',
-      href: 'mailto:soporte@studysync.co',
-    },
+      description: email,
+      href: `mailto:${email}`,
+    });
+  }
+
+  channels.push(
     {
       icon: 'clock',
       title: t('page.channels.hours.title'),
@@ -36,7 +41,9 @@ function getContactChannels(
       title: t('page.channels.location.title'),
       description: t('page.channels.location.description'),
     },
-  ];
+  );
+
+  return channels;
 }
 
 function ContactInfoCard({ channel }: { channel: ContactChannel }) {

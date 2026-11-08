@@ -312,8 +312,7 @@
       "description": "Have questions about StudySync or our plans, or want to bring it to your institution? Get in touch and our team will support you every step of the way.",
       "channels": {
         "email": {
-          "title": "Email support",
-          "description": "soporte@studysync.co"
+          "title": "Email support"
         },
         "hours": {
           "title": "Support hours",

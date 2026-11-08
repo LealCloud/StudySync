@@ -317,8 +317,7 @@
       "description": "¿Tienes dudas sobre StudySync, sobre nuestros planes o quieres llevarlo a tu institución? Escríbenos y el equipo te acompañará en cada paso.",
       "channels": {
         "email": {
-          "title": "Soporte por correo",
-          "description": "soporte@studysync.co"
+          "title": "Soporte por correo"
         },
         "hours": {
           "title": "Horario de atención",
