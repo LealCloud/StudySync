@@ -115,6 +115,23 @@ Cambios **compatibles hacia atrás** desde el punto de vista del frontend, pero 
 
 **Nota de despliegue:** el frontend ya aplica estos endurecimientos desde la Fase 0.6. El backend debe adoptarlos para cumplir el contrato. Mientras no los adopte, puede aceptar payloads que el frontend ya rechaza; ese desfase es tolerado durante la ventana de migración y **no constituye un cambio de contrato**. Una vez el backend adopte los regex, ambos lados estarán alineados.
 
+## v2.0.1
+
+Cambio compatible hacia atrás. Documenta la implementación real del
+envío de correos del formulario de contacto. La forma del request, la
+del response y los `error.code` de `POST /contact` no cambian.
+
+- `POST /contact` envía correos con Resend. La configuración
+  (`RESEND_API_KEY`, `CONTACT_FROM_EMAIL`, `CONTACT_TO_EMAIL`) vive en
+  `.env` y en `src/config/contact.ts`.
+- `replyTo` es el `email` del usuario. La `idempotencyKey` se deriva de
+  `email|subject|message` (SHA-256) para evitar duplicados en reintentos.
+- La UI lee `CONTACT_TO_EMAIL` desde config; si falta, oculta el canal
+  de email. El email deja de ser copy i18n
+  (`contact.page.channels.email.description` eliminada de es/en).
+- Falta de cualquiera de las tres variables → `500 INTERNAL_ERROR`;
+  el route handler lo traduce a `sendFailed`.
+
 ## v2.0
 
 Cambio arquitectónico mayor. **No es compatible con v1.x** desde el punto de

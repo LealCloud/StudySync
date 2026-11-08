@@ -5,7 +5,7 @@ auth: None
 consumers:
   - src/app/api/contact/route.ts
   - src/lib/backend/services/contact.ts
-source_legacy: "§3.4, §11"
+source_legacy: '§3.4, §11'
 contract_version: v1.3.1
 ---
 
@@ -47,12 +47,28 @@ El conjunto exacto de regex está en [`_convenciones/regex.md`](../_convenciones
 
 ## Errores
 
-| HTTP  | Código                | Cuándo                                |
-| ----: | --------------------- | ------------------------------------- |
-| `400` | `BAD_REQUEST`         | Petición mal formada                  |
-| `422` | `VALIDATION_ERROR`    | Datos inválidos                       |
-| `429` | `RATE_LIMITED`        | Demasiados intentos                   |
-| `500` | `INTERNAL_ERROR`      | Error interno                         |
-| `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente  |
+|  HTTP | Código                | Cuándo                               |
+| ----: | --------------------- | ------------------------------------ |
+| `400` | `BAD_REQUEST`         | Petición mal formada                 |
+| `422` | `VALIDATION_ERROR`    | Datos inválidos                      |
+| `429` | `RATE_LIMITED`        | Demasiados intentos                  |
+| `500` | `INTERNAL_ERROR`      | Error interno                        |
+| `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente |
 
 Códigos generales en [`_convenciones/errores.md`](../_convenciones/errores.md).
+
+## Implementación (v2.0)
+
+El envío real usa Resend (`resend` en `dependencies`). La configuración
+vive en `src/config/contact.ts` y en `.env`:
+
+| Variable             | Uso                                                    |
+| :------------------- | :----------------------------------------------------- |
+| `RESEND_API_KEY`     | API key de Resend. Secreta. Solo la lee el dominio.    |
+| `CONTACT_FROM_EMAIL` | Remitente verificado en Resend.                        |
+| `CONTACT_TO_EMAIL`   | Destinatario del formulario y email mostrado en la UI. |
+
+`replyTo` del correo es el `email` del usuario. La `idempotencyKey` se
+deriva de `email|subject|message` (SHA-256) para evitar duplicados en
+reintentos. Si falta cualquiera de las tres variables, el backend
+responde `500 INTERNAL_ERROR` (el route handler lo traduce a `sendFailed`).

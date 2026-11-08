@@ -47,6 +47,18 @@ cp .env.example .env
 openssl rand -base64 32
 ```
 
+Variables relevantes:
+
+- `AUTH_SECRET` — obligatoria. Firma el JWT de Auth.js.
+- `DATABASE_URL` — obligatoria en `BACKEND_MODE=local`.
+- `BACKEND_MODE` — `local` (default) o `mock`. Ver "Modos de ejecución".
+- `RESEND_API_KEY` — obligatoria para que `POST /contact` envíe correos.
+  Sin ella, el route handler responde `500 sendFailed`.
+- `CONTACT_FROM_EMAIL` — remitente verificado en Resend. En proyecto
+  académico, `StudySync <onboarding@resend.dev>`.
+- `CONTACT_TO_EMAIL` — destinatario del formulario y email mostrado en la
+  UI. Si falta, el canal de email se oculta en la página de contacto.
+
 ### 4. Migraciones y seed
 
 ```bash
