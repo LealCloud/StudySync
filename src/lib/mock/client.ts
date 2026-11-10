@@ -785,6 +785,12 @@ export class MockPublicBackendClient {
     },
 
     resetPassword: async (input: BackendResetPasswordInput) => {
+      // TODO(mock-persist-password): el mock no persiste el nuevo
+      // `passwordHash` ni marca el token como usado. Simular bcrypt y la
+      // actualización del usuario en memoria añade complejidad sin
+      // beneficio para el propósito del mock (probar flujos de UI y
+      // BFF). La persistencia real se verifica en `domain:test` contra
+      // PostgreSQL.
       if (!this.resetTokens.has(input.token)) {
         return mockApiError(
           400,
