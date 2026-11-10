@@ -144,6 +144,11 @@ export async function resetPassword(
   token: string,
   newPassword: string,
 ): Promise<void> {
+  // Doble validación intencional:
+  //   1. Aquí: fast-fail barato, evita pagar bcrypt.hash (~100ms) si el
+  //      token ya es inválido.
+  //   2. En la transacción: fuente de verdad contra carreras entre dos
+  //      requests con el mismo token; solo uno debe consumirlo.
   await validateResetToken(token);
   const passwordHash = await bcrypt.hash(newPassword, 10);
   const hashedToken = tokenHash(token);
