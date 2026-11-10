@@ -18,3 +18,9 @@ export function apiOk<T extends Record<string, unknown>>(
 ): NextResponse {
   return NextResponse.json({ status: 200, ...data }, { status: 200 });
 }
+
+export function apiCreated<T extends Record<string, unknown>>(
+  data?: T,
+): NextResponse {
+  return NextResponse.json({ status: 201, ...data }, { status: 201 });
+}

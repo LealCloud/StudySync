@@ -25,6 +25,11 @@ function isUniqueConstraintError(error: unknown): boolean {
 export async function registerUser(
   input: BackendRegisterInput,
 ): Promise<BackendUser> {
+  // El email llega ya normalizado por el schema Zod (trim) y por el route
+  // handler (toLowerCase), pero se vuelve a normalizar aquí como defensa
+  // en profundidad: esta función es pública dentro del dominio y podría
+  // invocarse desde otros flujos futuros sin pasar por el route handler.
+  // Misma decisión que en `requestPasswordReset`.
   const passwordHash = await bcrypt.hash(input.password, 10);
   let userId: string;
   try {

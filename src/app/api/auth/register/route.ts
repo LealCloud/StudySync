@@ -1,4 +1,4 @@
-import { apiError, apiOk } from '@/lib/apiResponse';
+import { apiCreated, apiError } from '@/lib/apiResponse';
 import { BackendOperationError } from '@/lib/backend/errors';
 import { backendRouteError } from '@/lib/backend/routeErrors';
 import { getClientIp } from '@/lib/clientIp';
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest): Promise<NextResponse> {
       password: result.data.password,
     });
 
-    return apiOk();
+    return apiCreated();
   } catch (error) {
     if (error instanceof BackendOperationError) {
       switch (error.code) {
