@@ -6,7 +6,7 @@ consumers:
   - src/graphql/resolvers/user.ts
   - src/components/layout/dashboard/sidebar/useSidebarData.ts
   - src/app/[locale]/(web)/dashboard/user-settings/ProfileSection.tsx
-source_legacy: "§3.1, §3.9, §10"
+source_legacy: '§3.1, §3.9, §10'
 contract_version: v1.3.1
 ---
 
@@ -22,21 +22,21 @@ Devuelve el usuario autenticado. Es la fuente de `id`, `name`, `email`, `image`,
 
 `BackendUser`:
 
-| Campo     | Tipo                 | Descripción                                  |
-| --------- | -------------------- | -------------------------------------------- |
-| `id`      | `string`             | Identificador único del usuario              |
-| `name`    | `string`             | Nombre completo (derivado de `firstName` + `lastName`) |
-| `email`   | `string`             | Correo electrónico                           |
-| `image`   | `string \| null`     | URL o data URI de la imagen de perfil        |
-| `role`    | `string`             | `student` \| `teacher` \| `admin`            |
-| `profile` | `BackendProfile`     | Bio e intereses del usuario                  |
+| Campo     | Tipo             | Descripción                                            |
+| --------- | ---------------- | ------------------------------------------------------ |
+| `id`      | `string`         | Identificador único del usuario                        |
+| `name`    | `string`         | Nombre completo (derivado de `firstName` + `lastName`) |
+| `email`   | `string`         | Correo electrónico                                     |
+| `image`   | `string \| null` | URL o data URI de la imagen de perfil                  |
+| `role`    | `string`         | `student` \| `teacher` \| `admin`                      |
+| `profile` | `BackendProfile` | Bio e intereses del usuario                            |
 
 `BackendProfile`:
 
-| Campo       | Tipo                  | Descripción                          |
-| ----------- | --------------------- | ------------------------------------ |
-| `bio`       | `BackendBio \| null`  | Título y descripción biográfica      |
-| `interests` | `string[]`            | Lista de intereses                   |
+| Campo       | Tipo                 | Descripción                     |
+| ----------- | -------------------- | ------------------------------- |
+| `bio`       | `BackendBio \| null` | Título y descripción biográfica |
+| `interests` | `string[]`           | Lista de intereses              |
 
 `BackendBio`:
 
@@ -45,7 +45,7 @@ Devuelve el usuario autenticado. Es la fuente de `id`, `name`, `email`, `image`,
 | `title`       | `string \| null` |
 | `description` | `string \| null` |
 
-`id` debe coincidir con el que devuelve `POST /auth/login` en `data.id` (ver [`../auth/login.md`](../auth/login.md)).
+`id` debe coincidir con `session.user.id` que Auth.js fija tras el login (`authorize()` en `src/auth.ts`).
 
 ## Relación con otros archivos
 
@@ -56,8 +56,8 @@ Devuelve el usuario autenticado. Es la fuente de `id`, `name`, `email`, `image`,
 
 ## Errores
 
-| HTTP  | Código            | Cuándo                                |
-| ----: | ----------------- | ------------------------------------- |
-| `401` | `UNAUTHENTICATED` | Token ausente, inválido o vencido     |
+|  HTTP | Código            | Cuándo                            |
+| ----: | ----------------- | --------------------------------- |
+| `401` | `UNAUTHENTICATED` | Token ausente, inválido o vencido |
 
 Códigos generales en [`_convenciones/errores.md`](../../_convenciones/errores.md).

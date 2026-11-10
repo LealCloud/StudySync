@@ -29,7 +29,6 @@ docs/backend-api/
 │
 ├── _rutas/
 │   ├── auth/
-│   │   ├── login.md                       (interno, consumido por Auth.js)
 │   │   ├── register.md
 │   │   ├── forgot-password.md
 │   │   ├── validate-reset-token.md

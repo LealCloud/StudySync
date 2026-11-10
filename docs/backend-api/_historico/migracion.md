@@ -1,6 +1,6 @@
 ---
 kind: history
-source_legacy: "§14"
+source_legacy: '§14'
 contract_version: v1.3.1
 ---
 
@@ -21,7 +21,7 @@ El backend previo usaba nombres de campos en español y una ruta distinta a la d
 
 Los campos del par de tokens no cambian: `token`, `refreshToken`, `expiresIn` y `refreshExpiresIn`.
 
-Nota v1.2: `firstName`, `lastName`, `subscription` e `image` dejan de formar parte de la respuesta de login. Ver [`../_rutas/auth/login.md`](../_rutas/auth/login.md) y [`../_convenciones/autenticacion.md`](../_convenciones/autenticacion.md).
+Nota v1.2: `firstName`, `lastName`, `subscription` e `image` dejan de formar parte de la respuesta de login. Ver [`../_convenciones/autenticacion.md`](../_convenciones/autenticacion.md).
 
 ### Cuerpo de `POST /auth/register`
 

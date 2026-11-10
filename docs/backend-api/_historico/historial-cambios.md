@@ -115,6 +115,22 @@ Cambios **compatibles hacia atrás** desde el punto de vista del frontend, pero 
 
 **Nota de despliegue:** el frontend ya aplica estos endurecimientos desde la Fase 0.6. El backend debe adoptarlos para cumplir el contrato. Mientras no los adopte, puede aceptar payloads que el frontend ya rechaza; ese desfase es tolerado durante la ventana de migración y **no constituye un cambio de contrato**. Una vez el backend adopte los regex, ambos lados estarán alineados.
 
+## v2.0.3
+
+Cambio compatible hacia atrás. Archiva el contrato de login.
+
+- Eliminado `docs/backend-api/_rutas/auth/login.md`. El login ya no es
+  un método REST en v2.0: es un callback interno de Auth.js
+  (`authorize()` en `src/auth.ts`), que devuelve `{ id, role }` y firma
+  un JWT con `{ id, role }`. El flujo completo está documentado en
+  `_convenciones/autenticacion.md`, sección "Cómo se llega a la sesión".
+- Eliminados del archivo los códigos de error del flujo v1
+  (`REFRESH_TOKEN_EXPIRED`, `REFRESH_TOKEN_INVALID`), que ya no existen
+  en el monolito.
+- Eliminada la referencia a `login.md` en el árbol de
+  `docs/backend-api/README.md`.
+- Sin cambios en otros métodos del contrato.
+
 ## v2.0.2
 
 Cambio compatible hacia atrás. Alinea el contrato de
