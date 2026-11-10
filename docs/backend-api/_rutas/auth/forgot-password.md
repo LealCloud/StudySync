@@ -31,12 +31,33 @@ Para evitar enumeración de usuarios, el backend debe responder `200` aunque el 
 
 ## Errores
 
-| HTTP  | Código            | Cuándo                                |
-| ----: | ----------------- | ------------------------------------- |
-| `400` | `BAD_REQUEST`     | Petición mal formada                  |
-| `422` | `VALIDATION_ERROR`| Datos inválidos                       |
-| `429` | `RATE_LIMITED`    | Demasiados intentos                   |
-| `500` | `INTERNAL_ERROR`  | Error interno                         |
-| `503` | `SERVICE_UNAVAILABLE` | Servicio no disponible temporalmente |
+|  HTTP | Código        | Cuándo               |
+| ----: | ------------- | -------------------- |
+| `400` | `BAD_REQUEST` | Petición mal formada |
+| `400` | `invalidData` | Datos inválidos      |
+| `429` | `rateLimited` | Demasiados intentos  |
+| `500` | `serverError` | Error interno        |
 
 Códigos generales en [`_convenciones/errores.md`](../../_convenciones/errores.md).
+
+## Implementación (v2.0)
+
+El route handler `src/app/api/auth/forgot-password/route.ts` responde
+directamente los códigos públicos que consume la UI, sin capa de
+traducción intermedia:
+
+- `400 invalidData` cuando Zod rechaza el cuerpo.
+- `429 rateLimited` cuando se supera el rate limit por IP (5/15m) o por
+  email (3/15m).
+- `500 serverError` para fallos internos no controlados.
+
+Anti-enumeración: la respuesta es `200` independientemente de si el email
+existe o no. El dominio (`requestPasswordReset` en
+`src/lib/domain/auth.ts`) hace `if (!user) return;` sin distinguir el
+resultado.
+
+**Deuda pendiente (fuera de alcance de esta auditoría):** el envío real
+del correo con el token no está implementado. El dominio solo loggea el
+token por consola en desarrollo (`TODO(password-reset-email)`). La
+integración con Resend, ya usada en `POST /contact`, se planifica como
+fase aparte.

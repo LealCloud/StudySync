@@ -2,7 +2,8 @@
 
 import { Button } from '@/components/ui/Button';
 import { InputField } from '@/components/ui/InputField';
-import { COMMON_ERROR_CODES, readErrorCode } from '@/lib/errors/api-errors';
+import { readErrorCode } from '@/lib/errors/api-errors';
+import { FORGOT_PASSWORD_ERROR_CODES } from '@/lib/errors/auth-errors';
 import { IconMap } from '@/lib/iconMap';
 import {
   forgotPasswordSchema,
@@ -36,7 +37,7 @@ export interface ForgotPasswordMessages {
   submitting: string;
   back: string;
   unexpected: string;
-  errors: Record<(typeof COMMON_ERROR_CODES)[number], string>;
+  errors: Record<(typeof FORGOT_PASSWORD_ERROR_CODES)[number], string>;
 }
 
 const DEFAULT_VALUES: ForgotPasswordInput = { email: '' };
@@ -45,7 +46,7 @@ const DEFAULT_VALUES: ForgotPasswordInput = { email: '' };
    Envío
    ==================================================== */
 
-async function requestPasswordReset(email: string): Promise<string> {
+async function submitForgotPassword(email: string): Promise<string> {
   const response = await fetch('/api/auth/forgot-password', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -55,7 +56,9 @@ async function requestPasswordReset(email: string): Promise<string> {
   const data: unknown = await response.json().catch(() => null);
 
   if (!response.ok) {
-    throw new Error(readErrorCode(data, COMMON_ERROR_CODES) ?? 'serverError');
+    throw new Error(
+      readErrorCode(data, FORGOT_PASSWORD_ERROR_CODES) ?? 'serverError',
+    );
   }
 
   return 'success';
@@ -125,14 +128,14 @@ export default function ForgotPasswordModal({
   const onSubmit = async (data: ForgotPasswordInput) => {
     setFeedback(null);
     try {
-      await requestPasswordReset(data.email);
+      await submitForgotPassword(data.email);
       setFeedback(messages.success);
       setStatus('success');
     } catch (error) {
       setFeedback(
         error instanceof Error &&
-          COMMON_ERROR_CODES.includes(
-            error.message as (typeof COMMON_ERROR_CODES)[number],
+          FORGOT_PASSWORD_ERROR_CODES.includes(
+            error.message as (typeof FORGOT_PASSWORD_ERROR_CODES)[number],
           )
           ? messages.errors[
               error.message as keyof ForgotPasswordMessages['errors']
@@ -268,7 +271,7 @@ export default function ForgotPasswordModal({
                             icon={<Mail />}
                             error={resolveError(
                               validation,
-                              resolveError(validation, errors.email?.message),
+                              errors.email?.message,
                             )}
                             required
                             disabled={isSubmitting}

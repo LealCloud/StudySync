@@ -98,6 +98,10 @@ export async function registerUser(
 }
 
 export async function requestPasswordReset(email: string): Promise<void> {
+  // El email llega ya normalizado por el schema Zod (trim) y por el route
+  // handler (toLowerCase), pero se vuelve a normalizar aquí como defensa
+  // en profundidad: esta función es pública dentro del dominio y podría
+  // invocarse desde otros flujos futuros sin pasar por el route handler.
   const normalizedEmail = email.trim().toLowerCase();
   const user = await prisma.user.findUnique({
     where: { email: normalizedEmail },

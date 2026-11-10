@@ -1,17 +1,13 @@
-import { EMAIL_MAX_LENGTH } from '@/lib/schemas/primitives';
+import { emailField } from '@/lib/schemas/fields/auth';
 import { z } from 'zod';
 
-// Esquema dedicado para "Olvidé mi contraseña": únicamente exige un correo
-// con formato válido. No reutiliza `emailField` porque este flujo requiere
-// un mensaje de error específico y no debe acoplarse a las reglas de
-// registro/login si estas cambian en el futuro.
+// Esquema para "Olvidé mi contraseña": únicamente exige un correo con
+// formato válido. Reutiliza `emailField` de `fields/auth.ts` para
+// garantizar que las claves de error (`email.required`, `email.max`,
+// `email.invalid`) son las mismas que en login y registro, y que
+// cualquier cambio futuro en esas reglas se propaga automáticamente.
 export const forgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, 'email.required')
-    .max(EMAIL_MAX_LENGTH, 'email.max')
-    .email('email.invalidInput'),
+  email: emailField,
 });
 
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
