@@ -3,6 +3,10 @@ import bcrypt from 'bcryptjs';
 import { Prisma } from '@prisma/client';
 import { prisma } from '@/lib/db/prisma';
 import { BackendOperationError } from '@/lib/backend/errors';
+import { buildPasswordResetEmail } from '@/lib/domain/auth-email';
+import { sendEmail } from '@/lib/email/client';
+import { getContactFromEmail } from '@/config/contact';
+import { routing } from '@/i18n/routing';
 import type {
   BackendRegisterInput,
   BackendResetTokenValidationResponse,
@@ -110,8 +114,26 @@ export async function requestPasswordReset(email: string): Promise<void> {
   const normalizedEmail = email.trim().toLowerCase();
   const user = await prisma.user.findUnique({
     where: { email: normalizedEmail },
+    include: { personalData: true },
   });
   if (!user) return;
+
+  // Base URL para construir el enlace de reset. Se lee de `.env` para
+  // no depender de headers del request (vulnerables a spoofing) ni de
+  // la config de Auth.js. Falla explícitamente si no está definida:
+  // un correo con un enlace roto es peor que un 500 visible.
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL?.trim();
+  if (!baseUrl) {
+    throw new BackendOperationError(500, 'INTERNAL_ERROR');
+  }
+
+  // El remitente es el mismo que el del formulario de contacto. Si en
+  // el futuro se necesita un remitente dedicado (p. ej. no-reply),
+  // añadir una variable de entorno y leerla aquí.
+  const fromEmail = getContactFromEmail();
+  if (!fromEmail) {
+    throw new BackendOperationError(500, 'INTERNAL_ERROR');
+  }
 
   const token = randomBytes(32).toString('hex');
   const now = new Date();
@@ -127,10 +149,28 @@ export async function requestPasswordReset(email: string): Promise<void> {
       },
     });
   });
-  // TODO(password-reset-email): connect email delivery in a later phase.
-  if (process.env.NODE_ENV !== 'production') {
-    console.info('[password-reset] development token', token);
-  }
+
+  // TODO(i18n-emails): usar `Preferences.language` en lugar de
+  // `routing.defaultLocale` cuando se internacionalicen los correos.
+  const resetUrl = `${baseUrl}/${routing.defaultLocale}/reset-password/${token}`;
+  const firstName = user.personalData?.firstName ?? 'estudiante';
+
+  const { subject, html, text } = buildPasswordResetEmail({
+    firstName,
+    resetUrl,
+  });
+
+  // `idempotencyKey` derivada del token hasheado: si el flujo se reintenta
+  // por un fallo de red, Resend no reenvía el mismo correo. El token en
+  // claro no se envía a Resend, solo su hash.
+  await sendEmail({
+    to: user.email,
+    from: fromEmail,
+    subject,
+    html,
+    text,
+    idempotencyKey: `password-reset/${tokenHash(token)}`,
+  });
 }
 
 export async function validateResetToken(
