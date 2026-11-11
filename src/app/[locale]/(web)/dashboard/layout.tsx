@@ -66,14 +66,6 @@ export default async function DashboardLayout({
           <NextIntlClientProvider>
             <UrqlProvider>
               <div className="flex min-h-screen w-full">
-                {/* TODO(dashboard-layout): el sidebar no es sticky, así que al
-                    hacer scroll en páginas con contenido largo (p. ej. User
-                    Settings con varias secciones) se va hacia arriba y
-                    desaparece. Fix pendiente: añadir `sticky top-0` al <aside>
-                    de SidebarShell.tsx, o mover el scroll al <main>
-                    (`overflow-y-auto h-screen`). Requiere verificar que el
-                    colapso/expansión del sidebar (SidebarShell) y el MobileNav
-                    no se rompen. Fase 6+. */}
                 <SideBar />
                 <main className="bg-background min-h-screen flex-1">
                   {children}
