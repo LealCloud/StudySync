@@ -14,6 +14,10 @@ export interface InputFieldProps {
   rightElement?: ReactNode;
   isSelect?: boolean;
   options?: Array<{ value: string; label: string }>;
+  optionGroups?: Array<{
+    label: string;
+    options: Array<{ value: string; label: string }>;
+  }>;
   error?: string;
   disabled?: boolean;
   className?: string;
@@ -48,6 +52,7 @@ export const InputField = ({
   rightElement,
   isSelect = false,
   options = [],
+  optionGroups,
   error,
   disabled = false,
   className = '',
@@ -192,15 +197,29 @@ export const InputField = ({
               aria-invalid={!!error}
               aria-describedby={errorId}
             >
-              {options.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                  className={selectOptionClasses}
-                >
-                  {option.label}
-                </option>
-              ))}
+              {optionGroups
+                ? optionGroups.map((group) => (
+                    <optgroup key={group.label} label={group.label}>
+                      {group.options.map((option) => (
+                        <option
+                          key={option.value}
+                          value={option.value}
+                          className={selectOptionClasses}
+                        >
+                          {option.label}
+                        </option>
+                      ))}
+                    </optgroup>
+                  ))
+                : options.map((option) => (
+                    <option
+                      key={option.value}
+                      value={option.value}
+                      className={selectOptionClasses}
+                    >
+                      {option.label}
+                    </option>
+                  ))}
             </select>
           ) : (
             <input

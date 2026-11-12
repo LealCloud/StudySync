@@ -313,6 +313,54 @@ const tests: TestCase[] = [
       assert(parsed.country === null, 'country: "" no se normalizó a null');
     },
   },
+  {
+    name: 'timezones catalog has no duplicates and all zones are valid IANA',
+    run: async () => {
+      const { TIMEZONES, getTimezonesByGroup, isTimezoneInCatalog } =
+        await import('../src/config/timezones');
+
+      const seen = new Set<string>();
+      for (const tz of TIMEZONES) {
+        assert(
+          !seen.has(tz.value),
+          `Timezone duplicada en el catálogo: ${tz.value}`,
+        );
+        seen.add(tz.value);
+      }
+
+      for (const tz of TIMEZONES) {
+        try {
+          new Intl.DateTimeFormat('en-US', { timeZone: tz.value });
+        } catch {
+          throw new Error(`Timezone IANA inválida: ${tz.value}`);
+        }
+      }
+
+      const groups = getTimezonesByGroup('es');
+      assert(groups.length === 6, 'Deben existir 6 grupos');
+      const utcGroup = groups.find((g) => g.group === 'utc');
+      assert(utcGroup !== undefined, 'Falta el grupo UTC');
+      assert(
+        utcGroup.options.length === 1,
+        'UTC debe tener exactamente 1 zona',
+      );
+      assert(utcGroup.options[0].value === 'UTC', 'La única zona UTC debe ser "UTC"');
+
+      assert(
+        isTimezoneInCatalog('America/Bogota'),
+        'Bogotá debe estar en el catálogo',
+      );
+      assert(
+        !isTimezoneInCatalog('XX/Invalid'),
+        'XX/Invalid no debe estar en el catálogo',
+      );
+
+      for (const tz of TIMEZONES) {
+        assert(tz.labelEs.length > 0, `labelEs vacío en ${tz.value}`);
+        assert(tz.labelEn.length > 0, `labelEn vacío en ${tz.value}`);
+      }
+    },
+  },
 ];
 
 async function main() {
