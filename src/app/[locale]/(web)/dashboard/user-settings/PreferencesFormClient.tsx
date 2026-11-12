@@ -3,6 +3,7 @@
 import { Button } from '@/components/ui/Button';
 import { InputField } from '@/components/ui/InputField';
 import { SettingsSkeleton } from '@/components/ui/SettingsSkeleton';
+import { getTimezonesByGroup, isTimezoneInCatalog } from '@/config/timezones';
 import {
   MyPreferencesDocument,
   UpdatePreferencesDocument,
@@ -44,7 +45,19 @@ interface PreferencesMessages {
       label: string;
       options: { system: string; light: string; dark: string };
     };
-    timezone: { label: string; placeholder: string };
+    timezone: {
+      label: string;
+      placeholder: string;
+      currentOption: string;
+      groups: {
+        america: string;
+        europe: string;
+        asia: string;
+        africa: string;
+        oceania: string;
+        utc: string;
+      };
+    };
   };
   fieldsets: {
     general: string;
@@ -125,6 +138,29 @@ export function PreferencesFormClient({
   });
   const { reset } = form;
   const watchedValues = useWatch({ control: form.control });
+
+  const timezoneGroups = (() => {
+    const groups = getTimezonesByGroup(locale === 'en' ? 'en' : 'es');
+
+    const currentTimezone = watchedValues.timezone;
+    if (currentTimezone && !isTimezoneInCatalog(currentTimezone)) {
+      const utcGroup = groups.find((group) => group.group === 'utc');
+      if (utcGroup) {
+        utcGroup.options.unshift({
+          value: currentTimezone,
+          label: messages.fields.timezone.currentOption.replace(
+            '{timezone}',
+            currentTimezone,
+          ),
+        });
+      }
+    }
+
+    return groups.map((group) => ({
+      label: messages.fields.timezone.groups[group.group],
+      options: group.options,
+    }));
+  })();
 
   useEffect(() => {
     if (!myPreferences) return;
@@ -339,19 +375,15 @@ export function PreferencesFormClient({
           </p>
         </div>
 
-        {/* TODO(timezone-select): reemplazar por <select> con catálogo IANA
-            (src/config/timezones.ts) para evitar que el usuario tenga que
-            escribir el identificador a mano. Requiere sub-fase nueva
-            (~600 entradas). Diferido a Fase 6+. */}
         <InputField
           name="timezone"
-          type="text"
           label={messages.fields.timezone.label}
           value={watchedValues.timezone}
           onChange={(
             event: ChangeEvent<HTMLInputElement | HTMLSelectElement>,
           ) => setFieldValue('timezone', event.target.value)}
-          placeholder={messages.fields.timezone.placeholder}
+          isSelect
+          optionGroups={timezoneGroups}
           error={fieldError(form.formState.errors.timezone?.message)}
         />
       </fieldset>

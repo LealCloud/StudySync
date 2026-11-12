@@ -278,6 +278,22 @@ const tests: TestCase[] = [
     },
   },
 
+  {
+    name: 'updatePreferences with timezone from catalog',
+    query: /* GraphQL */ `
+      mutation UpdatePreferences($input: UpdatePreferencesInput!) {
+        updatePreferences(input: $input) {
+          timezone
+        }
+      }
+    `,
+    variables: {
+      input: {
+        timezone: 'Europe/Madrid',
+      },
+    },
+  },
+
   // ============================================================
   // ACCOUNT
   // ============================================================

@@ -1073,7 +1073,16 @@
           },
           "timezone": {
             "label": "Timezone",
-            "placeholder": "e.g., America/Bogota"
+            "placeholder": "e.g., America/Bogota",
+            "currentOption": "Current: {timezone}",
+            "groups": {
+              "america": "Americas",
+              "europe": "Europe",
+              "asia": "Asia",
+              "africa": "Africa",
+              "oceania": "Oceania",
+              "utc": "UTC"
+            }
           }
         },
         "fieldsets": {

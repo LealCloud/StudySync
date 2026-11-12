@@ -1082,7 +1082,16 @@
           },
           "timezone": {
             "label": "Zona horaria",
-            "placeholder": "Ej: America/Bogota"
+            "placeholder": "Ej: America/Bogota",
+            "currentOption": "Actual: {timezone}",
+            "groups": {
+              "america": "América",
+              "europe": "Europa",
+              "asia": "Asia",
+              "africa": "África",
+              "oceania": "Oceanía",
+              "utc": "UTC"
+            }
           }
         },
         "fieldsets": {
