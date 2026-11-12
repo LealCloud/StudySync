@@ -249,6 +249,70 @@ const tests: TestCase[] = [
         void pm3;
       }),
   },
+  {
+    name: 'updatePersonalData clears optional contact fields with null',
+    run: () =>
+      withUser(async (userId) => {
+        // 1. Desbloquear identidad para poder borrar `documentId` (que
+        //    es un campo de identidad). En la UI real, un usuario no
+        //    bloqueado puede borrar los 4 campos opcionales.
+        await prisma.personalData.update({
+          where: { userId },
+          data: { identityLocked: false },
+        });
+
+        // 2. Llenar todos los campos opcionales.
+        await updatePersonalData(userId, {
+          documentType: 'dni',
+          documentId: '12345678',
+          phone: '+573001234567',
+          country: 'CO',
+          address: 'Calle 123 #45-67',
+        });
+
+        // 3. Borrarlos todos con null (equivalente a vaciar los
+        //    campos en la UI).
+        await updatePersonalData(userId, {
+          documentId: null,
+          phone: null,
+          country: null,
+          address: null,
+        });
+
+        // 4. Verificar que se borraron y que documentType no cambió.
+        const data = await prisma.personalData.findUniqueOrThrow({
+          where: { userId },
+        });
+        assert(data.documentId === null, 'documentId no se borró');
+        assert(data.phone === null, 'phone no se borró');
+        assert(data.country === null, 'country no se borró');
+        assert(data.address === null, 'address no se borró');
+        assert(
+          data.documentType === 'dni',
+          'documentType no debía cambiar (solo se borró documentId)',
+        );
+      }),
+  },
+  {
+    name: 'personalDataSchema normalizes empty string to null',
+    run: async () => {
+      const { personalDataSchema } =
+        await import('../src/lib/schemas/user-settings/personal-data.schema');
+      const parsed = personalDataSchema.parse({
+        phone: '',
+        address: '',
+        documentId: '',
+        country: '',
+      });
+      assert(parsed.phone === null, 'phone: "" no se normalizó a null');
+      assert(parsed.address === null, 'address: "" no se normalizó a null');
+      assert(
+        parsed.documentId === null,
+        'documentId: "" no se normalizó a null',
+      );
+      assert(parsed.country === null, 'country: "" no se normalizó a null');
+    },
+  },
 ];
 
 async function main() {

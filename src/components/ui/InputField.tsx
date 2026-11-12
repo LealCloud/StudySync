@@ -5,7 +5,7 @@ export interface InputFieldProps {
   label: string;
   name?: string;
   type?: string;
-  value: string | number | boolean | null | undefined;
+  value: string | number | null | undefined;
   onChange?: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
   placeholder?: string;
   autoComplete?: string;
@@ -184,7 +184,7 @@ export const InputField = ({
             <select
               id={fieldId}
               name={name}
-              value={String(value)}
+              value={value ?? ''}
               onChange={onChange}
               className={baseInputClasses}
               required={required}
@@ -207,7 +207,7 @@ export const InputField = ({
               id={fieldId}
               type={type}
               name={name}
-              value={String(value)}
+              value={value ?? ''}
               onChange={onChange}
               placeholder={placeholder}
               autoComplete={autoComplete}

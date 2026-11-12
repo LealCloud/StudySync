@@ -27,7 +27,6 @@ import {
   ADDRESS_MIN_LENGTH,
   ADDRESS_REGEX,
   DOCUMENT_ID_MAX_LENGTH,
-  DOCUMENT_ID_MIN_LENGTH,
   DOCUMENT_ID_REGEX,
   isValidCountryCode,
   isValidE164,
@@ -65,10 +64,15 @@ const documentTypeSchema = z.enum(['passport', 'dni'], {
 const documentIdSchema = z
   .string()
   .trim()
-  .min(DOCUMENT_ID_MIN_LENGTH, 'documentId.min')
-  .max(DOCUMENT_ID_MAX_LENGTH, 'documentId.max')
-  .refine((value) => DOCUMENT_ID_REGEX.test(value), {
-    message: 'documentId.invalid',
+  .transform((value) => (value === '' ? null : value))
+  .nullable()
+  .superRefine((value, ctx) => {
+    if (value === null) return;
+    if (value.length > DOCUMENT_ID_MAX_LENGTH) {
+      ctx.addIssue({ code: 'custom', message: 'documentId.max' });
+    } else if (!DOCUMENT_ID_REGEX.test(value)) {
+      ctx.addIssue({ code: 'custom', message: 'documentId.invalid' });
+    }
   });
 
 /* ============================================================
@@ -83,7 +87,9 @@ const documentIdSchema = z
 const phoneSchema = z
   .string()
   .trim()
-  .refine((value) => isValidE164(value), {
+  .transform((value) => (value === '' ? null : value))
+  .nullable()
+  .refine((value) => value === null || isValidE164(value), {
     message: 'phone.invalid',
   });
 
@@ -100,7 +106,9 @@ const phoneSchema = z
 const countrySchema = z
   .string()
   .trim()
-  .refine((value) => isValidCountryCode(value), {
+  .transform((value) => (value === '' ? null : value))
+  .nullable()
+  .refine((value) => value === null || isValidCountryCode(value), {
     message: 'country.invalid',
   });
 
@@ -115,10 +123,17 @@ const countrySchema = z
 const addressSchema = z
   .string()
   .trim()
-  .min(ADDRESS_MIN_LENGTH, 'address.min')
-  .max(ADDRESS_MAX_LENGTH, 'address.max')
-  .refine((value) => ADDRESS_REGEX.test(value), {
-    message: 'address.invalid',
+  .transform((value) => (value === '' ? null : value))
+  .nullable()
+  .superRefine((value, ctx) => {
+    if (value === null) return;
+    if (value.length < ADDRESS_MIN_LENGTH) {
+      ctx.addIssue({ code: 'custom', message: 'address.min' });
+    } else if (value.length > ADDRESS_MAX_LENGTH) {
+      ctx.addIssue({ code: 'custom', message: 'address.max' });
+    } else if (!ADDRESS_REGEX.test(value)) {
+      ctx.addIssue({ code: 'custom', message: 'address.invalid' });
+    }
   });
 
 /* ============================================================
@@ -138,10 +153,10 @@ export const personalDataSchema = z
     firstName: firstNameField.optional(),
     lastName: lastNameField.optional(),
     documentType: documentTypeSchema.nullable().optional(),
-    documentId: documentIdSchema.nullable().optional(),
-    phone: phoneSchema.nullable().optional(),
-    country: countrySchema.nullable().optional(),
-    address: addressSchema.nullable().optional(),
+    documentId: documentIdSchema.optional(),
+    phone: phoneSchema.optional(),
+    country: countrySchema.optional(),
+    address: addressSchema.optional(),
   })
   .superRefine((data, ctx) => {
     const hasDocumentType =
