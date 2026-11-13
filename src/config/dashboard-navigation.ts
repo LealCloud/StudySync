@@ -1,4 +1,9 @@
-// dashboard-navigation.ts
+// Configuración de la navegación del dashboard por rol.
+//
+// Convención: todos los `path` de los menús viven bajo `/dashboard/...`,
+// coherente con la estructura de `src/app/[locale]/(web)/dashboard/`.
+// El `SidebarNav` y `MobileNav` usan `Link` de `@/i18n/navigation`, que
+// resuelve rutas absolutas con el prefijo de locale.
 import { DashboardIconName } from '@/lib/iconMap';
 import type { UserRole } from '@/types/next-auth';
 
@@ -14,32 +19,32 @@ export interface NavItem {
 export const studentMenu: NavItem[] = [
   {
     label: 'courses',
-    path: '/courses',
+    path: '/dashboard/courses',
     icon: 'bookOpen',
   },
   {
     label: 'studyRooms',
-    path: '/rooms',
+    path: '/dashboard/rooms',
     icon: 'video',
   },
   {
     label: 'calendar',
-    path: '/calendar',
+    path: '/dashboard/calendar',
     icon: 'calendar',
   },
   {
     label: 'messages',
-    path: '/messages',
+    path: '/dashboard/messages',
     icon: 'message',
   },
   {
     label: 'academicManagement',
-    path: '/academic-management',
+    path: '/dashboard/academic-management',
     icon: 'clipboard',
   },
   {
     label: 'pomodoro',
-    path: '/pomodoro',
+    path: '/dashboard/pomodoro',
     icon: 'timer',
   },
 ];
@@ -50,32 +55,32 @@ export const studentMenu: NavItem[] = [
 export const professorMenu: NavItem[] = [
   {
     label: 'courses',
-    path: '/courses',
+    path: '/dashboard/courses',
     icon: 'bookOpen',
   },
   {
     label: 'studyRooms',
-    path: '/rooms',
+    path: '/dashboard/rooms',
     icon: 'video',
   },
   {
     label: 'calendar',
-    path: '/calendar',
+    path: '/dashboard/calendar',
     icon: 'calendar',
   },
   {
     label: 'messages',
-    path: '/messages',
+    path: '/dashboard/messages',
     icon: 'message',
   },
   {
     label: 'academicManagement',
-    path: '/academic-management',
+    path: '/dashboard/academic-management',
     icon: 'clipboard',
   },
   {
     label: 'students',
-    path: '/students',
+    path: '/dashboard/students',
     icon: 'users',
   },
 ];
@@ -86,37 +91,37 @@ export const professorMenu: NavItem[] = [
 export const adminMenu: NavItem[] = [
   {
     label: 'users',
-    path: '/users',
+    path: '/dashboard/users',
     icon: 'users',
   },
   {
     label: 'professors',
-    path: '/professors',
+    path: '/dashboard/professors',
     icon: 'graduationCap',
   },
   {
     label: 'students',
-    path: '/students-admin',
+    path: '/dashboard/students-admin',
     icon: 'userCog',
   },
   {
     label: 'courses',
-    path: '/courses-admin',
+    path: '/dashboard/courses-admin',
     icon: 'bookOpen',
   },
   {
     label: 'academicCenter',
-    path: '/academic-center',
+    path: '/dashboard/academic-center',
     icon: 'clipboard',
   },
   {
     label: 'rooms',
-    path: '/rooms',
+    path: '/dashboard/rooms',
     icon: 'video',
   },
   {
     label: 'reportsAudit',
-    path: '/reports',
+    path: '/dashboard/reports',
     icon: 'barChart',
   },
 ];
@@ -141,7 +146,7 @@ export function getRoleNavigation(role: UserRole | string | null | undefined) {
     return {
       type: 'admin' as const,
       menu: adminMenu,
-      dashboardPath: '/dashboard-admin',
+      dashboardPath: '/dashboard',
       panelTitle: 'Panel del administrador',
       roleLabel: 'Administrador',
     };
@@ -161,7 +166,7 @@ export function getRoleNavigation(role: UserRole | string | null | undefined) {
   return {
     type: 'student' as const,
     menu: studentMenu,
-    dashboardPath: '/dashboard-estudiante',
+    dashboardPath: '/dashboard',
     panelTitle: 'Panel del estudiante',
     roleLabel: 'Estudiante',
   };

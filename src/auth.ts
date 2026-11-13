@@ -76,8 +76,10 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       //   0) rate limit por IP
       //   1) validación del payload con Zod
       //   2) rate limit por email
-      //   3) authenticateUser(email, password) → bcrypt.compare
-      //   4) devolver { id, role } a Auth.js
+      //   3) modo mock: devuelve { id: 'test-user-001', role: 'student' }
+      //      sin consultar Prisma (coherente con MockBackendClient).
+      //   4) modo local: authenticateUser(email, password) → bcrypt.compare
+      //   5) devolver { id, role } a Auth.js
       async authorize(credentials, request) {
         try {
           // 0. Rate limit por IP
@@ -113,16 +115,37 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
             throw new RateLimitedError();
           }
 
-          // 3. authenticateUser → bcrypt.compare
-          const user = await authenticateUser(normalizedEmail, password);
+          // 3. Modo mock: no se consulta Prisma. Cualquier credencial
+          //    es válida excepto las de prueba, coherente con
+          //    `MockPublicBackendClient.auth.login`.
+          if (process.env.BACKEND_MODE === 'mock') {
+            if (
+              normalizedEmail === 'invalid@example.com' ||
+              password === 'wrong-password'
+            ) {
+              logger.info('Credenciales mock inválidas', {
+                email: normalizedEmail,
+              });
+              return null;
+            }
+            // TODO(mock-role-login): permitir elegir rol en modo mock
+            // (por ejemplo, con un email específico: admin@mock.local
+            // → role: 'admin') para testear el chat con distintos roles.
+            logger.info('Autenticación exitosa (modo mock)', {
+              email: normalizedEmail,
+            });
+            return { id: 'test-user-001', role: 'student' };
+          }
 
+          // 4. Modo local: authenticateUser → bcrypt.compare
+          const user = await authenticateUser(normalizedEmail, password);
           logger.info('Autenticación exitosa', {
             email: normalizedEmail,
             id: user.id,
             rol: user.role,
           });
 
-          // 4. Auth.js firma el JWT con { id, role } en callbacks.jwt.
+          // 5. Auth.js firma el JWT con { id, role } en callbacks.jwt.
           return { id: user.id, role: user.role };
         } catch (error) {
           // Los CredentialsSignin ya llevan su propio código; se
