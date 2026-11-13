@@ -90,6 +90,7 @@ function mapMessage(message: MessageWithSender): BackendMessage {
   return {
     id: message.id,
     conversationId: message.conversationId,
+    senderId: message.senderId,
     sender: toBackendUser(message.sender),
     content: message.content,
     createdAt: message.createdAt.toISOString(),
@@ -178,7 +179,14 @@ async function requireParticipant(userId: string, conversationId: string) {
     where: { conversationId_userId: { conversationId, userId } },
     select: { id: true },
   });
-  if (!participant) throw new BackendOperationError(403, 'FORBIDDEN');
+  if (!participant) {
+    const conversation = await prisma.conversation.findUnique({
+      where: { id: conversationId },
+      select: { id: true },
+    });
+    if (!conversation) throw new BackendOperationError(404, 'NOT_FOUND');
+    throw new BackendOperationError(403, 'FORBIDDEN');
+  }
   return participant;
 }
 
@@ -285,4 +293,28 @@ export async function markAsRead(
     data: { lastReadAt: new Date() },
   });
   return loadConversation(conversationId, userId);
+}
+
+/** Counts unread messages across all conversations with one grouped query. */
+export async function getUnreadCount(userId: string): Promise<number> {
+  const participations = await prisma.conversationParticipant.findMany({
+    where: { userId },
+    select: { conversationId: true, lastReadAt: true },
+  });
+  if (participations.length === 0) return 0;
+
+  const groups = await prisma.message.groupBy({
+    by: ['conversationId'],
+    where: {
+      conversationId: { in: participations.map((p) => p.conversationId) },
+      senderId: { not: userId },
+      OR: participations.map((p) => ({
+        conversationId: p.conversationId,
+        ...(p.lastReadAt ? { createdAt: { gt: p.lastReadAt } } : {}),
+      })),
+    },
+    _count: { _all: true },
+  });
+
+  return groups.reduce((sum, group) => sum + group._count._all, 0);
 }

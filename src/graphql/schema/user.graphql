@@ -16,6 +16,7 @@ type User {
   image: String
   role: UserRole!
   profile: Profile!
+  unreadMessagesCount: Int!
 }
 
 type PublicProfile {

@@ -6,6 +6,32 @@ contract_version: v2.0
 
 # Historial de cambios
 
+## v2.0.1
+
+Cambio **compatible hacia atrás**. Añade el contrato de mensajería.
+
+- Nuevo archivo [`../_rutas/users-me/messaging.md`](../_rutas/users-me/messaging.md)
+  con 5 métodos de dominio:
+  - `myConversations` (query): lista de conversaciones del usuario.
+  - `startConversation` (mutation): inicia una DM con otro usuario.
+  - `messages` (query): mensajes de una conversación, paginados.
+  - `sendMessage` (mutation): envía un mensaje de texto.
+  - `markConversationAsRead` (mutation): actualiza `lastReadAt`.
+- `BackendMessage` incluye `senderId: string` además de `sender: BackendUser`,
+  para facilitar filtros y normalización en el graphcache del cliente.
+- `User.unreadMessagesCount: Int!` expuesto en GraphQL. Devuelve el total de
+  mensajes no leídos solo para el usuario autenticado; `0` para otros usuarios.
+- `Conversation.directKey` (`String? @unique`) garantiza unicidad del par de
+  usuarios en conversaciones `direct` a nivel de DB, sin romper la
+  extensibilidad a grupos (`null` para `group`).
+- Nuevos códigos de error: `FORBIDDEN` (no participante o
+  `allowDirectMessages: false`), `NOT_FOUND` (conversación o destinatario
+  inexistente), `VALIDATION_ERROR` (`content` fuera de rango, conversación
+  consigo mismo).
+- Rate limiting de mensajería **pendiente** (`TODO(rate-limit-messaging)`):
+  30 mensajes/minuto para `sendMessage`, 10/minuto para `startConversation`.
+  Se aplicará en un bloque de hardening posterior.
+
 ## v1
 
 Contrato inicial formalizado para la integración entre el frontend/BFF y el backend.

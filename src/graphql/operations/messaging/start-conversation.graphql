@@ -1,0 +1,24 @@
+mutation StartConversation($participantId: ID!) {
+  startConversation(participantId: $participantId) {
+    id
+    type
+    participants {
+      id
+      user {
+        id
+        name
+        image
+      }
+      lastReadAt
+    }
+    lastMessage {
+      id
+      conversationId
+      senderId
+      content
+      createdAt
+    }
+    lastMessageAt
+    unreadCount
+  }
+}

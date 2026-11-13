@@ -1,0 +1,25 @@
+query MyConversations {
+  myConversations {
+    id
+    type
+    participants {
+      id
+      user {
+        id
+        name
+        image
+        unreadMessagesCount
+      }
+      lastReadAt
+    }
+    lastMessage {
+      id
+      conversationId
+      senderId
+      content
+      createdAt
+    }
+    lastMessageAt
+    unreadCount
+  }
+}

@@ -17,4 +17,16 @@ export const userResolvers = {
       return context.backend.users.getPublicProfile(args.userId);
     },
   },
+  User: {
+    unreadMessagesCount: (
+      parent: { id: string },
+      _args: unknown,
+      context: GraphQLContext,
+    ) => {
+      if (!context.session?.user || context.session.user.id !== parent.id) {
+        return 0;
+      }
+      return context.backend.messaging.getUnreadCount();
+    },
+  },
 };

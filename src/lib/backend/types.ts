@@ -212,7 +212,6 @@ export interface BackendContractErrorBody {
   error: BackendContractError;
 }
 
-
 // ============================================================
 // MESSAGING
 // ============================================================
@@ -228,6 +227,7 @@ export interface BackendConversationParticipant {
 export interface BackendMessage {
   id: string;
   conversationId: string;
+  senderId: string;
   sender: BackendUser;
   content: string;
   createdAt: string;

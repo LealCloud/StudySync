@@ -3,6 +3,7 @@
 import { createClient, fetchExchange, gql } from '@urql/core';
 import { cacheExchange } from '@urql/exchange-graphcache';
 import {
+  MyConversationsDocument,
   MyPaymentMethodsDocument,
   SidebarDataDocument,
 } from '@/graphql/generated/graphql';
@@ -24,6 +25,9 @@ export function UrqlProvider({ children }: { children: ReactNode }) {
               Certificate: (data) => data.id as string,
               PaymentMethod: (data) => data.id as string,
               Invoice: (data) => data.id as string,
+              Conversation: (data) => data.id as string,
+              ConversationParticipant: (data) => data.id as string,
+              Message: (data) => data.id as string,
 
               // `CourseEnrollment` no tiene `id` propio; su clave natural
               // es `courseId` (contrato §5.7.1 / plan §5.7.9).
@@ -129,6 +133,85 @@ export function UrqlProvider({ children }: { children: ReactNode }) {
                         ...data,
                         myPaymentMethods: data.myPaymentMethods.filter(
                           (method) => method.id !== paymentMethodId,
+                        ),
+                      };
+                    },
+                  );
+                },
+
+                // The root conversation list is a connection, so explicitly
+                // place the new message and move its conversation to the top.
+                sendMessage: (result, _args, cache) => {
+                  const message = result.sendMessage as
+                    | {
+                        id: string;
+                        conversationId: string;
+                        senderId: string;
+                        content: string;
+                        createdAt: string;
+                      }
+                    | undefined;
+                  if (!message) return;
+
+                  cache.updateQuery(
+                    { query: MyConversationsDocument },
+                    (data) => {
+                      if (!data) return null;
+                      const conversation = data.myConversations.find(
+                        (item) => item.id === message.conversationId,
+                      );
+                      if (!conversation) return data;
+
+                      return {
+                        ...data,
+                        myConversations: [
+                          {
+                            ...conversation,
+                            // TODO(sendMessage-sender): si en el futuro
+                            // `MyConversationsDocument` pide
+                            // `lastMessage { sender { ... } }`, este objeto
+                            // debe incluir el `sender` completo. Hoy solo
+                            // selecciona id, conversationId, senderId,
+                            // content y createdAt, así que el shape es
+                            // suficiente.
+                            lastMessage: {
+                              id: message.id,
+                              conversationId: message.conversationId,
+                              senderId: message.senderId,
+                              content: message.content,
+                              createdAt: message.createdAt,
+                            },
+                            lastMessageAt: message.createdAt,
+                          },
+                          ...data.myConversations.filter(
+                            (item) => item.id !== message.conversationId,
+                          ),
+                        ],
+                      };
+                    },
+                  );
+                },
+
+                // `markConversationAsRead` devuelve `Conversation` completa.
+                // Actualizamos `unreadCount` en `myConversations` para que
+                // el badge y la lista reflejen el cambio sin esperar al
+                // siguiente polling. Si en el futuro se añade otro campo
+                // a la mutación, ampliar este `update`.
+                markConversationAsRead: (result, _args, cache) => {
+                  const conversation = result.markConversationAsRead as
+                    { id: string; unreadCount: number } | undefined;
+                  if (!conversation) return;
+
+                  cache.updateQuery(
+                    { query: MyConversationsDocument },
+                    (data) => {
+                      if (!data) return null;
+                      return {
+                        ...data,
+                        myConversations: data.myConversations.map((item) =>
+                          item.id === conversation.id
+                            ? { ...item, unreadCount: conversation.unreadCount }
+                            : item,
                         ),
                       };
                     },

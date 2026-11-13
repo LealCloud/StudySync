@@ -53,7 +53,8 @@ docs/backend-api/
 │       ├── certificates.md
 │       ├── subscription.md
 │       ├── payment-methods.md
-│       └── invoices.md
+│       ├── invoices.md
+│       └── messaging.md
 │
 └── _historico/
     ├── historial-cambios.md
@@ -62,7 +63,7 @@ docs/backend-api/
 
 ---
 
-## Resumen de los 31 métodos de dominio
+## Resumen de los 36 métodos de dominio
 
 La columna `Categoría` distingue `query` (lectura) de `mutation` (escritura). La columna `Ruta` es el identificador estable del método en el contrato (`docs/backend-api/_rutas/`).
 
@@ -99,6 +100,11 @@ La columna `Categoría` distingue `query` (lectura) de `mutation` (escritura). L
 |  29 | query     | `/users/me/payment-methods`                  | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
 |  30 | mutation  | `/users/me/payment-methods/:paymentMethodId` | Required | [`_rutas/users-me/payment-methods.md`](_rutas/users-me/payment-methods.md)             |
 |  31 | query     | `/users/me/invoices`                         | Required | [`_rutas/users-me/invoices.md`](_rutas/users-me/invoices.md)                           |
+|  32 | query     | `/users/me/conversations`                    | Required | [`_rutas/users-me/messaging.md`](_rutas/users-me/messaging.md)                         |
+|  33 | mutation  | `/users/me/conversations`                    | Required | [`_rutas/users-me/messaging.md`](_rutas/users-me/messaging.md)                         |
+|  34 | query     | `/users/me/conversations/:id/messages`       | Required | [`_rutas/users-me/messaging.md`](_rutas/users-me/messaging.md)                         |
+|  35 | mutation  | `/users/me/conversations/:id/messages`       | Required | [`_rutas/users-me/messaging.md`](_rutas/users-me/messaging.md)                         |
+|  36 | mutation  | `/users/me/conversations/:id/read`           | Required | [`_rutas/users-me/messaging.md`](_rutas/users-me/messaging.md)                         |
 
 ---
 
@@ -113,6 +119,7 @@ La columna `Auth` indica el nivel de autenticación, no de autorización. La aut
 | `/users/me/certificates`                   | `student`                     | `403 FORBIDDEN`                    |
 | `/users/me/subscription` (todas las rutas) | `student`                     | `403 FORBIDDEN`                    |
 | `/users/me/security/two-factor/disable`    | `student`                     | `403 FORBIDDEN`                    |
+| `/users/me/conversations` (todas)          | `student`, `teacher`, `admin` | —                                  |
 | Resto de métodos de settings               | `student`, `teacher`, `admin` | —                                  |
 
 El BFF bloquea con `403` antes de llamar a la capa de dominio cuando corresponde. La capa de dominio vuelve a validar como defensa en profundidad. Ver [`_convenciones/errores.md`](_convenciones/errores.md).

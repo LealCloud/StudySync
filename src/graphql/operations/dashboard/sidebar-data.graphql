@@ -5,6 +5,7 @@ query SidebarData {
     email
     image
     role
+    unreadMessagesCount
   }
   mySubscription {
     plan

@@ -34,9 +34,17 @@ export interface BackendClient {
   messaging: {
     getConversations(): Promise<BackendConversation[]>;
     startConversation(participantId: string): Promise<BackendConversation>;
-    getMessages(conversationId: string, before?: string, limit?: number): Promise<BackendMessage[]>;
-    sendMessage(conversationId: string, content: string): Promise<BackendMessage>;
+    getMessages(
+      conversationId: string,
+      before?: string,
+      limit?: number,
+    ): Promise<BackendMessage[]>;
+    sendMessage(
+      conversationId: string,
+      content: string,
+    ): Promise<BackendMessage>;
     markAsRead(conversationId: string): Promise<BackendConversation>;
+    getUnreadCount(): Promise<number>;
   };
   users: {
     getMe(): Promise<BackendUser>;

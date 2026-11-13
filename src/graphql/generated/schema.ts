@@ -1,289 +1,326 @@
 // AUTO-GENERADO por graphql-codegen. No editar a mano.
 export const typeDefs = /* GraphQL */ `
-schema {
-  query: Query
-  mutation: Mutation
-}
+  schema {
+    query: Query
+    mutation: Mutation
+  }
 
-type AccessibilityPreferences {
-  highContrast: Boolean!
-  reducedMotion: Boolean!
-}
+  type AccessibilityPreferences {
+    highContrast: Boolean!
+    reducedMotion: Boolean!
+  }
 
-input AccessibilityPreferencesInput {
-  highContrast: Boolean
-  reducedMotion: Boolean
-}
+  input AccessibilityPreferencesInput {
+    highContrast: Boolean
+    reducedMotion: Boolean
+  }
 
-type Account {
-  deactivationScheduledAt: DateTime
-  status: AccountStatus!
-}
+  type Account {
+    deactivationScheduledAt: DateTime
+    status: AccountStatus!
+  }
 
-enum AccountStatus {
-  active
-  inactive
-  pending_deactivation
-  suspended
-}
+  enum AccountStatus {
+    active
+    inactive
+    pending_deactivation
+    suspended
+  }
 
-type Bio {
-  description: String
-  title: String
-}
+  type Bio {
+    description: String
+    title: String
+  }
 
-type Certificate {
-  certificateNumber: String!
-  courseId: ID!
-  courseTitle: String!
-  downloadUrl: String!
-  id: ID!
-  issuedAt: DateTime!
-}
+  type Certificate {
+    certificateNumber: String!
+    courseId: ID!
+    courseTitle: String!
+    downloadUrl: String!
+    id: ID!
+    issuedAt: DateTime!
+  }
 
-input ChangePasswordInput {
-  currentPassword: String!
-  newPassword: String!
-}
+  input ChangePasswordInput {
+    currentPassword: String!
+    newPassword: String!
+  }
 
-type CourseEnrollment {
-  completedAt: DateTime
-  courseId: ID!
-  enrolledAt: DateTime!
-  progress: Float!
-  status: CourseEnrollmentStatus!
-  title: String!
-}
+  type Conversation {
+    id: ID!
+    lastMessage: Message
+    lastMessageAt: DateTime
+    participants: [ConversationParticipant!]!
+    type: ConversationType!
+    unreadCount: Int!
+  }
 
-enum CourseEnrollmentStatus {
-  active
-  completed
-  paused
-}
+  type ConversationParticipant {
+    id: ID!
+    lastReadAt: DateTime
+    user: User!
+  }
 
-scalar DateTime
+  enum ConversationType {
+    direct
+    group
+  }
 
-enum DocumentType {
-  dni
-  passport
-}
+  type CourseEnrollment {
+    completedAt: DateTime
+    courseId: ID!
+    enrolledAt: DateTime!
+    progress: Float!
+    status: CourseEnrollmentStatus!
+    title: String!
+  }
 
-type Invoice {
-  amount: Int!
-  currency: String!
-  downloadUrl: String
-  id: ID!
-  issuedAt: DateTime!
-  number: String!
-  status: InvoiceStatus!
-}
+  enum CourseEnrollmentStatus {
+    active
+    completed
+    paused
+  }
 
-enum InvoiceStatus {
-  draft
-  open
-  paid
-  uncollectible
-  void
-}
+  scalar DateTime
 
-type Mutation {
-  beginTwoFactorSetup: TwoFactorSetup!
-  cancelAccountDeactivation: Account!
-  cancelSubscription: UserSubscription!
-  changePassword(input: ChangePasswordInput!): SecurityOperationResult!
-  changeSubscriptionPlan(plan: SubscriptionPlan!): UserSubscription!
-  disableTwoFactor(code: String!): SecurityOperationResult!
-  removePaymentMethod(paymentMethodId: ID!): Boolean!
-  requestAccountDeactivation: Account!
-  requestEmailChange(input: RequestEmailChangeInput!): SecurityOperationResult!
-  updatePersonalData(input: UpdatePersonalDataInput!): PersonalData!
-  updatePreferences(input: UpdatePreferencesInput!): Preferences!
-  updatePrivacySettings(input: UpdatePrivacySettingsInput!): PrivacySettings!
-  updateProfile(input: UpdateProfileInput!): User!
-  verifyTwoFactorSetup(code: String!): SecurityOperationResult!
-}
+  enum DocumentType {
+    dni
+    passport
+  }
 
-type NotificationPreferences {
-  email: Boolean!
-  inApp: Boolean!
-  push: Boolean!
-}
+  type Invoice {
+    amount: Int!
+    currency: String!
+    downloadUrl: String
+    id: ID!
+    issuedAt: DateTime!
+    number: String!
+    status: InvoiceStatus!
+  }
 
-input NotificationPreferencesInput {
-  email: Boolean
-  inApp: Boolean
-  push: Boolean
-}
+  enum InvoiceStatus {
+    draft
+    open
+    paid
+    uncollectible
+    void
+  }
 
-type PaymentMethod {
-  brand: String
-  expirationMonth: Int
-  expirationYear: Int
-  id: ID!
-  last4: String
-}
+  type Message {
+    content: String!
+    conversationId: ID!
+    createdAt: DateTime!
+    id: ID!
+    sender: User!
+    senderId: ID!
+  }
 
-type PersonalData {
-  address: String
-  country: String
-  documentId: String
-  documentType: DocumentType
-  firstName: String!
-  identityLocked: Boolean!
-  lastName: String!
-  phone: String
-}
+  type Mutation {
+    beginTwoFactorSetup: TwoFactorSetup!
+    cancelAccountDeactivation: Account!
+    cancelSubscription: UserSubscription!
+    changePassword(input: ChangePasswordInput!): SecurityOperationResult!
+    changeSubscriptionPlan(plan: SubscriptionPlan!): UserSubscription!
+    disableTwoFactor(code: String!): SecurityOperationResult!
+    markConversationAsRead(conversationId: ID!): Conversation!
+    removePaymentMethod(paymentMethodId: ID!): Boolean!
+    requestAccountDeactivation: Account!
+    requestEmailChange(
+      input: RequestEmailChangeInput!
+    ): SecurityOperationResult!
+    sendMessage(content: String!, conversationId: ID!): Message!
+    startConversation(participantId: ID!): Conversation!
+    updatePersonalData(input: UpdatePersonalDataInput!): PersonalData!
+    updatePreferences(input: UpdatePreferencesInput!): Preferences!
+    updatePrivacySettings(input: UpdatePrivacySettingsInput!): PrivacySettings!
+    updateProfile(input: UpdateProfileInput!): User!
+    verifyTwoFactorSetup(code: String!): SecurityOperationResult!
+  }
 
-type Preferences {
-  accessibility: AccessibilityPreferences!
-  language: String!
-  notifications: NotificationPreferences!
-  theme: Theme!
-  timezone: String!
-}
+  type NotificationPreferences {
+    email: Boolean!
+    inApp: Boolean!
+    push: Boolean!
+  }
 
-type PrivacySettings {
-  allowDirectMessages: Boolean!
-  emailVisibility: ProfileVisibility!
-  phoneVisibility: ProfileVisibility!
-  profileVisibility: ProfileVisibility!
-}
+  input NotificationPreferencesInput {
+    email: Boolean
+    inApp: Boolean
+    push: Boolean
+  }
 
-type Profile {
-  bio: Bio
-  interests: [String!]!
-}
+  type PaymentMethod {
+    brand: String
+    expirationMonth: Int
+    expirationYear: Int
+    id: ID!
+    last4: String
+  }
 
-enum ProfileVisibility {
-  authenticated
-  everyone
-  nobody
-}
+  type PersonalData {
+    address: String
+    country: String
+    documentId: String
+    documentType: DocumentType
+    firstName: String!
+    identityLocked: Boolean!
+    lastName: String!
+    phone: String
+  }
 
-type PublicProfile {
-  allowDirectMessages: Boolean!
-  bio: Bio
-  email: String
-  id: ID!
-  image: String
-  interests: [String!]!
-  name: String!
-  phone: String
-}
+  type Preferences {
+    accessibility: AccessibilityPreferences!
+    language: String!
+    notifications: NotificationPreferences!
+    theme: Theme!
+    timezone: String!
+  }
 
-type Query {
-  me: User!
-  myAccount: Account!
-  myCertificates: [Certificate!]!
-  myCourses: [CourseEnrollment!]!
-  myInvoices: [Invoice!]!
-  myPaymentMethods: [PaymentMethod!]!
-  myPersonalData: PersonalData!
-  myPreferences: Preferences!
-  myPrivacySettings: PrivacySettings!
-  mySecuritySettings: SecuritySettings!
-  mySubscription: UserSubscription
-  publicProfile(userId: ID!): PublicProfile
-}
+  type PrivacySettings {
+    allowDirectMessages: Boolean!
+    emailVisibility: ProfileVisibility!
+    phoneVisibility: ProfileVisibility!
+    profileVisibility: ProfileVisibility!
+  }
 
-input RequestEmailChangeInput {
-  newEmail: String!
-}
+  type Profile {
+    bio: Bio
+    interests: [String!]!
+  }
 
-type SecurityOperationResult {
-  message: String
-  success: Boolean!
-}
+  enum ProfileVisibility {
+    authenticated
+    everyone
+    nobody
+  }
 
-type SecuritySettings {
-  email: String!
-  emailVerified: Boolean!
-  twoFactorEnabled: Boolean!
-  twoFactorRequired: Boolean!
-}
+  type PublicProfile {
+    allowDirectMessages: Boolean!
+    bio: Bio
+    email: String
+    id: ID!
+    image: String
+    interests: [String!]!
+    name: String!
+    phone: String
+  }
 
-enum SubscriptionPlan {
-  enterprise
-  free
-  premium
-}
+  type Query {
+    me: User!
+    messages(before: DateTime, conversationId: ID!, limit: Int): [Message!]!
+    myAccount: Account!
+    myCertificates: [Certificate!]!
+    myConversations: [Conversation!]!
+    myCourses: [CourseEnrollment!]!
+    myInvoices: [Invoice!]!
+    myPaymentMethods: [PaymentMethod!]!
+    myPersonalData: PersonalData!
+    myPreferences: Preferences!
+    myPrivacySettings: PrivacySettings!
+    mySecuritySettings: SecuritySettings!
+    mySubscription: UserSubscription
+    publicProfile(userId: ID!): PublicProfile
+  }
 
-enum SubscriptionStatus {
-  active
-  canceled
-  expired
-  past_due
-  trialing
-}
+  input RequestEmailChangeInput {
+    newEmail: String!
+  }
 
-enum Theme {
-  dark
-  light
-  system
-}
+  type SecurityOperationResult {
+    message: String
+    success: Boolean!
+  }
 
-type TwoFactorSetup {
-  qrCode: String!
-  secret: String!
-}
+  type SecuritySettings {
+    email: String!
+    emailVerified: Boolean!
+    twoFactorEnabled: Boolean!
+    twoFactorRequired: Boolean!
+  }
 
-input UpdateBioInput {
-  description: String
-  title: String
-}
+  enum SubscriptionPlan {
+    enterprise
+    free
+    premium
+  }
 
-input UpdatePersonalDataInput {
-  address: String
-  country: String
-  documentId: String
-  documentType: DocumentType
-  firstName: String
-  lastName: String
-  phone: String
-}
+  enum SubscriptionStatus {
+    active
+    canceled
+    expired
+    past_due
+    trialing
+  }
 
-input UpdatePreferencesInput {
-  accessibility: AccessibilityPreferencesInput
-  language: String
-  notifications: NotificationPreferencesInput
-  theme: Theme
-  timezone: String
-}
+  enum Theme {
+    dark
+    light
+    system
+  }
 
-input UpdatePrivacySettingsInput {
-  allowDirectMessages: Boolean
-  emailVisibility: ProfileVisibility
-  phoneVisibility: ProfileVisibility
-  profileVisibility: ProfileVisibility
-}
+  type TwoFactorSetup {
+    qrCode: String!
+    secret: String!
+  }
 
-input UpdateProfileInput {
-  bio: UpdateBioInput
-  image: String
-  interests: [String!]
-}
+  input UpdateBioInput {
+    description: String
+    title: String
+  }
 
-type User {
-  email: String!
-  id: ID!
-  image: String
-  name: String!
-  profile: Profile!
-  role: UserRole!
-}
+  input UpdatePersonalDataInput {
+    address: String
+    country: String
+    documentId: String
+    documentType: DocumentType
+    firstName: String
+    lastName: String
+    phone: String
+  }
 
-enum UserRole {
-  admin
-  student
-  teacher
-}
+  input UpdatePreferencesInput {
+    accessibility: AccessibilityPreferencesInput
+    language: String
+    notifications: NotificationPreferencesInput
+    theme: Theme
+    timezone: String
+  }
 
-type UserSubscription {
-  cancelAtPeriodEnd: Boolean!
-  currentPeriodEnd: DateTime
-  id: ID!
-  plan: SubscriptionPlan!
-  startedAt: DateTime!
-  status: SubscriptionStatus!
-}
+  input UpdatePrivacySettingsInput {
+    allowDirectMessages: Boolean
+    emailVisibility: ProfileVisibility
+    phoneVisibility: ProfileVisibility
+    profileVisibility: ProfileVisibility
+  }
+
+  input UpdateProfileInput {
+    bio: UpdateBioInput
+    image: String
+    interests: [String!]
+  }
+
+  type User {
+    email: String!
+    id: ID!
+    image: String
+    name: String!
+    profile: Profile!
+    role: UserRole!
+    unreadMessagesCount: Int!
+  }
+
+  enum UserRole {
+    admin
+    student
+    teacher
+  }
+
+  type UserSubscription {
+    cancelAtPeriodEnd: Boolean!
+    currentPeriodEnd: DateTime
+    id: ID!
+    plan: SubscriptionPlan!
+    startedAt: DateTime!
+    status: SubscriptionStatus!
+  }
 `;

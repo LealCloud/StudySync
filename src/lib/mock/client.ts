@@ -56,7 +56,8 @@ type MockOperation =
   | 'messaging.startConversation'
   | 'messaging.getMessages'
   | 'messaging.sendMessage'
-  | 'messaging.markAsRead';
+  | 'messaging.markAsRead'
+  | 'messaging.getUnreadCount';
 
 export type MockFailureMap = Partial<
   Record<MockOperation, { status: number; code: string }>
@@ -825,6 +826,12 @@ export class MockBackendClient implements BackendClient {
         this.store.conversations.find((c) => c.id === conversationId)!,
       );
     },
+    getUnreadCount: async () => {
+      this.failIfConfigured('messaging.getUnreadCount');
+      return this.store.conversations
+        .filter((c) => c.participantIds.includes(MOCK_USER_ID))
+        .reduce((sum, c) => sum + this.mockConversation(c).unreadCount, 0);
+    },
   };
 
   private mockUser(userId: string): BackendUser {
@@ -856,6 +863,7 @@ export class MockBackendClient implements BackendClient {
     return {
       id: m.id,
       conversationId: m.conversationId,
+      senderId: m.senderId,
       sender: this.mockUser(m.senderId),
       content: m.content,
       createdAt: m.createdAt,

@@ -1,5 +1,6 @@
 import { accountResolvers } from './account';
 import { billingResolvers } from './billing';
+import { messagingResolvers } from './messaging';
 import { certificatesResolvers } from './certificates';
 import { coursesResolvers } from './courses';
 import { personalDataResolvers } from './personal-data';
@@ -20,6 +21,7 @@ export const resolvers = {
     ...coursesResolvers.Query,
     ...certificatesResolvers.Query,
     ...billingResolvers.Query,
+    ...messagingResolvers.Query,
     ...profileResolvers.Query,
   },
   Mutation: {
@@ -30,5 +32,7 @@ export const resolvers = {
     ...accountResolvers.Mutation,
     ...billingResolvers.Mutation,
     ...profileResolvers.Mutation,
+    ...messagingResolvers.Mutation,
   },
+  User: userResolvers.User,
 };

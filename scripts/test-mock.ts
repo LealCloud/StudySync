@@ -44,6 +44,7 @@ const tests: TestCase[] = [
           email
           image
           role
+          unreadMessagesCount
           profile {
             bio {
               title
@@ -517,6 +518,105 @@ const tests: TestCase[] = [
         interests: ['programming', 'technology'],
       },
     },
+  },
+
+  // ============================================================
+  // MESSAGING (GraphQL)
+  // ============================================================
+
+  {
+    name: 'myConversations',
+    query: /* GraphQL */ `
+      query MyConversations {
+        myConversations {
+          id
+          type
+          participants {
+            id
+            user {
+              id
+              name
+              image
+              unreadMessagesCount
+            }
+            lastReadAt
+          }
+          lastMessage {
+            id
+            conversationId
+            senderId
+            content
+            createdAt
+          }
+          lastMessageAt
+          unreadCount
+        }
+      }
+    `,
+  },
+  {
+    name: 'messages',
+    query: /* GraphQL */ `
+      query Messages($conversationId: ID!) {
+        messages(conversationId: $conversationId) {
+          id
+          conversationId
+          senderId
+          sender {
+            id
+            name
+            image
+          }
+          content
+          createdAt
+        }
+      }
+    `,
+    variables: { conversationId: 'conv-001' },
+  },
+  {
+    name: 'startConversation',
+    query: /* GraphQL */ `
+      mutation StartConversation($participantId: ID!) {
+        startConversation(participantId: $participantId) {
+          id
+          type
+          unreadCount
+        }
+      }
+    `,
+    variables: { participantId: 'repeat-user' },
+  },
+  {
+    name: 'sendMessage',
+    query: /* GraphQL */ `
+      mutation SendMessage($conversationId: ID!, $content: String!) {
+        sendMessage(conversationId: $conversationId, content: $content) {
+          id
+          conversationId
+          senderId
+          sender {
+            id
+            name
+          }
+          content
+          createdAt
+        }
+      }
+    `,
+    variables: { conversationId: 'conv-001', content: 'Hello from GraphQL' },
+  },
+  {
+    name: 'markConversationAsRead',
+    query: /* GraphQL */ `
+      mutation MarkConversationAsRead($conversationId: ID!) {
+        markConversationAsRead(conversationId: $conversationId) {
+          id
+          unreadCount
+        }
+      }
+    `,
+    variables: { conversationId: 'conv-001' },
   },
 ];
 
@@ -1031,7 +1131,6 @@ async function runPersonalDataSecurityTests(): Promise<{
   return { passed, failed, total: behaviorTests.length };
 }
 
-// TODO(messaging-mock-graphql-tests): add GraphQL cases in Block B after schema/resolvers exist.
 async function runMessagingTests(): Promise<{
   passed: number;
   failed: number;

@@ -16,6 +16,9 @@ export interface SidebarData {
   role: UserRole | null;
   plan: SubscriptionType | null;
   accountStatus: AccountStatus | null;
+  // TODO(sidebar-unread-count): exponer `unreadMessagesCount` cuando
+  // la Fase 4.3 lo consuma. La query `SidebarData` ya lo pide, pero este
+  // hook todavía no lo devuelve.
   error: CombinedError | undefined;
 }
 

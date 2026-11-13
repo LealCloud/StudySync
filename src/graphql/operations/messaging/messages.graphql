@@ -1,0 +1,14 @@
+query Messages($conversationId: ID!, $before: DateTime, $limit: Int) {
+  messages(conversationId: $conversationId, before: $before, limit: $limit) {
+    id
+    conversationId
+    senderId
+    sender {
+      id
+      name
+      image
+    }
+    content
+    createdAt
+  }
+}

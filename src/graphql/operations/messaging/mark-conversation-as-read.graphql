@@ -1,0 +1,6 @@
+mutation MarkConversationAsRead($conversationId: ID!) {
+  markConversationAsRead(conversationId: $conversationId) {
+    id
+    unreadCount
+  }
+}

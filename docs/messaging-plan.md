@@ -195,17 +195,26 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 
 ---
 
-### Fase 2 — Contrato GraphQL (BFF)
+### Fase 2 — Contrato GraphQL (BFF) ✅ CERRADA (2.1–2.6 + extensiones)
 
 **Objetivo:** Exponer la lógica de dominio a través de la API GraphQL.
 
-- [ ] **2.1** Crear `src/graphql/schema/messaging.graphql` con los tipos, queries y mutations.
-- [ ] **2.2** Crear operaciones GraphQL en `src/graphql/operations/messaging/`:
+- [x] **2.1** Crear `src/graphql/schema/messaging.graphql` con los tipos, queries y mutations.
+- [x] **2.2** Crear operaciones GraphQL en `src/graphql/operations/messaging/`:
   - `my-conversations.graphql`, `messages.graphql`, `start-conversation.graphql`, `send-message.graphql`, `mark-conversation-as-read.graphql`.
-- [ ] **2.3** Regenerar tipos con `pnpm graphql:codegen`.
-- [ ] **2.4** Crear `src/graphql/resolvers/messaging.ts` y registrar en `src/graphql/resolvers/index.ts`.
-- [ ] **2.5** Aplicar `requireAuth` en todas las operaciones. La autorización de participación se delega a la capa de dominio (defensa en profundidad).
-- [ ] **2.6** `pnpm graphql:validate` en verde.
+- [x] **2.3** Regenerar tipos con `pnpm graphql:codegen`.
+- [x] **2.4** Crear `src/graphql/resolvers/messaging.ts` y registrar en `src/graphql/resolvers/index.ts`.
+- [x] **2.5** Aplicar `requireAuth` en todas las operaciones. La autorización de participación se delega a la capa de dominio (defensa en profundidad).
+- [x] **2.6** `pnpm graphql:validate` en verde.
+
+**Extensiones adelantadas desde Fase 3 (por coherencia con GraphQL):**
+
+- [x] **3.6** Añadir `Conversation: (data) => data.id`, `ConversationParticipant: (data) => data.id` y `Message: (data) => data.id` a `keys` de `UrqlProvider.tsx`. Hecho en el bloque B.
+- [x] **3.7** Añadir `updates.Mutation.sendMessage` en `UrqlProvider.tsx`. Hecho en el bloque B.
+- [x] **3.8** Añadir `updates.Mutation.markConversationAsRead` en `UrqlProvider.tsx`. Hecho en el bloque B.
+- [x] **1.11** Documentar el contrato en `docs/backend-api/`: `messaging.md` + `README.md` actualizado. Hecho en el bloque B.
+
+**Estado (2026-11-12):** ✅ Cerrada. `graphql:validate`, `type-check`, `lint` en verde. `domain:test` 16/16, `mock:test` 63/63 (+5 tests GraphQL de mensajería). Contrato v2.0.1 documentado. `BackendMessage.senderId` añadido para normalización. `User.unreadMessagesCount` con `messaging.getUnreadCount()` (sin N+1, `groupBy`).
 
 **Commit sugerido:** `feat(messaging): exponer mensajería vía GraphQL`
 
@@ -309,9 +318,13 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 - **`TODO(messages-pagination)`:** La paginación cursor-based está diseñada pero la UI inicial solo carga los últimos N mensajes. La UI de "cargar más" se implementa en Fase 5+.
 - **`TODO(messaging-realtime)`:** Ver Fase 5.
 - **`TODO(seed-messaging-idempotent)`:** El seed de mensajes usa IDs fijos (`msg_001`, `msg_002`, `msg_003`) y `upsert` por PK. Verificado: dos ejecuciones seguidas no duplican.
-- **`TODO(messaging-mock-graphql-tests)`:** Anotado en `scripts/test-mock.ts`. Los tests vía GraphQL de mensajería se escriben en el bloque B (Fase 2), cuando el schema exista.
+- **`TODO(messaging-mock-graphql-tests)`:** ✅ Resuelto en el bloque B. 5 tests GraphQL añadidos en `scripts/test-mock.ts` (`myConversations`, `messages`, `startConversation`, `sendMessage`, `markConversationAsRead`). `mock:test` 63/63.
 - **`TODO(messaging-getConversations-test)`:** ✅ Resuelto en el bloque A. Test añadido en `scripts/test-domain.ts`.
-- **`TODO(messaging-n+1)`:** ✅ Resuelto en el bloque A. `mapMessage` y `mapConversation` no hacen queries; usan `include` + `groupBy`.
+- **`TODO(messaging-n+1)`:** ✅ Resuelto en el bloque A. `mapMessage` y `mapConversation` no hacen queries; usan `include` + `groupBy`.}
+- **`TODO(rate-limit-messaging)`:** Límites documentados pero no implementados: 30 mensajes/minuto para `sendMessage`, 10/minuto para `startConversation`. Se aplican en un bloque de hardening. Ver `docs/backend-api/_rutas/users-me/messaging.md`.
+- **`TODO(sidebar-unread-count)`:** `useSidebarData` todavía no expone `unreadMessagesCount` aunque la query `SidebarData` lo pide. Se resuelve en la Fase 4.3.
+- **`TODO(sendMessage-sender)`:** El `updates.Mutation.sendMessage` de `UrqlProvider` no incluye `sender` en `lastMessage`. Si en el futuro `MyConversationsDocument` pide `lastMessage { sender { ... } }`, este `update` debe ampliarse.
+- **`TODO(messaging-resolvers-structure)`:** `src/graphql/resolvers/index.ts` expone `Message` y `User` como propiedades de primer nivel del objeto `resolvers` en lugar de anidarlos bajo un tipo. Funciona, pero es inconsistente con el resto de resolvers (que van dentro de `Query` y `Mutation`). Reevaluar si añadimos más resolvers de campo.
 
 ---
 
@@ -327,11 +340,11 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 
 ## 9. Bitácora
 
-| Fecha      | Fase                      | Estado      | Notas                                                                                                                                                                                                                                                                                                                                                    |
-| ---------- | ------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 2026-11-12 | Fase 0 — Decisiones       | **Cerrada** | M1 (polling), M2 (DMs extensibles), M10 (2000 chars), M11 (una sola página) fijadas. Documento creado.                                                                                                                                                                                                                                                   |
-| 2026-11-12 | Fase 1 — Modelo y dominio | **Cerrada** | Prisma: `Conversation`, `ConversationParticipant`, `Message` + enum `ConversationType`. Migración `20261112000000_add_messaging`. Dominio en `src/lib/domain/messaging.ts` (sin N+1: include + `groupBy`). `LocalBackendClient.messaging` y `MockBackendClient.messaging`. `domain:test` 16/16, `mock:test` 58/58. 1.11 (contrato) diferida al bloque D. |
-| —          | Fase 2 — Contrato GraphQL | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
-| —          | Fase 3 — UI del cliente   | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
-| —          | Fase 4 — Integración      | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
-| —          | Fase 5 — Deudas diferidas | Pendiente   | Adjuntos, edición/borrado, notificaciones, grupos, realtime, búsqueda, typing indicator, paginación UI.                                                                                                                                                                                                                                                  |
+| Fecha      | Fase                      | Estado      | Notas                                                                                                                                                                                                                                                                                                                                                                                              |
+| ---------- | ------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-12 | Fase 0 — Decisiones       | **Cerrada** | M1 (polling), M2 (DMs extensibles), M10 (2000 chars), M11 (una sola página) fijadas. Documento creado.                                                                                                                                                                                                                                                                                             |
+| 2026-11-12 | Fase 1 — Modelo y dominio | **Cerrada** | Prisma: `Conversation`, `ConversationParticipant`, `Message` + enum `ConversationType`. Migración `20261112000000_add_messaging`. Dominio en `src/lib/domain/messaging.ts` (sin N+1: include + `groupBy`). `LocalBackendClient.messaging` y `MockBackendClient.messaging`. `domain:test` 16/16, `mock:test` 58/58. 1.11 (contrato) diferida al bloque D.                                           |
+| 2026-11-12 | Fase 2 — Contrato GraphQL | **Cerrada** | Schema `messaging.graphql`, 5 operaciones, `messagingResolvers` con `requireAuth`. `BackendMessage.senderId` añadido. `User.unreadMessagesCount` con `getUnreadCount()` (groupBy, sin N+1). `UrqlProvider` con keys + `updates.Mutation.sendMessage` + `markConversationAsRead`. Tests GraphQL de mock (5 nuevos, 63/63). Contrato v2.0.1 documentado. 1.11, 3.6, 3.7, 3.8 adelantadas y cerradas. |
+| —          | Fase 3 — UI del cliente   | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                                                                  |
+| —          | Fase 4 — Integración      | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                                                                  |
+| —          | Fase 5 — Deudas diferidas | Pendiente   | Adjuntos, edición/borrado, notificaciones, grupos, realtime, búsqueda, typing indicator, paginación UI.                                                                                                                                                                                                                                                                                            |

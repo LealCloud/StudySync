@@ -1,0 +1,39 @@
+enum ConversationType {
+  direct
+  group
+}
+
+type ConversationParticipant {
+  id: ID!
+  user: User!
+  lastReadAt: DateTime
+}
+
+type Message {
+  id: ID!
+  conversationId: ID!
+  senderId: ID!
+  sender: User!
+  content: String!
+  createdAt: DateTime!
+}
+
+type Conversation {
+  id: ID!
+  type: ConversationType!
+  participants: [ConversationParticipant!]!
+  lastMessage: Message
+  lastMessageAt: DateTime
+  unreadCount: Int!
+}
+
+extend type Query {
+  myConversations: [Conversation!]!
+  messages(conversationId: ID!, before: DateTime, limit: Int): [Message!]!
+}
+
+extend type Mutation {
+  startConversation(participantId: ID!): Conversation!
+  sendMessage(conversationId: ID!, content: String!): Message!
+  markConversationAsRead(conversationId: ID!): Conversation!
+}
