@@ -761,6 +761,22 @@
         "reportsAudit": "Reports & audit"
       }
     },
+    "messages": {
+      "title": "Messages",
+      "description": "Conversations with other StudySync users.",
+      "emptyConversations": "You don't have any conversations yet.",
+      "selectConversation": "Select a conversation to start.",
+      "sendMessagePlaceholder": "Write a message…",
+      "send": "Send",
+      "sending": "Sending…",
+      "backToList": "Back to list",
+      "errors": {
+        "INTERNAL_ERROR": "An unexpected error occurred. Please try again.",
+        "FORBIDDEN": "You don't have permission for this action.",
+        "NOT_FOUND": "The conversation doesn't exist.",
+        "VALIDATION_ERROR": "The message cannot be empty or exceed 2000 characters."
+      }
+    },
     "userSettings": {
       "metadata": {
         "title": "My profile | StudySync",
