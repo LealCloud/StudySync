@@ -3,7 +3,7 @@
 > Documento vivo. Se actualiza conforme avanza el trabajo.
 > Fuente de verdad para el desarrollo del sistema de mensajería tipo Messenger.
 >
-> **Estado:** Fase 0 (Decisiones) **CERRADA**. Fase 1 pendiente de inicio.
+> **Estado:** Fases 0, 1 y 2 **CERRADAS**. Fase 3 pendiente de inicio.
 >
 > **Documentos relacionados:**
 >
@@ -161,33 +161,33 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
   - Relaciones en `User`: `conversationParticipants` (1:N), `sentMessages` (1:N).
   - Índices: `Message(conversationId, createdAt DESC)`, `ConversationParticipant(userId)`.
   - `TODO(dm-uniqueness)` documentado en el schema para el par único de usuarios en conversaciones `direct`.
-- [ ] **1.2** Crear la migración con `pnpm prisma:migrate --name add_messaging`.
-- [ ] **1.3** Actualizar `prisma/seed.ts` con 1 conversación `direct` de ejemplo entre `student@example.com` y `teacher@example.com` con 3-4 mensajes. Los IDs de los mensajes serán fijos para que el seed sea idempotente.
-- [ ] **1.4** Definir en `src/lib/backend/types.ts`:
+- [x] **1.2** Crear la migración con `pnpm prisma:migrate --name add_messaging`.
+- [x] **1.3** Actualizar `prisma/seed.ts` con 1 conversación `direct` de ejemplo entre `student@example.com` y `teacher@example.com` con 3-4 mensajes. Los IDs de los mensajes serán fijos para que el seed sea idempotente.
+- [x] **1.4** Definir en `src/lib/backend/types.ts`:
   - `BackendConversationType = 'direct' | 'group'`.
   - `BackendConversation` (`id`, `type`, `participants`, `lastMessage`, `lastMessageAt`, `unreadCount`).
   - `BackendConversationParticipant` (`id`, `user`, `lastReadAt`).
   - `BackendMessage` (`id`, `conversationId`, `sender`, `content`, `createdAt`).
-- [ ] **1.5** Añadir el grupo `messaging` a `BackendClient` en `src/lib/backend/client.ts`:
+- [x] **1.5** Añadir el grupo `messaging` a `BackendClient` en `src/lib/backend/client.ts`:
   - `getConversations(): Promise<BackendConversation[]>`.
   - `startConversation(participantId: string): Promise<BackendConversation>`.
   - `getMessages(conversationId: string, before?: string, limit?: number): Promise<BackendMessage[]>`.
   - `sendMessage(conversationId: string, content: string): Promise<BackendMessage>`.
   - `markAsRead(conversationId: string): Promise<BackendConversation>`.
-- [ ] **1.6** Crear `src/lib/domain/messaging.ts` con las 5 funciones y las reglas de negocio (3.2). Reutilizar `MESSAGE_MAX_LENGTH` de `primitives.ts`.
-- [ ] **1.7** Implementar `LocalBackendClient.messaging` en `src/lib/backend/local/client.ts`.
-- [ ] **1.8** Implementar `MockBackendClient.messaging` en `src/lib/mock/client.ts`, con estado en `globalThis.__mockStore`. Añadir `MockOperation` y `failures` para los 5 métodos.
-- [ ] **1.9** Añadir tests a `scripts/test-domain.ts` (5-6 casos):
+- [x] **1.6** Crear `src/lib/domain/messaging.ts` con las 5 funciones y las reglas de negocio (3.2). Reutilizar `MESSAGE_MAX_LENGTH` de `primitives.ts`.
+- [x] **1.7** Implementar `LocalBackendClient.messaging` en `src/lib/backend/local/client.ts`.
+- [x] **1.8** Implementar `MockBackendClient.messaging` en `src/lib/mock/client.ts`, con estado en `globalThis.__mockStore`. Añadir `MockOperation` y `failures` para los 5 métodos.
+- [x] **1.9** Añadir tests a `scripts/test-domain.ts` (5-6 casos):
   - Crear DM, verificar `allowDirectMessages: false` → 403.
   - Enviar mensaje, verificar límite de 2000 → 422.
   - `markConversationAsRead` actualiza `lastReadAt`.
   - No participante → 403.
   - Reutilizar DM existente.
-- [ ] **1.10** Añadir tests a `scripts/test-mock.ts` (5 queries + 3 mutations + 3 behavior tests).
-- [ ] **1.11** Documentar el contrato en `docs/backend-api/`:
+- [x] **1.10** Añadir tests a `scripts/test-mock.ts` (5 queries + 3 mutations + 3 behavior tests).
+- [x] **1.11** Documentar el contrato en `docs/backend-api/`:
   - Nuevo archivo `docs/backend-api/_rutas/users-me/messaging.md` con las 5 operaciones.
   - Actualizar `docs/backend-api/README.md` (tabla de métodos, autorización).
-- [ ] **1.12** `pnpm type-check`, `pnpm lint`, `pnpm domain:test`, `pnpm mock:test` en verde.
+- [x] **1.12** `pnpm type-check`, `pnpm lint`, `pnpm domain:test`, `pnpm mock:test` en verde.
 
 **Estado (2026-11-12):** ✅ Cerrada (1.1–1.10, 1.12). 1.11 diferida al bloque D (documentación del contrato). `type-check`, `lint`, `domain:test` (16/16), `mock:test` (58/58) en verde.
 
@@ -320,7 +320,7 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 - **`TODO(seed-messaging-idempotent)`:** El seed de mensajes usa IDs fijos (`msg_001`, `msg_002`, `msg_003`) y `upsert` por PK. Verificado: dos ejecuciones seguidas no duplican.
 - **`TODO(messaging-mock-graphql-tests)`:** ✅ Resuelto en el bloque B. 5 tests GraphQL añadidos en `scripts/test-mock.ts` (`myConversations`, `messages`, `startConversation`, `sendMessage`, `markConversationAsRead`). `mock:test` 63/63.
 - **`TODO(messaging-getConversations-test)`:** ✅ Resuelto en el bloque A. Test añadido en `scripts/test-domain.ts`.
-- **`TODO(messaging-n+1)`:** ✅ Resuelto en el bloque A. `mapMessage` y `mapConversation` no hacen queries; usan `include` + `groupBy`.}
+- **`TODO(messaging-n+1)`:** ✅ Resuelto en el bloque A. `mapMessage` y `mapConversation` no hacen queries; usan `include` + `groupBy`.
 - **`TODO(rate-limit-messaging)`:** Límites documentados pero no implementados: 30 mensajes/minuto para `sendMessage`, 10/minuto para `startConversation`. Se aplican en un bloque de hardening. Ver `docs/backend-api/_rutas/users-me/messaging.md`.
 - **`TODO(sidebar-unread-count)`:** `useSidebarData` todavía no expone `unreadMessagesCount` aunque la query `SidebarData` lo pide. Se resuelve en la Fase 4.3.
 - **`TODO(sendMessage-sender)`:** El `updates.Mutation.sendMessage` de `UrqlProvider` no incluye `sender` en `lastMessage`. Si en el futuro `MyConversationsDocument` pide `lastMessage { sender { ... } }`, este `update` debe ampliarse.
