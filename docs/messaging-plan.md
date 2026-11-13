@@ -149,11 +149,11 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 
 ---
 
-### Fase 1 — Modelo de datos y capa de dominio
+### Fase 1 — Modelo de datos y capa de dominio ✅ CERRADA (1.1–1.10)
 
 **Objetivo:** Tener la lógica de negocio funcionando sin UI.
 
-- [ ] **1.1** Añadir al `prisma/schema.prisma`:
+- [x] **1.1** Añadir al `prisma/schema.prisma`:
   - Enum `ConversationType { direct, group }`.
   - `Conversation` (`id`, `type`, `createdAt`, `updatedAt`).
   - `ConversationParticipant` (`id`, `conversationId`, `userId`, `lastReadAt`, `joinedAt`). `@@unique([conversationId, userId])`.
@@ -188,6 +188,8 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
   - Nuevo archivo `docs/backend-api/_rutas/users-me/messaging.md` con las 5 operaciones.
   - Actualizar `docs/backend-api/README.md` (tabla de métodos, autorización).
 - [ ] **1.12** `pnpm type-check`, `pnpm lint`, `pnpm domain:test`, `pnpm mock:test` en verde.
+
+**Estado (2026-11-12):** ✅ Cerrada (1.1–1.10, 1.12). 1.11 diferida al bloque D (documentación del contrato). `type-check`, `lint`, `domain:test` (16/16), `mock:test` (58/58) en verde.
 
 **Commit sugerido:** `feat(messaging): implementar capa de dominio del sistema de mensajería`
 
@@ -303,10 +305,13 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 
 ## 7. Deudas conocidas
 
-- **`TODO(dm-uniqueness)`:** El par único de usuarios en conversaciones `direct` se resuelve a nivel de dominio (buscar antes de crear). No hay constraint en la base de datos porque el modelo es extensible a grupos. Si se necesita garantía a nivel de DB, añadir una tabla `DirectConversation(userAId, userBId)` con `@@unique`.
+- **`TODO(dm-uniqueness)`:** ✅ Resuelto en el bloque A. `Conversation.directKey` es `String? @unique`; se calcula como `[userIdA, userIdB].sort().join(':')` para DMs y es `null` para grupos. Garantía a nivel de DB sin romper la extensibilidad a grupos.
 - **`TODO(messages-pagination)`:** La paginación cursor-based está diseñada pero la UI inicial solo carga los últimos N mensajes. La UI de "cargar más" se implementa en Fase 5+.
 - **`TODO(messaging-realtime)`:** Ver Fase 5.
-- **`TODO(seed-messaging-idempotent)`:** El seed de mensajes usará IDs fijos para que sea idempotente. Verificar que el `upsert` no duplica participantes.
+- **`TODO(seed-messaging-idempotent)`:** El seed de mensajes usa IDs fijos (`msg_001`, `msg_002`, `msg_003`) y `upsert` por PK. Verificado: dos ejecuciones seguidas no duplican.
+- **`TODO(messaging-mock-graphql-tests)`:** Anotado en `scripts/test-mock.ts`. Los tests vía GraphQL de mensajería se escriben en el bloque B (Fase 2), cuando el schema exista.
+- **`TODO(messaging-getConversations-test)`:** ✅ Resuelto en el bloque A. Test añadido en `scripts/test-domain.ts`.
+- **`TODO(messaging-n+1)`:** ✅ Resuelto en el bloque A. `mapMessage` y `mapConversation` no hacen queries; usan `include` + `groupBy`.
 
 ---
 
@@ -322,11 +327,11 @@ El contrato del sistema de mensajería se añadirá a `docs/backend-api/` como n
 
 ## 9. Bitácora
 
-| Fecha      | Fase                      | Estado      | Notas                                                                                                   |
-| ---------- | ------------------------- | ----------- | ------------------------------------------------------------------------------------------------------- |
-| 2026-11-12 | Fase 0 — Decisiones       | **Cerrada** | M1 (polling), M2 (DMs extensibles), M10 (2000 chars), M11 (una sola página) fijadas. Documento creado.  |
-| —          | Fase 1 — Modelo y dominio | Pendiente   | —                                                                                                       |
-| —          | Fase 2 — Contrato GraphQL | Pendiente   | —                                                                                                       |
-| —          | Fase 3 — UI del cliente   | Pendiente   | —                                                                                                       |
-| —          | Fase 4 — Integración      | Pendiente   | —                                                                                                       |
-| —          | Fase 5 — Deudas diferidas | Pendiente   | Adjuntos, edición/borrado, notificaciones, grupos, realtime, búsqueda, typing indicator, paginación UI. |
+| Fecha      | Fase                      | Estado      | Notas                                                                                                                                                                                                                                                                                                                                                    |
+| ---------- | ------------------------- | ----------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 2026-11-12 | Fase 0 — Decisiones       | **Cerrada** | M1 (polling), M2 (DMs extensibles), M10 (2000 chars), M11 (una sola página) fijadas. Documento creado.                                                                                                                                                                                                                                                   |
+| 2026-11-12 | Fase 1 — Modelo y dominio | **Cerrada** | Prisma: `Conversation`, `ConversationParticipant`, `Message` + enum `ConversationType`. Migración `20261112000000_add_messaging`. Dominio en `src/lib/domain/messaging.ts` (sin N+1: include + `groupBy`). `LocalBackendClient.messaging` y `MockBackendClient.messaging`. `domain:test` 16/16, `mock:test` 58/58. 1.11 (contrato) diferida al bloque D. |
+| —          | Fase 2 — Contrato GraphQL | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
+| —          | Fase 3 — UI del cliente   | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
+| —          | Fase 4 — Integración      | Pendiente   | —                                                                                                                                                                                                                                                                                                                                                        |
+| —          | Fase 5 — Deudas diferidas | Pendiente   | Adjuntos, edición/borrado, notificaciones, grupos, realtime, búsqueda, typing indicator, paginación UI.                                                                                                                                                                                                                                                  |

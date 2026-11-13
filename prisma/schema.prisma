@@ -56,19 +56,21 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  profile             Profile?
-  personalData        PersonalData?
-  privacySettings     PrivacySettings?
-  preferences         Preferences?
-  securitySettings    SecuritySettings?
-  account             Account?
-  subscription        Subscription?
-  paymentMethods      PaymentMethod[]
-  invoices            Invoice[]
-  courseEnrollments   CourseEnrollment[]
-  certificates        Certificate[]
-  passwordResetTokens PasswordResetToken[]
-  emailChangeTokens   EmailChangeToken[]
+  profile                  Profile?
+  personalData             PersonalData?
+  privacySettings          PrivacySettings?
+  preferences              Preferences?
+  securitySettings         SecuritySettings?
+  account                  Account?
+  subscription             Subscription?
+  paymentMethods           PaymentMethod[]
+  invoices                 Invoice[]
+  courseEnrollments        CourseEnrollment[]
+  certificates             Certificate[]
+  passwordResetTokens      PasswordResetToken[]
+  emailChangeTokens        EmailChangeToken[]
+  conversationParticipants ConversationParticipant[]
+  sentMessages             Message[]
 
   @@index([role])
 }
@@ -412,4 +414,56 @@ model EmailChangeToken {
   usedAt    DateTime?
 
   createdAt DateTime @default(now())
+}
+
+// ============================================================
+// MESSAGING
+// ============================================================
+
+enum ConversationType {
+  direct
+  group
+}
+
+/// A direct conversation between users. directKey is the sorted user ID pair
+/// joined with ':' and is null for group conversations.
+model Conversation {
+  id        String           @id @default(cuid())
+  type      ConversationType
+  directKey String?          @unique
+  createdAt DateTime         @default(now())
+  updatedAt DateTime         @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([updatedAt])
+}
+
+/// Participant membership and read cursor for a conversation. joinedAt supports
+/// group membership history; lastReadAt is the source of truth for unread counts.
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastReadAt     DateTime?
+  joinedAt       DateTime     @default(now())
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+}
+
+/// Text message. Content length is validated in the domain layer.
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt(sort: Desc)])
 }

@@ -6,6 +6,13 @@ import { getPublicProfile, updateProfile } from '../src/lib/domain/users';
 import { changePlan } from '../src/lib/domain/subscription';
 import { removePaymentMethod } from '../src/lib/domain/billing';
 import { submitContact } from '../src/lib/domain/contact';
+import {
+  getConversations,
+  startConversation,
+  sendMessage,
+  markAsRead,
+  getMessages,
+} from '../src/lib/domain/messaging';
 
 type TestCase = { name: string; run: () => Promise<void> };
 const results: { name: string; passed: boolean; error?: string }[] = [];
@@ -61,6 +68,13 @@ async function withUser(run: (userId: string) => Promise<void>): Promise<void> {
   try {
     await run(userId);
   } finally {
+    // Las conversaciones no se borran por cascada al borrar el User:
+    // `Conversation` no tiene FK a `User` (la relación es N:M vía
+    // `ConversationParticipant`). Hay que borrarlas explícitamente para
+    // no dejar conversaciones huérfanas que ocupen `directKey`.
+    await prisma.conversation.deleteMany({
+      where: { participants: { some: { userId } } },
+    });
     await prisma.user.deleteMany({ where: { id: userId } });
   }
 }
@@ -344,7 +358,10 @@ const tests: TestCase[] = [
         utcGroup.options.length === 1,
         'UTC debe tener exactamente 1 zona',
       );
-      assert(utcGroup.options[0].value === 'UTC', 'La única zona UTC debe ser "UTC"');
+      assert(
+        utcGroup.options[0].value === 'UTC',
+        'La única zona UTC debe ser "UTC"',
+      );
 
       assert(
         isTimezoneInCatalog('America/Bogota'),
@@ -360,6 +377,217 @@ const tests: TestCase[] = [
         assert(tz.labelEn.length > 0, `labelEn vacío en ${tz.value}`);
       }
     },
+  },
+  {
+    name: 'messaging rejects a recipient who disabled direct messages',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: { allowDirectMessages: false } },
+          },
+        });
+        try {
+          await expectDomainError(
+            () => startConversation(userId, recipientId),
+            403,
+            'FORBIDDEN',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
+  },
+  {
+    name: 'messaging reuses the direct conversation for a user pair',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: {} },
+          },
+        });
+        try {
+          const first = await startConversation(userId, recipientId);
+          const second = await startConversation(userId, recipientId);
+          assert(first.id === second.id, 'DM was not reused');
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
+  },
+  {
+    name: 'messaging rejects content over 2000 characters',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: {} },
+          },
+        });
+        try {
+          const c = await startConversation(userId, recipientId);
+          await expectDomainError(
+            () => sendMessage(userId, c.id, 'x'.repeat(2001)),
+            422,
+            'VALIDATION_ERROR',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
+  },
+  {
+    name: 'messaging rejects empty content',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: {} },
+          },
+        });
+        try {
+          const c = await startConversation(userId, recipientId);
+          await expectDomainError(
+            () => sendMessage(userId, c.id, '  '),
+            422,
+            'VALIDATION_ERROR',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
+  },
+  {
+    name: 'messaging markAsRead clears unread count',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: {} },
+          },
+        });
+        try {
+          const c = await startConversation(userId, recipientId);
+          await prisma.message.create({
+            data: {
+              conversationId: c.id,
+              senderId: recipientId,
+              content: 'A message for unread count',
+            },
+          });
+          const read = await markAsRead(userId, c.id);
+          assert(read.unreadCount === 0, 'Unread count did not clear');
+          assert(
+            read.participants.find((p) => p.user.id === userId)?.lastReadAt !==
+              null,
+            'lastReadAt was not set',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
+  },
+  {
+    name: 'messaging denies message history to nonparticipants',
+    run: () =>
+      withUser(async (outsiderId) => {
+        const ids = [randomUUID(), randomUUID()];
+        for (const id of ids) {
+          await prisma.user.create({
+            data: {
+              id,
+              email: `participant-${id}@example.test`,
+              passwordHash: 'unused',
+              role: 'student',
+              personalData: {
+                create: { firstName: 'Participant', lastName: 'Test' },
+              },
+              privacySettings: { create: {} },
+            },
+          });
+        }
+        try {
+          const c = await startConversation(ids[0], ids[1]);
+          await expectDomainError(
+            () => getMessages(outsiderId, c.id),
+            403,
+            'FORBIDDEN',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: { in: ids } } });
+        }
+      }),
+  },
+  {
+    name: 'messaging getConversations returns only own conversations',
+    run: () =>
+      withUser(async (userId) => {
+        const recipientId = randomUUID();
+        await prisma.user.create({
+          data: {
+            id: recipientId,
+            email: `recipient-${recipientId}@example.test`,
+            passwordHash: 'unused',
+            role: 'student',
+            personalData: {
+              create: { firstName: 'Recipient', lastName: 'Test' },
+            },
+            privacySettings: { create: {} },
+          },
+        });
+        try {
+          await startConversation(userId, recipientId);
+          const list = await getConversations(userId);
+          assert(list.length >= 1, 'Expected at least one conversation');
+          assert(
+            list.every((c) => c.participants.some((p) => p.user.id === userId)),
+            'Returned a conversation where user is not a participant',
+          );
+        } finally {
+          await prisma.user.deleteMany({ where: { id: recipientId } });
+        }
+      }),
   },
 ];
 

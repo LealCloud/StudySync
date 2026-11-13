@@ -31,6 +31,7 @@ import {
   removePaymentMethod,
 } from '@/lib/domain/billing';
 import { changePlan, cancelSubscription } from '@/lib/domain/subscription';
+import { getConversations, startConversation, getMessages, sendMessage, markAsRead } from '@/lib/domain/messaging';
 
 /** Implementa el contrato de cliente BFF utilizando la capa de dominio local. */
 export class LocalBackendClient implements BackendClient {
@@ -42,6 +43,14 @@ export class LocalBackendClient implements BackendClient {
     }
     return this.userId;
   }
+
+  messaging: BackendClient['messaging'] = {
+    getConversations: () => getConversations(this.requireUserId()),
+    startConversation: (participantId) => startConversation(this.requireUserId(), participantId),
+    getMessages: (conversationId, before, limit) => getMessages(this.requireUserId(), conversationId, before, limit),
+    sendMessage: (conversationId, content) => sendMessage(this.requireUserId(), conversationId, content),
+    markAsRead: (conversationId) => markAsRead(this.requireUserId(), conversationId),
+  };
 
   users: BackendClient['users'] = {
     getMe: () => getUser(this.requireUserId()),

@@ -211,3 +211,33 @@ export interface BackendContractError {
 export interface BackendContractErrorBody {
   error: BackendContractError;
 }
+
+
+// ============================================================
+// MESSAGING
+// ============================================================
+
+export type BackendConversationType = 'direct' | 'group';
+
+export interface BackendConversationParticipant {
+  id: string;
+  user: BackendUser;
+  lastReadAt: string | null;
+}
+
+export interface BackendMessage {
+  id: string;
+  conversationId: string;
+  sender: BackendUser;
+  content: string;
+  createdAt: string;
+}
+
+export interface BackendConversation {
+  id: string;
+  type: BackendConversationType;
+  participants: BackendConversationParticipant[];
+  lastMessage: BackendMessage | null;
+  lastMessageAt: string | null;
+  unreadCount: number;
+}

@@ -237,6 +237,27 @@ async function seedStudentExtras(): Promise<void> {
   });
 }
 
+async function seedMessaging(): Promise<void> {
+  const conversationId = 'conv_student_teacher';
+  const directKey = [USER_IDS.student, USER_IDS.teacher].sort().join(':');
+  await prisma.conversation.upsert({ where: { id: conversationId }, update: {}, create: { id: conversationId, type: 'direct', directKey } });
+  for (const [userId, id] of [[USER_IDS.student, 'cp_student_teacher_student'], [USER_IDS.teacher, 'cp_student_teacher_teacher']] as const) {
+    await prisma.conversationParticipant.upsert({
+      where: { conversationId_userId: { conversationId, userId } }, update: {},
+      create: { id, conversationId, userId },
+    });
+  }
+  const now = Date.now();
+  const messages = [
+    { id: 'msg_001', senderId: USER_IDS.student, content: 'Hola profesor, ¿tiene un momento?', offsetMs: -180000 },
+    { id: 'msg_002', senderId: USER_IDS.teacher, content: 'Claro, dime en qué puedo ayudarte.', offsetMs: -120000 },
+    { id: 'msg_003', senderId: USER_IDS.student, content: 'Quería consultar sobre el próximo examen.', offsetMs: -60000 },
+  ];
+  for (const msg of messages) {
+    await prisma.message.upsert({ where: { id: msg.id }, update: {}, create: { id: msg.id, conversationId, senderId: msg.senderId, content: msg.content, createdAt: new Date(now + msg.offsetMs) } });
+  }
+}
+
 async function main(): Promise<void> {
   console.log('Seeding dev data…');
 
@@ -269,6 +290,7 @@ async function main(): Promise<void> {
 
   // Datos ricos solo para el student.
   await seedStudentExtras();
+  await seedMessaging();
 
   console.log('Seed complete.');
   console.log('');

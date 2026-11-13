@@ -1,5 +1,7 @@
 import type {
   BackendAccount,
+  BackendConversation,
+  BackendMessage,
   BackendCertificate,
   BackendChangePasswordInput,
   BackendCourseEnrollment,
@@ -29,6 +31,13 @@ export interface RestBackendResponse<T = unknown> {
 }
 
 export interface BackendClient {
+  messaging: {
+    getConversations(): Promise<BackendConversation[]>;
+    startConversation(participantId: string): Promise<BackendConversation>;
+    getMessages(conversationId: string, before?: string, limit?: number): Promise<BackendMessage[]>;
+    sendMessage(conversationId: string, content: string): Promise<BackendMessage>;
+    markAsRead(conversationId: string): Promise<BackendConversation>;
+  };
   users: {
     getMe(): Promise<BackendUser>;
     getPublicProfile(userId: string): Promise<BackendPublicProfile | null>;

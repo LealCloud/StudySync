@@ -2,6 +2,9 @@ import type { BackendClient, RestBackendResponse } from '../backend/client';
 import { BackendOperationError } from '../backend/errors';
 import type {
   BackendAccount,
+  BackendConversation,
+  BackendMessage,
+  BackendUser,
   BackendContactInput,
   BackendDocumentType,
   BackendForgotPasswordInput,
@@ -48,7 +51,12 @@ type MockOperation =
   | 'subscription.cancel'
   | 'billing.getPaymentMethods'
   | 'billing.getInvoices'
-  | 'billing.removePaymentMethod';
+  | 'billing.removePaymentMethod'
+  | 'messaging.getConversations'
+  | 'messaging.startConversation'
+  | 'messaging.getMessages'
+  | 'messaging.sendMessage'
+  | 'messaging.markAsRead';
 
 export type MockFailureMap = Partial<
   Record<MockOperation, { status: number; code: string }>
@@ -94,6 +102,22 @@ interface MockStore {
   };
   accountState: BackendAccount;
   subscriptionState: BackendSubscription | null;
+  conversations: Array<{
+    id: string;
+    type: 'direct' | 'group';
+    directKey: string | null;
+    participantIds: string[];
+    createdAt: string;
+    updatedAt: string;
+  }>;
+  messages: Array<{
+    id: string;
+    conversationId: string;
+    senderId: string;
+    content: string;
+    createdAt: string;
+  }>;
+  lastReadAt: Record<string, string>;
   paymentMethods: Array<{
     id: string;
     brand: string | null;
@@ -160,6 +184,33 @@ function createInitialStore(): MockStore {
       currentPeriodEnd: null,
       cancelAtPeriodEnd: false,
     },
+    conversations: [
+      {
+        id: 'conv-001',
+        type: 'direct',
+        directKey: ['test-user-001', 'other-user-001'].sort().join(':'),
+        participantIds: ['test-user-001', 'other-user-001'],
+        createdAt: '2026-01-01T00:00:00.000Z',
+        updatedAt: '2026-01-01T00:02:00.000Z',
+      },
+    ],
+    messages: [
+      {
+        id: 'msg-001',
+        conversationId: 'conv-001',
+        senderId: 'other-user-001',
+        content: 'Hola, ¿cómo va tu proyecto?',
+        createdAt: '2026-01-01T00:01:00.000Z',
+      },
+      {
+        id: 'msg-002',
+        conversationId: 'conv-001',
+        senderId: MOCK_USER_ID,
+        content: '¡Muy bien, gracias!',
+        createdAt: '2026-01-01T00:02:00.000Z',
+      },
+    ],
+    lastReadAt: {},
     paymentMethods: [
       {
         id: 'payment-001',
@@ -694,6 +745,154 @@ export class MockBackendClient implements BackendClient {
       return true;
     },
   };
+
+  // El mock hardcodea tres user IDs para simular los casos del contrato:
+  // - `other-user-001`: participante de la conversación seed (`conv-001`).
+  // - `blocked-user`: simula un destinatario con `allowDirectMessages: false`
+  //   (M3), sin modelar `PrivacySettings` en el store del mock.
+  // - `repeat-user`: simula un destinatario que permite DMs, para el test
+  //   de reutilización de conversación.
+  messaging: BackendClient['messaging'] = {
+    getConversations: async () => {
+      this.failIfConfigured('messaging.getConversations');
+      return this.store.conversations
+        .filter((c) => c.participantIds.includes(MOCK_USER_ID))
+        .map((c) => this.mockConversation(c));
+    },
+    startConversation: async (participantId) => {
+      this.failIfConfigured('messaging.startConversation');
+      if (participantId === MOCK_USER_ID)
+        throw new BackendOperationError(422, 'VALIDATION_ERROR');
+      if (participantId === 'blocked-user')
+        throw new BackendOperationError(403, 'FORBIDDEN');
+      const directKey = [MOCK_USER_ID, participantId].sort().join(':');
+      let c = this.store.conversations.find(
+        (item) => item.directKey === directKey,
+      );
+      if (!c) {
+        const now = new Date().toISOString();
+        c = {
+          id: `conv-${Date.now()}`,
+          type: 'direct',
+          directKey,
+          participantIds: [MOCK_USER_ID, participantId],
+          createdAt: now,
+          updatedAt: now,
+        };
+        this.store.conversations.push(c);
+      }
+      return this.mockConversation(c);
+    },
+    getMessages: async (conversationId, before, limit = 50) => {
+      this.failIfConfigured('messaging.getMessages');
+      this.requireMockParticipant(conversationId);
+      const beforeMs = before ? Date.parse(before) : Infinity;
+      return this.store.messages
+        .filter(
+          (m) =>
+            m.conversationId === conversationId &&
+            Date.parse(m.createdAt) < beforeMs,
+        )
+        .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
+        .slice(-Math.min(Math.max(Math.trunc(limit), 1), 100))
+        .map((m) => this.mockMessage(m));
+    },
+    sendMessage: async (conversationId, content) => {
+      this.failIfConfigured('messaging.sendMessage');
+      this.requireMockParticipant(conversationId);
+      if (!content.trim() || content.length > 2000)
+        throw new BackendOperationError(422, 'VALIDATION_ERROR');
+      const msg = {
+        id: `msg-${Date.now()}-${Math.random()}`,
+        conversationId,
+        senderId: MOCK_USER_ID,
+        content,
+        createdAt: new Date().toISOString(),
+      };
+      this.store.messages.push(msg);
+      const c = this.store.conversations.find(
+        (item) => item.id === conversationId,
+      )!;
+      c.updatedAt = msg.createdAt;
+      return this.mockMessage(msg);
+    },
+    markAsRead: async (conversationId) => {
+      this.failIfConfigured('messaging.markAsRead');
+      this.requireMockParticipant(conversationId);
+      this.store.lastReadAt[`${conversationId}:${MOCK_USER_ID}`] =
+        new Date().toISOString();
+      return this.mockConversation(
+        this.store.conversations.find((c) => c.id === conversationId)!,
+      );
+    },
+  };
+
+  private mockUser(userId: string): BackendUser {
+    return userId === MOCK_USER_ID
+      ? {
+          id: MOCK_USER_ID,
+          name: 'Test User',
+          email: 'test@example.com',
+          image: this.store.imageState,
+          role: 'student',
+          profile: {
+            bio: this.store.profileState.bio
+              ? { ...this.store.profileState.bio }
+              : null,
+            interests: [...this.store.profileState.interests],
+          },
+        }
+      : {
+          id: userId,
+          name: 'Other User',
+          email: 'other@example.com',
+          image: null,
+          role: 'student',
+          profile: { bio: null, interests: [] },
+        };
+  }
+
+  private mockMessage(m: MockStore['messages'][number]): BackendMessage {
+    return {
+      id: m.id,
+      conversationId: m.conversationId,
+      sender: this.mockUser(m.senderId),
+      content: m.content,
+      createdAt: m.createdAt,
+    };
+  }
+
+  private requireMockParticipant(conversationId: string) {
+    const c = this.store.conversations.find(
+      (item) => item.id === conversationId,
+    );
+    if (!c || !c.participantIds.includes(MOCK_USER_ID))
+      throw new BackendOperationError(403, 'FORBIDDEN');
+  }
+
+  private mockConversation(
+    c: MockStore['conversations'][number],
+  ): BackendConversation {
+    const messages = this.store.messages
+      .filter((m) => m.conversationId === c.id)
+      .sort((a, b) => a.createdAt.localeCompare(b.createdAt));
+    const last = messages.at(-1);
+    const readAt = this.store.lastReadAt[`${c.id}:${MOCK_USER_ID}`];
+    return {
+      id: c.id,
+      type: c.type,
+      participants: c.participantIds.map((id, i) => ({
+        id: `${c.id}-p${i}`,
+        user: this.mockUser(id),
+        lastReadAt: this.store.lastReadAt[`${c.id}:${id}`] ?? null,
+      })),
+      lastMessage: last ? this.mockMessage(last) : null,
+      lastMessageAt: last?.createdAt ?? null,
+      unreadCount: messages.filter(
+        (m) => m.senderId !== MOCK_USER_ID && (!readAt || m.createdAt > readAt),
+      ).length,
+    };
+  }
 }
 
 export class MockPublicBackendClient {

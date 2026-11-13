@@ -1031,6 +1031,115 @@ async function runPersonalDataSecurityTests(): Promise<{
   return { passed, failed, total: behaviorTests.length };
 }
 
+// TODO(messaging-mock-graphql-tests): add GraphQL cases in Block B after schema/resolvers exist.
+async function runMessagingTests(): Promise<{
+  passed: number;
+  failed: number;
+  total: number;
+}> {
+  const tests: BehaviorTest[] = [
+    {
+      name: 'messaging blocks a recipient who disabled DMs',
+      run: async () => {
+        try {
+          await backend.messaging.startConversation('blocked-user');
+        } catch (error) {
+          assertBehavior(
+            error instanceof BackendOperationError && error.status === 403,
+            'Expected 403 FORBIDDEN',
+          );
+          return;
+        }
+        throw new Error('Expected blocked recipient to be rejected');
+      },
+    },
+    {
+      name: 'messaging reuses an existing direct conversation',
+      run: async () => {
+        const first = await backend.messaging.startConversation('repeat-user');
+        const second = await backend.messaging.startConversation('repeat-user');
+        assertBehavior(
+          first.id === second.id,
+          'Expected existing conversation to be reused',
+        );
+      },
+    },
+    {
+      name: 'messaging rejects content over 2000 characters',
+      run: async () => {
+        try {
+          await backend.messaging.sendMessage('conv-001', 'x'.repeat(2001));
+        } catch (error) {
+          assertBehavior(
+            error instanceof BackendOperationError && error.status === 422,
+            'Expected 422 VALIDATION_ERROR',
+          );
+          return;
+        }
+        throw new Error('Expected long message to be rejected');
+      },
+    },
+    {
+      name: 'messaging markAsRead clears unread count',
+      run: async () => {
+        const before = (await backend.messaging.getConversations()).find(
+          (c) => c.id === 'conv-001',
+        );
+        assertBehavior(
+          (before?.unreadCount ?? 0) > 0,
+          'Expected initial unread message',
+        );
+        const after = await backend.messaging.markAsRead('conv-001');
+        assertBehavior(after.unreadCount === 0, 'Unread count did not clear');
+      },
+    },
+    {
+      name: 'messaging clamps message page size to 100',
+      run: async () => {
+        await backend.messaging.getConversations();
+        const store = globalThis.__mockStore;
+        assertBehavior(store !== undefined, 'Mock store was not initialized');
+        for (let i = 0; i < 105; i++)
+          store.messages.push({
+            id: `page-${i}`,
+            conversationId: 'conv-001',
+            senderId: 'other-user-001',
+            content: 'message',
+            createdAt: new Date(
+              Date.parse('2026-02-01T00:00:00.000Z') + i,
+            ).toISOString(),
+          });
+        const page = await backend.messaging.getMessages(
+          'conv-001',
+          undefined,
+          500,
+        );
+        assertBehavior(
+          page.length === 100,
+          `Expected 100 messages, got ${page.length}`,
+        );
+      },
+    },
+  ];
+  let passed = 0;
+  let failed = 0;
+  for (const test of tests) {
+    resetMockStore();
+    try {
+      await test.run();
+      passed++;
+      console.log(`behavior   ${test.name.padEnd(58)} ✓ PASS`);
+    } catch (error) {
+      failed++;
+      console.log(`behavior   ${test.name.padEnd(58)} ✗ FAIL`);
+      console.log(
+        `           ${error instanceof Error ? error.message : String(error)}`,
+      );
+    }
+  }
+  return { passed, failed, total: tests.length };
+}
+
 async function runAuthTests(): Promise<{ passed: number; failed: number }> {
   let passed = 0;
   let failed = 0;
@@ -1222,6 +1331,11 @@ async function main() {
   passed += behaviorResult.passed;
   failed += behaviorResult.failed;
 
+  console.log('\n=== Messaging behavior ===\n');
+  const messagingResult = await runMessagingTests();
+  passed += messagingResult.passed;
+  failed += messagingResult.failed;
+
   console.log('');
   console.log('=== Autorización por rol ===');
   console.log('');
@@ -1238,7 +1352,7 @@ async function main() {
   console.log(`✓ Passed: ${passed}`);
   console.log(`✗ Failed: ${failed}`);
   console.log(
-    `  Total:  ${tests.length + publicApiChecks.length + authTests.length + behaviorResult.total}`,
+    `  Total:  ${tests.length + publicApiChecks.length + authTests.length + behaviorResult.total + messagingResult.total}`,
   );
   console.log('');
 
